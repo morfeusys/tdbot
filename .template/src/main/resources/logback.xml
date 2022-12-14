@@ -1,0 +1,12 @@
+<configuration>
+    <appender class="ch.qos.logback.core.ConsoleAppender" name="CONSOLE">
+        <encoder>
+            <pattern>%d %5p [%8c] - %m %n</pattern>
+        </encoder>
+    </appender>
+    <logger level="OFF" name="com.justai.jaicf"/>
+    <logger level="WARN" name="it.tdlight.TDLight"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
