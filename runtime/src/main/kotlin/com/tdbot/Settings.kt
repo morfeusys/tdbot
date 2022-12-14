@@ -7,5 +7,5 @@ val defaultRuntimeSettings = TdRuntime.Settings(
     apiHash = System.getenv("TD_API_HASH"),
     tdBotToken = System.getenv("TD_BOT_TOKEN"),
     tdDirectory = System.getenv("TD_DIRECTORY") ?: ".td",
-    publicQrLink = System.getenv("TD_PUBLIC_QR_LINK") ?: "http://127.0.0.1:8080"
+    publicQrLink = System.getenv("TD_PUBLIC_QR_LINK") ?: "https://tdbot.vercel.app/"
 )
