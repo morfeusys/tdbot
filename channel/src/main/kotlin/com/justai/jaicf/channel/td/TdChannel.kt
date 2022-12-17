@@ -62,7 +62,7 @@ class TdChannel(
         client.addUpdatesHandler { update ->
             val request = when (update) {
                 is TdApi.UpdateNewMessage -> when (update.message.content) {
-                    is TdApi.MessageText -> TdNewTextMessageRequest(user, update, update.message.content as TdApi.MessageText)
+                    is TdApi.MessageText -> TdNewTextMessageRequest(user, update)
                     else -> TdNewEventMessageRequest(user, update)
                 }
                 else -> TdUpdateRequest(user, update)

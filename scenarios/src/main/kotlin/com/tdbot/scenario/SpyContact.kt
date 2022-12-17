@@ -1,9 +1,9 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.TdActionContext
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.TdScenario
-import com.justai.jaicf.channel.td.onUpdate
+import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.scenario.onUpdate
 import it.tdlight.jni.TdApi
 import org.slf4j.LoggerFactory
 
@@ -24,8 +24,8 @@ fun SpyContact(
         }
     }
 
-    onUpdate<TdApi.UpdateUserStatus> { update ->
-        if (update.userId == user?.id) {
+    onUpdate<TdApi.UpdateUserStatus> {
+        if (request.update.userId == user?.id) {
             handler(this, user!!, request.update as TdApi.UpdateUserStatus)
         }
     }

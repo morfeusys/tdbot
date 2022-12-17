@@ -9,7 +9,9 @@ allprojects {
     }
 }
 
-tasks.register<Copy>("generate") {
+tasks.register<Copy>("createBot") {
     from(".template")
     into("bot")
+
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }

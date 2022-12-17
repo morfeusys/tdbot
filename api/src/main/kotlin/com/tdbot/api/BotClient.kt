@@ -1,7 +1,9 @@
 package com.tdbot.api
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.helpers.kotlin.ifTrue
+import com.justai.jaicf.channel.td.client.forwardMessages
+import com.justai.jaicf.channel.td.client.getInlineQueryResults
+import com.justai.jaicf.channel.td.client.sendMessage
 import it.tdlight.client.GenericResultHandler
 import it.tdlight.client.Result
 import it.tdlight.client.SimpleTelegramClient

@@ -1,7 +1,8 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.helpers.logging.logger
+import com.justai.jaicf.channel.td.scenario.onNewMessage
+import com.justai.jaicf.channel.td.scenario.onNewTextMessage
 import com.tdbot.api.TdBotClientScenario
 import com.tdbot.api.isBotChat
 import com.tdbot.api.isNotBotChat
@@ -15,8 +16,8 @@ fun TranscriberBot(language: String) = TdBotClientScenario("@transcriber_bot") {
         }
     }
 
-    onNewMessage<TdApi.MessageVoiceNote>(isOutgoing, isNotBotChat(bot)) { update, _ ->
-        bot.forwardMessage(update.message) { reply ->
+    onNewMessage<TdApi.MessageVoiceNote>(isOutgoing, isNotBotChat(bot)) {
+        bot.forwardMessage(request.update.message) { reply ->
             val text = reply.get().content as TdApi.MessageText
             if (text.text.text.length <= 1024) {
                 reactions.editCaption(text.text.text)

@@ -5,16 +5,18 @@ import com.justai.jaicf.api.EventBotRequest
 import com.justai.jaicf.api.QueryBotRequest
 import it.tdlight.jni.TdApi
 
-val BotRequest.td get() = this as? TdRequest
+typealias DefaultTdRequest = TdRequest<out TdApi.Update>
 
-val TdRequest.message get() = this as? TdNewMessageRequest
-val TdRequest.text get() = this as? TdNewTextMessageRequest
+val BotRequest.td get() = this as? DefaultTdRequest
 
-val TdRequest.messageId get() = message?.update?.message?.id
-val TdRequest.chatId get() = message?.update?.message?.chatId
-val TdRequest.senderId get() = message?.update?.senderId
-val TdRequest.isOutgoing get() = message?.update?.message?.isOutgoing
-val TdRequest.isChannelPost get() = message?.update?.message?.isChannelPost
+val DefaultTdRequest.message get() = this as? TdNewMessageRequest<out TdApi.MessageContent>
+val DefaultTdRequest.text get() = this as? TdNewTextMessageRequest
+
+val DefaultTdRequest.messageId get() = message?.update?.message?.id
+val DefaultTdRequest.chatId get() = message?.update?.message?.chatId
+val DefaultTdRequest.senderId get() = message?.update?.senderId
+val DefaultTdRequest.isOutgoing get() = message?.update?.message?.isOutgoing
+val DefaultTdRequest.isChannelPost get() = message?.update?.message?.isChannelPost
 
 val TdApi.UpdateNewMessage.senderId get() = when (message.senderId) {
     is TdApi.MessageSenderUser -> (message.senderId as TdApi.MessageSenderUser).userId
@@ -24,27 +26,30 @@ val TdApi.UpdateNewMessage.senderId get() = when (message.senderId) {
 
 internal fun TdApi.Update.getClientId(user: TdApi.User) = clientId?.toString() ?: user.id.toString()
 
-interface TdRequest : BotRequest {
+interface TdRequest<U : TdApi.Update> : BotRequest {
     val user: TdApi.User
-    val update: TdApi.Update
+    val update: U
 }
 
-interface TdNewMessageRequest : TdRequest {
-    override val update: TdApi.UpdateNewMessage
+interface TdNewMessageRequest<M : TdApi.MessageContent> : TdRequest<TdApi.UpdateNewMessage> {
+    val content: M
 }
 
 data class TdUpdateRequest(
     override val user: TdApi.User,
     override val update: TdApi.Update
-) : TdRequest, EventBotRequest(clientId = update.getClientId(user), input = event(update))
+) : TdRequest<TdApi.Update>, EventBotRequest(clientId = update.getClientId(user), input = event(update))
 
 data class TdNewTextMessageRequest(
     override val user: TdApi.User,
     override val update: TdApi.UpdateNewMessage,
-    val content: TdApi.MessageText,
-): TdNewMessageRequest, QueryBotRequest(clientId = update.getClientId(user), input = content.text.text)
+): TdNewMessageRequest<TdApi.MessageText>, QueryBotRequest(clientId = update.getClientId(user), input = (update.message.content as TdApi.MessageText).text.text) {
+    override val content = update.message.content as TdApi.MessageText
+}
 
 data class TdNewEventMessageRequest(
     override val user: TdApi.User,
     override val update: TdApi.UpdateNewMessage,
-): TdNewMessageRequest, EventBotRequest(clientId = update.getClientId(user), input = event(update))
+): TdNewMessageRequest<TdApi.MessageContent>, EventBotRequest(clientId = update.getClientId(user), input = event(update)) {
+    override val content = update.message.content
+}

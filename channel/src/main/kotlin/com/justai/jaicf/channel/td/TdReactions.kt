@@ -1,5 +1,6 @@
 package com.justai.jaicf.channel.td
 
+import com.justai.jaicf.channel.td.client.*
 import com.justai.jaicf.logging.AudioReaction
 import com.justai.jaicf.logging.ImageReaction
 import com.justai.jaicf.logging.SayReaction
@@ -12,7 +13,7 @@ val Reactions.td get() = this as? TdReactions
 
 class TdReactions(
     val api: SimpleTelegramClient,
-    private val request: TdRequest,
+    private val request: DefaultTdRequest,
 ): Reactions() {
     private val chatId = request.chatId
 

@@ -2,9 +2,9 @@ package com.tdbot.scenario
 
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.channel.invocationapi.invocationRequest
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.createTdModel
-import com.justai.jaicf.channel.td.onUpdate
+import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.scenario.onUpdate
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
@@ -31,9 +31,9 @@ class CatchContact(
             client = api
         }
 
-        onUpdate<TdApi.UpdateUserStatus> { update ->
-            if (update.status is TdApi.UserStatusOnline && usersToCatch.any { it.id == update.userId }) {
-                tdBotApi.sendEvent("CatchContactOnline", update.userId.toString())
+        onUpdate<TdApi.UpdateUserStatus> {
+            if (request.update.status is TdApi.UserStatusOnline && usersToCatch.any { it.id == request.update.userId }) {
+                tdBotApi.sendEvent("CatchContactOnline", request.update.userId.toString())
             }
         }
     }

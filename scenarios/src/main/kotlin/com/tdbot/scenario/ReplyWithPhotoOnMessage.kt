@@ -1,13 +1,15 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.*
+import com.justai.jaicf.channel.td.scenario.onNewTextMessage
+import org.intellij.lang.annotations.Language
 
-fun ReplyWithPhoto(
-    pattern: String,
+fun ReplyWithPhotoOnMessage(
+    @Language("regexp") pattern: String,
     photoUrl: TdActionContext.() -> String?
 ) = TdScenario {
 
-    onNewTextMessage(pattern, isIncoming, isDirect) {
+    onNewTextMessage(pattern) {
         photoUrl(this)?.let { url ->
             reactions.reply(Td.photo(url))
         }

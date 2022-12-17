@@ -1,4 +1,4 @@
-package com.justai.jaicf.channel.td
+package com.justai.jaicf.channel.td.client
 
 import it.tdlight.client.GenericResultHandler
 import it.tdlight.client.Result
@@ -21,6 +21,15 @@ fun SimpleTelegramClient.sendMessage(
     TdApi.SendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content),
     handler
 )
+
+fun SimpleTelegramClient.addMessageReaction(
+    chatId: Long,
+    messageId: Long,
+    reactionType: TdApi.ReactionType,
+    isBig: Boolean = false,
+    updateRecentReactions: Boolean = false,
+    handler: GenericResultHandler<TdApi.Ok> = DefaultResultHandler()
+) = send(TdApi.AddMessageReaction(chatId, messageId, reactionType, isBig, updateRecentReactions), handler)
 
 fun SimpleTelegramClient.forwardMessages(
     chatId: Long,

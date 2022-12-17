@@ -1,15 +1,14 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.isOutgoing
-import com.justai.jaicf.channel.td.onAnyNewTextMessage
-import com.justai.jaicf.channel.td.onNewTextMessage
+import com.justai.jaicf.channel.td.scenario.onAnyNewTextMessage
 import com.tdbot.api.TdBotClientScenario
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
 val GrammarChecker = TdBotClientScenario("@fixmebot") { bot ->
 
-    onAnyNewTextMessage(isOutgoing, isNotBotChat(bot)) { _, _ ->
+    onAnyNewTextMessage(isOutgoing, isNotBotChat(bot)) {
         bot.sendInlineQuery(request.input) { res ->
             if (!res.isError) {
                 res.get().results

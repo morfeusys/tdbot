@@ -1,5 +1,6 @@
 import com.tdbot.runtime.TdRuntime
 import com.tdbot.scenario.*
+import com.justai.jaicf.channel.td.scenario.*
 
 fun main() {
     TdRuntime().start {
@@ -9,12 +10,8 @@ fun main() {
 
         "TranscribeMyVoiceNotes" to TranscriberBot("english")
 
-        "SendCatPhoto" to SendPhotoOnMyMessage("mew+") {
-            "https://cataas.com/cat?color=${System.currentTimeMillis()}"
-        }
-
-        "ReplyWithCatPhoto" to ReplyWithPhoto(pattern = "mew+") {
-            "https://cataas.com/cat?color=${System.currentTimeMillis()}"
+        "CataasPhoto" to ReplyWithPhotoOnMessage("mew+") {
+            "https://cataas.com/cat?x=${System.currentTimeMillis()}"
         }
 
         "CatchContact" to CatchContact(tdBotApi)
