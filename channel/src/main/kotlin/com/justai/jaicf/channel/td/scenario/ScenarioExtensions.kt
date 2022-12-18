@@ -19,6 +19,8 @@ val Scenario.onlyOutgoing get() = onlyIf(isOutgoing)
 
 val Scenario.onlyChannelPosts get() = onlyIf(isChannelPost)
 
+val Scenario.onlyNonChannelPosts get() = onlyIf(isNotChannelPost)
+
 fun Scenario.onlyWithContact(query: String) = let { scenario ->
     val logger = LoggerFactory.getLogger("onlyWithContact")
     var userId: Long? = null
@@ -38,9 +40,7 @@ fun Scenario.onlyWithContact(query: String) = let { scenario ->
             userId = null
         }
 
-        append(scenario.onlyIf(
-            isChat { userId }
-        ))
+        append(scenario.onlyIf(isChat { userId }))
     }
 }
 
@@ -63,8 +63,6 @@ fun Scenario.onlyInChat(query: String) = let { scenario ->
             chatId = null
         }
 
-        append(scenario.onlyIf(
-            isChat { chatId }
-        ))
+        append(scenario.onlyIf(isChat { chatId }))
     }
 }

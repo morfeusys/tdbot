@@ -9,11 +9,11 @@ val isOutgoing: OnlyIf = { request.td?.isOutgoing == true }
 val isIncoming: OnlyIf = { request.td?.isOutgoing == false }
 val isChannelPost: OnlyIf = { request.td?.isChannelPost == true }
 val isNotChannelPost: OnlyIf = { request.td?.isChannelPost == false }
-val isChat: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.chatId != null && request.td?.chatId == p.invoke(this) } }
-val isNotChat: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.chatId != null && request.td?.chatId != p.invoke(this) } }
-val isSender: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.senderId != null && request.td?.senderId == p.invoke(this) } }
-val isNotSender: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.senderId != null && request.td?.senderId != p.invoke(this) } }
-val isMyMessage: OnlyIf = isSender { request.td?.user?.id }
+val isChat: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.chatId?.let { it == p(this) } ?: false } }
+val isNotChat: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.chatId?.let { id -> p(this)?.let { id != it } } ?: false } }
+val isSender: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { it == p(this) } ?: false } }
+val isNotSender: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { id -> p(this)?.let { id != it } } ?: false } }
+val isMyMessage: OnlyIf = isSender { request.td?.me?.id }
 
 fun ActivationRule.ifOutgoing() = onlyIf(isOutgoing)
 fun ActivationRule.ifIncoming() = onlyIf(isIncoming)

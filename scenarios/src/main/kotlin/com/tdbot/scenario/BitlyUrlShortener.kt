@@ -1,12 +1,15 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.isOutgoing
+import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyNewTextMessage
-import com.tdbot.api.TdBotClientScenario
+import com.tdbot.api.createBotClient
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
-fun BitlyUrlShortener(maxUrlLength: Int = 50) = TdBotClientScenario("@BitlyBot", startBot = true) { bot ->
+fun BitlyUrlShortener(maxUrlLength: Int = 50) = TdScenario {
+    val bot = createBotClient("@BitlyBot")
+
     onAnyNewTextMessage(isOutgoing, isNotBotChat(bot)) {
         val text = request.content.text.text
         request.content.text.entities.forEach { e ->

@@ -1,7 +1,7 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.TdActionContext
-import com.justai.jaicf.channel.td.TdScenario
+import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.scenario.onUpdate
 import it.tdlight.jni.TdApi

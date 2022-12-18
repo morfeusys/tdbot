@@ -6,6 +6,7 @@ dependencies {
     implementation(kotlin("stdlib"))
 
     api(project(":api"))
+    api("com.vdurmont:emoji-java:5.1.1")
 }
 
 tasks {

@@ -68,6 +68,14 @@ class TdReactions(
             api.forwardMessages(chat, fromChatId = messages.first().chatId, messageIds = messages.map { it.id }.toTypedArray(), handler = handler)
     }
 
+    fun forward(chat: Long, handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()) {
+        request.message?.let { message ->
+            if (message.update.message.canBeForwarded) {
+                api.forwardMessages(chat, fromChatId = message.chatId!!, messageIds = arrayOf(message.messageId!!), handler = handler)
+            }
+        }
+    }
+
     fun deleteMessages(messages: LongArray, revoke: Boolean = false, handler: GenericResultHandler<TdApi.Ok> = DefaultResultHandler()) =
         withChatId { chatId ->
             api.send(TdApi.DeleteMessages(chatId, messages, revoke), handler)

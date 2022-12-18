@@ -19,7 +19,6 @@ import com.tdbot.runtime.TdRuntime
 import it.tdlight.jni.TdApi
 
 class TdBotScenario(
-    settings: TdRuntime.Settings,
     clientInteraction: LinkClientInteraction,
     scenarios: Scenarios,
 ) : Scenario {

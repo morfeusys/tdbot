@@ -3,6 +3,7 @@ package com.justai.jaicf.channel.td
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.api.EventBotRequest
 import com.justai.jaicf.api.QueryBotRequest
+import com.justai.jaicf.channel.td.scenario.event
 import it.tdlight.jni.TdApi
 
 typealias DefaultTdRequest = TdRequest<out TdApi.Update>
@@ -27,7 +28,7 @@ val TdApi.UpdateNewMessage.senderId get() = when (message.senderId) {
 internal fun TdApi.Update.getClientId(user: TdApi.User) = clientId?.toString() ?: user.id.toString()
 
 interface TdRequest<U : TdApi.Update> : BotRequest {
-    val user: TdApi.User
+    val me: TdApi.User
     val update: U
 }
 
@@ -36,20 +37,20 @@ interface TdNewMessageRequest<M : TdApi.MessageContent> : TdRequest<TdApi.Update
 }
 
 data class TdUpdateRequest(
-    override val user: TdApi.User,
+    override val me: TdApi.User,
     override val update: TdApi.Update
-) : TdRequest<TdApi.Update>, EventBotRequest(clientId = update.getClientId(user), input = event(update))
+) : TdRequest<TdApi.Update>, EventBotRequest(clientId = update.getClientId(me), input = event(update))
 
 data class TdNewTextMessageRequest(
-    override val user: TdApi.User,
+    override val me: TdApi.User,
     override val update: TdApi.UpdateNewMessage,
-): TdNewMessageRequest<TdApi.MessageText>, QueryBotRequest(clientId = update.getClientId(user), input = (update.message.content as TdApi.MessageText).text.text) {
+): TdNewMessageRequest<TdApi.MessageText>, QueryBotRequest(clientId = update.getClientId(me), input = (update.message.content as TdApi.MessageText).text.text) {
     override val content = update.message.content as TdApi.MessageText
 }
 
 data class TdNewEventMessageRequest(
-    override val user: TdApi.User,
+    override val me: TdApi.User,
     override val update: TdApi.UpdateNewMessage,
-): TdNewMessageRequest<TdApi.MessageContent>, EventBotRequest(clientId = update.getClientId(user), input = event(update)) {
+): TdNewMessageRequest<TdApi.MessageContent>, EventBotRequest(clientId = update.getClientId(me), input = event(update)) {
     override val content = update.message.content
 }

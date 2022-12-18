@@ -58,21 +58,21 @@ class TdChannel(
         }
     }
 
-    private fun addHandlers(user: TdApi.User) {
+    private fun addHandlers(me: TdApi.User) {
         client.addUpdatesHandler { update ->
             val request = when (update) {
                 is TdApi.UpdateNewMessage -> when (update.message.content) {
-                    is TdApi.MessageText -> TdNewTextMessageRequest(user, update)
-                    else -> TdNewEventMessageRequest(user, update)
+                    is TdApi.MessageText -> TdNewTextMessageRequest(me, update)
+                    else -> TdNewEventMessageRequest(me, update)
                 }
-                else -> TdUpdateRequest(user, update)
+                else -> TdUpdateRequest(me, update)
             }
 
             botApi.process(request, TdReactions(client, request), RequestContext.DEFAULT)
         }
 
         onClose { client ->
-            botApi.hooks.triggerHook(TdClosedHook(client, user))
+            botApi.hooks.triggerHook(TdClosedHook(client, me))
         }
     }
 }

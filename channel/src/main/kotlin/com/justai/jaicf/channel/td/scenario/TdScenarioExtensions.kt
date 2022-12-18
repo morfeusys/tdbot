@@ -2,7 +2,6 @@ package com.justai.jaicf.channel.td.scenario
 
 import com.justai.jaicf.activator.regex.RegexActivatorContext
 import com.justai.jaicf.builder.ScenarioDsl
-import com.justai.jaicf.builder.ScenarioGraphBuilder
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
@@ -12,11 +11,10 @@ import it.tdlight.jni.TdApi
 import org.intellij.lang.annotations.Language
 import java.util.*
 
-typealias TdScenarioBuilder = ScenarioGraphBuilder<DefaultTdRequest, TdReactions>
 
 @ScenarioDsl
 @StateDeclaration
-inline fun <reified U : TdApi.Update> TdScenarioBuilder.onUpdate(
+inline fun <reified U : TdApi.Update> TdScenarioRootBuilder.onUpdate(
     vararg conditions: OnlyIf,
     @StateBody noinline body: ActionContext<ActivatorContext, TdRequest<U>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
@@ -33,7 +31,7 @@ inline fun <reified U : TdApi.Update> TdScenarioBuilder.onUpdate(
 
 @ScenarioDsl
 @StateDeclaration
-inline fun <reified M : TdApi.MessageContent> TdScenarioBuilder.onNewMessage(
+inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage(
     vararg conditions: OnlyIf,
     @StateBody noinline body: ActionContext<ActivatorContext, TdNewMessageRequest<M>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
@@ -51,14 +49,14 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioBuilder.onNewMessage(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioBuilder.onAnyNewMessage(
+fun TdScenarioRootBuilder.onAnyNewMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: TdActionContext.() -> Unit
-) = onNewMessage<TdApi.MessageContent>(*conditions, body = body)
+    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageContent>, TdReactions>.() -> Unit
+) = onNewMessage(*conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioBuilder.onNewTextMessage(
+fun TdScenarioRootBuilder.onNewTextMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>.() -> Unit
@@ -76,7 +74,7 @@ fun TdScenarioBuilder.onNewTextMessage(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioBuilder.onAnyNewTextMessage(
+fun TdScenarioRootBuilder.onAnyNewTextMessage(
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>.() -> Unit
 ) = onNewTextMessage(".*", *conditions, body = body)

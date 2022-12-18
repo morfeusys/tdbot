@@ -28,7 +28,7 @@ class TdBot(
     private val logger = LoggerFactory.getLogger(javaClass.name)
     private val botId = CompletableFuture<Long>()
     private val botApi = BotEngine(
-        scenario = TdBotScenario(settings, linkClientInteraction, scenarios),
+        scenario = TdBotScenario(linkClientInteraction, scenarios),
         activators = arrayOf(RegexActivator),
         defaultContextManager = MutableContextManager()
     )

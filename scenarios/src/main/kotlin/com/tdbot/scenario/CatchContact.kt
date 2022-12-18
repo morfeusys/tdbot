@@ -2,7 +2,7 @@ package com.tdbot.scenario
 
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.channel.invocationapi.invocationRequest
-import com.justai.jaicf.channel.td.createTdModel
+import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.scenario.onUpdate
 import com.justai.jaicf.model.activation.onlyIfInSession

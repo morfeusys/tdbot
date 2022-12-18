@@ -1,14 +1,19 @@
 package com.tdbot.scenario
 
-import com.justai.jaicf.channel.td.*
+import com.justai.jaicf.channel.td.Td
+import com.justai.jaicf.channel.td.isIncoming
+import com.justai.jaicf.channel.td.isOutgoing
+import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onNewMessage
 import com.justai.jaicf.channel.td.scenario.onNewTextMessage
-import com.tdbot.api.TdBotClientScenario
+import com.justai.jaicf.channel.td.text
+import com.tdbot.api.createBotClient
 import com.tdbot.api.isBotChat
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
-fun TranscriberBot(language: String) = TdBotClientScenario("@transcriber_bot") { bot ->
+fun TranscriberBot(language: String) = TdScenario {
+    val bot = createBotClient("@transcriber_bot")
 
     onNewTextMessage(".*choose a language.*", isIncoming, isBotChat(bot)) {
         if (request.input.contains(language)) {

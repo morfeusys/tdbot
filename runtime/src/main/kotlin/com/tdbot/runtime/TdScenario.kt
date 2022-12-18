@@ -3,7 +3,7 @@ package com.tdbot.runtime
 import com.justai.jaicf.api.BotApi
 import com.tdbot.bot.Scenarios
 import com.justai.jaicf.channel.td.chatId
-import com.justai.jaicf.channel.td.createTdModel
+import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.message
 import com.justai.jaicf.channel.td.td
 import com.justai.jaicf.context.BotContext
