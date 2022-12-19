@@ -62,6 +62,9 @@ class TdReactions(
         sendContent(Td.audio(url), handler)
     }
 
+    fun forward(message: TdApi.Message, chat: Long? = chatId, handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()) =
+        forward(arrayOf(message), chat, handler)
+
     fun forward(messages: Array<TdApi.Message>, chat: Long? = chatId, handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()) {
         if (chat != null)
             api.forwardMessages(chat, fromChatId = messages.first().chatId, messageIds = messages.map { it.id }.toTypedArray(), handler = handler)

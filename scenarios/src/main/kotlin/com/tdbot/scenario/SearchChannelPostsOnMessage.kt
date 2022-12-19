@@ -44,8 +44,8 @@ fun SearchChannelPostsOnMessage(
         GlobalScope.launch {
             mutableListOf<TdApi.Message>().apply {
                 when {
-                    activator.matcher.groupCount() == 0 -> listOf(request.input)
-                    else -> activator.matcher.groupCount().downTo(0).map { activator.group(it) }
+                    activator.matcher.groupCount() == 1 -> listOf(request.input)
+                    else -> activator.matcher.groupCount().downTo(1).map { activator.group(it) }
                 }.filterNotNull().forEach { query ->
                     addAll(reactions.api.searchPosts(query))
                 }
