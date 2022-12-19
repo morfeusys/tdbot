@@ -1,6 +1,5 @@
 import com.tdbot.runtime.TdRuntime
 import com.tdbot.scenario.*
-import com.justai.jaicf.channel.td.scenario.*
 
 fun main() {
     TdRuntime().start {

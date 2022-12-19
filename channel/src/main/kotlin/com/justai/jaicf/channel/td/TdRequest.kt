@@ -3,6 +3,7 @@ package com.justai.jaicf.channel.td
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.api.EventBotRequest
 import com.justai.jaicf.api.QueryBotRequest
+import com.justai.jaicf.channel.td.client.clientId
 import com.justai.jaicf.channel.td.scenario.event
 import it.tdlight.jni.TdApi
 

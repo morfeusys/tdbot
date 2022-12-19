@@ -4,6 +4,7 @@ import com.google.gson.JsonObject
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.activator.regex.RegexActivator
 import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
+import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.TelegramChannel
 import com.justai.jaicf.context.RequestContext
@@ -14,7 +15,6 @@ import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
-import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
@@ -59,17 +59,17 @@ class TdBot(
 
     fun getId(): Long = botId.get()
 
-    fun onReady(client: SimpleTelegramClient) {
+    fun onReady(api: TdTelegramApi) {
         logger.info("Ready")
-        client.addDefaultExceptionHandler(::onException)
-        client.send(TdApi.GetMe()) { res ->
+        api.client.addDefaultExceptionHandler(::onException)
+        api.send(TdApi.GetMe()) { res ->
             me = res.get()
-            botApi.hooks.triggerHook(TdReadyHook(client, me))
+            botApi.hooks.triggerHook(TdReadyHook(api, me))
             invoke("ready")
         }
     }
 
-    fun onClose(client: SimpleTelegramClient) {
+    fun onClose(api: TdTelegramApi) {
         logger.info("Closed")
         invoke("close")
     }

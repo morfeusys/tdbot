@@ -6,13 +6,12 @@ import com.justai.jaicf.logging.ImageReaction
 import com.justai.jaicf.logging.SayReaction
 import com.justai.jaicf.reactions.Reactions
 import it.tdlight.client.GenericResultHandler
-import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
 
 val Reactions.td get() = this as? TdReactions
 
 class TdReactions(
-    val api: SimpleTelegramClient,
+    val api: TdTelegramApi,
     private val request: DefaultTdRequest,
 ): Reactions() {
     private val chatId = request.chatId

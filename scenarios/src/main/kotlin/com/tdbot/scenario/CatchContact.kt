@@ -2,6 +2,7 @@ package com.tdbot.scenario
 
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.channel.invocationapi.invocationRequest
+import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.scenario.onUpdate
@@ -11,13 +12,12 @@ import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdBotApi
 import com.tdbot.api.TdBotScenario
 import com.tdbot.api.TdInteractiveScenario
-import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
 
 class CatchContact(
     private val tdBotApi: TdBotApi
 ) : TdInteractiveScenario {
-    private lateinit var client: SimpleTelegramClient
+    private lateinit var telegramApi: TdTelegramApi
     private val usersToCatch = mutableSetOf<TdApi.User>()
 
     override val helpMarkdownText =
@@ -28,7 +28,7 @@ class CatchContact(
 
     override val model = createTdModel {
         handle<TdReadyHook> {
-            client = api
+            telegramApi = api
         }
 
         onUpdate<TdApi.UpdateUserStatus> {
@@ -65,11 +65,11 @@ class CatchContact(
                 val userName = activator.matcher.group(1)
                 context.cleanSessionData()
 
-                client.send(TdApi.SearchContacts(userName, 1)) { res ->
+                telegramApi.send(TdApi.SearchContacts(userName, 1)) { res ->
                     if (res.isError || res.get().totalCount == 0) {
                         reactions.say("Sorry, \"$userName\" was not found in your contacts")
                     } else {
-                        client.send(TdApi.GetUser(res.get().userIds.first())) { user ->
+                        telegramApi.send(TdApi.GetUser(res.get().userIds.first())) { user ->
                             context.session["user_to_catch"] = user.get()
                             reactions.say("Would you like to catch ${user.get().firstName} ${user.get().lastName}?")
                             reactions.buttons("Yes", "No")

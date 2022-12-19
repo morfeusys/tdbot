@@ -2,80 +2,92 @@ package com.tdbot.api
 
 import com.justai.jaicf.builder.RootBuilder
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.client.forwardMessages
-import com.justai.jaicf.channel.td.client.getInlineQueryResults
-import com.justai.jaicf.channel.td.client.sendMessage
+import com.justai.jaicf.channel.td.client.*
 import com.justai.jaicf.channel.td.hook.TdReadyHook
-import com.justai.jaicf.helpers.kotlin.ifTrue
 import it.tdlight.client.GenericResultHandler
 import it.tdlight.client.Result
-import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.jni.TdApi
 import org.slf4j.LoggerFactory
 
 val isBotChat: (bot: BotClient?) -> OnlyIf = { isChat { it?.botUserId } }
 val isNotBotChat: (bot: BotClient?) -> OnlyIf = { isNotChat { it?.botUserId } }
 
-fun RootBuilder<DefaultTdRequest, TdReactions>.createBotClient(
-    botName: String, sendStart: Boolean = true
-) = BotClient(botName, sendStart).also { bot ->
+fun RootBuilder<DefaultTdRequest, TdReactions>.createBotClient(botName: String, initHandler: (client: BotClient) -> Unit = {}) =
+    BotClient(botName, initHandler).also { bot ->
         handle<TdReadyHook> { bot.init(api) }
     }
 
 class BotClient(
     private val botName: String,
-    private val sendStart: Boolean = true
+    private val initHandler: (client: BotClient) -> Unit = {}
 ) {
     private val logger = LoggerFactory.getLogger("BotClient_$botName")
-    private lateinit var api: SimpleTelegramClient
+    private val handlers = mutableMapOf<Int, HandlerHolder>()
+    private lateinit var api: TdTelegramApi
 
-    lateinit var chat: TdApi.Chat
+    var started = false
         private set
 
-    val botUserId
-        get() = this::chat.isInitialized.ifTrue { chat.id } ?: 0L
+    var botUserId = 0L
+        private set
 
-    private val handlers = mutableMapOf<Int, HandlerHolder>()
+    fun init(api: TdTelegramApi) {
+        this.api = api.apply {
+            logger.info("Looking for $botName bot")
 
-    fun init(client: SimpleTelegramClient) {
-        api = client.apply {
-            send(TdApi.SearchPublicChat(botName)) { chat ->
-                if (chat.isError) {
-                    logger.error("Cannot find $botName bot", chat.error.message)
+            send(TdApi.SearchChats(botName, 1)) { res ->
+                if (res.isError || res.get().totalCount == 0) {
+                    logger.info("Looking for $botName bot on server")
+                    send(TdApi.SearchPublicChat(botName)) { chat ->
+                        if (chat.isError) {
+                            logger.error("Cannot find $botName bot", chat.error.message)
+                        } else {
+                            logger.info("Found $botName id = ${chat.get().id}")
+                            start { init(chat.get().id) }
+                        }
+                    }
                 } else {
-                    init(chat.get())
+                    logger.info("Found $botName bot, id = ${res.get().chatIds.first()}")
+                    init(res.get().chatIds.first())
                 }
             }
         }
     }
 
-    private fun init(chat: TdApi.Chat) {
-        this.chat = chat
-        if (sendStart) {
-            api.sendMessage(chat.id, content = Td.text("/start"))
+    fun start(handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()) {
+        if (!started) {
+            api.sendMessage(botUserId, content = Td.text("/start")) { res ->
+                started = true
+                handler.onResult(res)
+            }
         }
+    }
 
+    private fun init(chatId: Long) {
+        botUserId = chatId
         toggleMuted(true)
 
-        api.addUpdateHandler(TdApi.UpdateMessageEdited::class.java) { update ->
+        api.client.addUpdateHandler(TdApi.UpdateMessageEdited::class.java) { update ->
             if (update.chatId == botUserId) {
-                api.send(TdApi.GetMessage(chat.id, update.messageId)) { res ->
+                api.send(TdApi.GetMessage(botUserId, update.messageId)) { res ->
                     if (!res.isError && !res.get().isOutgoing) {
                         onMessageReceived(res.get())
                     }
                 }
             }
         }
-        api.addUpdateHandler(TdApi.UpdateNewMessage::class.java) { update ->
+        api.client.addUpdateHandler(TdApi.UpdateNewMessage::class.java) { update ->
             if (update.message.chatId == botUserId && !update.message.isOutgoing) {
                 onMessageReceived(update.message)
             }
         }
-        api.addUpdateHandler(TdApi.UpdateAuthorizationState::class.java) { state ->
+        api.client.addUpdateHandler(TdApi.UpdateAuthorizationState::class.java) { state ->
             if (state.authorizationState is TdApi.AuthorizationStateClosed) {
                 handlers.clear()
             }
         }
+
+        initHandler(this)
     }
 
     private fun removeOutdatedHandlers(timeout: Long = 180000) = synchronized(handlers) {
@@ -104,7 +116,12 @@ class BotClient(
         userLocation: TdApi.Location? = null,
         offset: String? = null,
         resultHandler: GenericResultHandler<TdApi.InlineQueryResults>
-    ) = api.getInlineQueryResults(botUserId, api.me.id, userLocation, query, offset, resultHandler)
+    ) = api.getInlineQueryResults(botUserId, api.client.me.id, userLocation, query, offset, resultHandler)
+
+    fun sendMessage(
+        content: String,
+        replyHandler: GenericResultHandler<TdApi.Message>
+    ) = sendMessage(Td.text(content), replyHandler)
 
     fun sendMessage(
         content: TdApi.InputMessageContent,

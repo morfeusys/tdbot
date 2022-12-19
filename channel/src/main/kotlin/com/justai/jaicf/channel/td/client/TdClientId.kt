@@ -1,4 +1,4 @@
-package com.justai.jaicf.channel.td
+package com.justai.jaicf.channel.td.client
 
 import it.tdlight.jni.TdApi
 
