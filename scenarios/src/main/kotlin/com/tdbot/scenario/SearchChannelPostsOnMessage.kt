@@ -45,7 +45,7 @@ fun SearchChannelPostsOnMessage(
             mutableListOf<TdApi.Message>().apply {
                 when {
                     activator.matcher.groupCount() == 1 -> request.input
-                    else -> activator.matcher.groupCount().downTo(1).map { activator.group(it) }.joinToString(" ")
+                    else -> activator.matcher.groupCount().downTo(1).mapNotNull { activator.group(it) }.joinToString(" ")
                 }.let { query ->
                     addAll(reactions.api.searchPosts(query))
                 }
