@@ -22,12 +22,14 @@
     <script src="js/qrious.min.js"></script>
     <script src="js/kioskboard-2.3.0.min.js"></script>
     <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
         (function() {
             let code = document.getElementById("code")
             KioskBoard.run('#code', {
                 keysArrayOfObjects: [{"0": "0"}],
                 keysEnterCanClose: false,
-                cssAnimations: false,
+                cssAnimations: true,
                 keysEnterCallback: () => {
                     if (code.value) {
                         Telegram.WebApp.sendData(code.value);
@@ -36,7 +38,6 @@
             });
 
             code.focus();
-            Telegram.WebApp.ready();
         })();
     </script>
     </body>
