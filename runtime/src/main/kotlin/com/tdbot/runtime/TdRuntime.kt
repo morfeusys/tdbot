@@ -9,18 +9,24 @@ import com.justai.jaicf.model.scenario.Scenario
 import com.tdbot.api.TdBotApi
 import com.tdbot.defaultRuntimeSettings
 import it.tdlight.client.APIToken
-import it.tdlight.client.AuthenticationData
-import it.tdlight.client.ClientInteraction
 import it.tdlight.client.TDLibSettings
+import it.tdlight.client.TelegramError
+import it.tdlight.common.ExceptionHandler
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
+import kotlin.system.exitProcess
 
 class TdRuntime(
     private val settings: Settings = defaultRuntimeSettings
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
+    private val authService = AuthService()
+    private val tdSettings = TDLibSettings.create(APIToken(settings.apiId, settings.apiHash)).apply {
+        databaseDirectoryPath = Path.of(settings.tdDirectory)
+    }
+
     private lateinit var tdBot: TdBot
-    private val linkInteraction = LinkClientInteraction(settings)
+    private lateinit var tdChannel: TdChannel
 
     private val tdBotApi = object : TdBotApi {
         override fun sendEvent(event: String, data: String) {
@@ -36,11 +42,7 @@ class TdRuntime(
             scenarios.invoke(this)
         }.build()
 
-        tdBot = TdBot(settings, linkInteraction, scenarios)
-
-        val settings = TDLibSettings.create(APIToken(settings.apiId, settings.apiHash)).apply {
-            databaseDirectoryPath = Path.of(settings.tdDirectory)
-        }
+        tdBot = TdBot(settings, authService, scenarios)
 
         val tdScenario = TdScenario(tdBot.getId(), scenarios)
 
@@ -52,26 +54,32 @@ class TdRuntime(
             tdScenario.botApi = engine
         }
 
-        startTdChannel(tdEngine, AuthenticationData.qrCode(), settings, linkInteraction)
+        startTdChannel(tdEngine)
     }
 
-    private fun startTdChannel(
-        tdEngine: BotEngine,
-        authenticationData: AuthenticationData,
-        settings: TDLibSettings,
-        clientInteraction: ClientInteraction) {
-
+    private fun startTdChannel(tdEngine: BotEngine) {
         logger.info("Starting td channel")
 
-        TdChannel(
+        tdChannel = TdChannel(
             botApi = tdEngine,
-            authenticationData = AuthenticationData.qrCode(),
-            settings = settings,
-            clientInteraction = linkInteraction
+            authenticationData = authService.authData,
+            settings = tdSettings,
+            clientInteraction = authService
         )
-            .onReady(tdBot::onReady).onClose(tdBot::onClose)
-            .onClose { startTdChannel(tdEngine, authenticationData, settings, clientInteraction)
-        }.start()
+            .onReady(tdBot::onReady)
+            .onClose(tdBot::onClose)
+            .onClose { startTdChannel(tdEngine) }
+            .onException(tdBot::onException)
+            .onException(::onException)
+            .start()
+    }
+
+    private fun onException(e: Throwable) {
+        if (e is TelegramError) {
+            when (e.errorMessage) {
+                "PHONE_CODE_INVALID" -> tdChannel.close()
+            }
+        }
     }
 
     class ScenariosBuilder(

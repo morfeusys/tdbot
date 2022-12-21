@@ -1,50 +1,40 @@
-package com.tdbot.bot
+package com.tdbot.bot.scenario
 
 import com.github.kotlintelegrambot.entities.ParseMode
+import com.github.kotlintelegrambot.entities.ReplyKeyboardRemove
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.builder.createModel
 import com.justai.jaicf.channel.invocationapi.invocationRequest
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.telegram
-import com.justai.jaicf.context.DialogContext
 import com.justai.jaicf.helpers.kotlin.ifTrue
-import com.justai.jaicf.hook.BeforeActionHook
-import com.justai.jaicf.hook.BotHookException
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdInteractiveScenario
+import com.tdbot.bot.Scenarios
+import com.tdbot.runtime.AuthService
 import com.tdbot.runtime.LinkClientInteraction
-import com.tdbot.runtime.TdRuntime
 import it.tdlight.jni.TdApi
 
 class TdBotScenario(
-    clientInteraction: LinkClientInteraction,
+    authService: AuthService,
     scenarios: Scenarios,
 ) : Scenario {
     private var me: TdApi.User? = null
 
     override val model = createModel(telegram) {
+        append(SignInScenario(authService))
+
         handle<TdReadyHook> {
             me = user
-        }
-
-        handle<BeforeActionHook> {
-            if (!context.dialogContext.isAllowed()) {
-                if (me == null) {
-                    reactions.say("⚠️ You're not logged in Telegram yet.")
-                    reactions.go("/TdBotScenario.GetPublicQR")
-                }
-                if (request.clientId != me?.id.toString()) {
-                    throw BotHookException("Access denied")
-                }
-            }
         }
 
         state("TdBotScenario.Start") {
             activators {
                 regex("/start.*")
             }
+
 
             action {
                 reactions.say("\uD83D\uDC4B Hello ${request.message.from?.firstName}!")
@@ -69,25 +59,8 @@ class TdBotScenario(
             }
 
             action {
-                me = null
                 reactions.say("\uD83D\uDD34 Telegram client was closed.")
-                reactions.buttons("Sign in to Telegram" toState "/TdBotScenario.GetPublicQR")
-            }
-        }
-
-        state("TdBotScenario.GetPublicQR") {
-            action {
-                if (me != null) {
-                    reactions.say("You're logged in already")
-                } else {
-                    reactions.say("Here is [your public QR link](${clientInteraction.publicUrl}) to sign in\\.",
-                        ParseMode.MARKDOWN_V2,
-                        disableWebPagePreview = true)
-                    reactions.say("_Open it in the browser and follow instructions_", ParseMode.MARKDOWN_V2)
-                    reactions.buttons(
-                        "Get new public URL" toState "/TdBotScenario.GetPublicQR",
-                    )
-                }
+                reactions.buttons("Sign in to Telegram" toState "/TdBotScenario.SignIn")
             }
         }
 
@@ -100,12 +73,16 @@ class TdBotScenario(
                 if (scenarios.all.isEmpty()) {
                     reactions.say("You don't have any scenarios yet...")
                 } else {
-                    val enabled = StringBuilder("You have ${scenarios.enabled.size.scenarios} enabled so far\n")
-                    scenarios.enabled.keys.forEach { enabled.append("\n/$it") }
-                    reactions.say(enabled.toString())
-                    val disabled = StringBuilder("${scenarios.disabled.size.scenarios} ${scenarios.disabled.size.are} disabled\n")
-                    scenarios.disabled.keys.forEach { disabled.append("\n/$it") }
-                    reactions.say(disabled.toString())
+                    if (scenarios.enabled.isNotEmpty()) {
+                        val enabled = StringBuilder("You have ${scenarios.enabled.size.scenarios} enabled so far\n")
+                        scenarios.enabled.keys.forEach { enabled.append("\n/$it") }
+                        reactions.say(enabled.toString())
+                    }
+                    if (scenarios.disabled.isNotEmpty()) {
+                        val disabled = StringBuilder("${scenarios.disabled.size.scenarios} ${scenarios.disabled.size.are} disabled\n")
+                        scenarios.disabled.keys.forEach { disabled.append("\n/$it") }
+                        reactions.say(disabled.toString())
+                    }
                 }
             }
         }
@@ -174,10 +151,4 @@ class TdBotScenario(
 
     private val Int.are
         get() = (this == 1).ifTrue { "is" } ?: "are"
-
-    companion object {
-        private val allowAllStates = setOf("/TdBotScenario.GetPublicQR")
-
-        private fun DialogContext.isAllowed() = allowAllStates.any { currentState.startsWith(it) }
-    }
 }

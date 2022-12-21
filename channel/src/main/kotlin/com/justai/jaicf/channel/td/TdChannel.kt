@@ -11,6 +11,7 @@ import it.tdlight.client.AuthenticationData
 import it.tdlight.client.ClientInteraction
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.client.TDLibSettings
+import it.tdlight.common.ExceptionHandler
 import it.tdlight.jni.TdApi
 
 class TdChannel(
@@ -34,6 +35,13 @@ class TdChannel(
         wait.ifTrue { api.client.waitForExit() }
     }
 
+    fun close(wait: Boolean = false) = apply {
+        when (wait) {
+            true -> api.client.closeAndWait()
+            else -> api.client.sendClose()
+        }
+    }
+
     fun onReady(handler: (client: TdTelegramApi) -> Unit): TdChannel = apply {
         api.client.addUpdateHandler(TdApi.UpdateAuthorizationState::class.java) { state ->
             if (state.authorizationState is TdApi.AuthorizationStateReady) {
@@ -48,6 +56,10 @@ class TdChannel(
                 handler.invoke(api)
             }
         }
+    }
+
+    fun onException(handler: (e: Throwable) -> Unit) = apply {
+        api.client.addDefaultExceptionHandler(handler)
     }
 
     private fun ready(client: TdTelegramApi) {

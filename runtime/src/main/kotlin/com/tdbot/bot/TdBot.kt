@@ -1,6 +1,5 @@
 package com.tdbot.bot
 
-import com.google.gson.JsonObject
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.activator.regex.RegexActivator
 import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
@@ -8,27 +7,25 @@ import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.TelegramChannel
 import com.justai.jaicf.context.RequestContext
+import com.justai.jaicf.helpers.kotlin.ifTrue
+import com.tdbot.bot.scenario.TdBotScenario
+import com.tdbot.runtime.AuthService
 import com.tdbot.runtime.LinkClientInteraction
 import com.tdbot.runtime.MutableContextManager
 import com.tdbot.runtime.TdRuntime
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.request.*
 import it.tdlight.jni.TdApi
-import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 
 class TdBot(
     settings: TdRuntime.Settings,
-    linkClientInteraction: LinkClientInteraction,
+    private val authService: AuthService,
     scenarios: Scenarios
 ) {
     private val logger = LoggerFactory.getLogger(javaClass.name)
     private val botId = CompletableFuture<Long>()
     private val botApi = BotEngine(
-        scenario = TdBotScenario(linkClientInteraction, scenarios),
+        scenario = TdBotScenario(authService, scenarios),
         activators = arrayOf(RegexActivator),
         defaultContextManager = MutableContextManager()
     )
@@ -37,22 +34,15 @@ class TdBot(
         run()
     }
 
-    private lateinit var me: TdApi.User
+    private lateinit var user: TdApi.User
 
     init {
         logger.info("Initializing...")
-        HttpClient(CIO) {
-            expectSuccess = true
-            install(JsonFeature) {
-                serializer = GsonSerializer()
-            }
-        }.use { client ->
-            runBlocking {
-                client.get<JsonObject>("https://api.telegram.org/bot${settings.tdBotToken}/getMe").let { json ->
-                    botId.complete(
-                        json.getAsJsonObject("result").get("id").asLong
-                    )
-                }
+        channel.bot.getMe().also { res ->
+            if (res.isSuccess) {
+                botId.complete(res.get().id)
+            } else {
+                throw IllegalStateException("Cannot get tdbot data. Check your bot token.")
             }
         }
     }
@@ -61,10 +51,9 @@ class TdBot(
 
     fun onReady(api: TdTelegramApi) {
         logger.info("Ready")
-        api.client.addDefaultExceptionHandler(::onException)
         api.send(TdApi.GetMe()) { res ->
-            me = res.get()
-            botApi.hooks.triggerHook(TdReadyHook(api, me))
+            user = res.get()
+            botApi.hooks.triggerHook(TdReadyHook(api, user))
             invoke("ready")
         }
     }
@@ -74,15 +63,19 @@ class TdBot(
         invoke("close")
     }
 
-    private fun onException(error: Throwable) {
+    fun onException(error: Throwable) {
         logger.error("onException", error)
         invoke("error", error.message ?: "")
     }
 
-    fun invoke(event: String, requestData: String = "") =
-        channel.processInvocation(InvocationEventRequest(
-            clientId = me.id.toString(),
-            input = event,
-            requestData = requestData
-        ), RequestContext.DEFAULT)
+    fun invoke(event: String, requestData: String = "") {
+        val userId = this::user.isInitialized.ifTrue { user.id } ?: authService.userId.takeIf { it != 0L }
+        if (userId != null) {
+            channel.processInvocation(InvocationEventRequest(
+                clientId = userId.toString(),
+                input = event,
+                requestData = requestData
+            ), RequestContext.DEFAULT)
+        }
+    }
 }
