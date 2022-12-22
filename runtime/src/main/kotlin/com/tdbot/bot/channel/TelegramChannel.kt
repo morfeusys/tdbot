@@ -1,4 +1,4 @@
-package com.justai.jaicf.channel.telegram
+package com.tdbot.bot.channel
 
 import com.github.kotlintelegrambot.bot
 import com.github.kotlintelegrambot.dispatch
@@ -10,6 +10,7 @@ import com.justai.jaicf.channel.http.HttpBotRequest
 import com.justai.jaicf.channel.invocationapi.InvocableBotChannel
 import com.justai.jaicf.channel.invocationapi.InvocationRequest
 import com.justai.jaicf.channel.invocationapi.getRequestTemplateFromResources
+import com.justai.jaicf.channel.telegram.*
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.helpers.http.withTrailingSlash
 import com.justai.jaicf.helpers.kotlin.PropertyWithBackingField
@@ -84,10 +85,6 @@ class TelegramChannel(
 
             preCheckoutQuery {
                 process(TelegramPreCheckoutRequest(update, preCheckoutQuery))
-            }
-
-            webAppData {
-                process(TelegramWebAppDataRequest(update, message, data))
             }
         }
     }

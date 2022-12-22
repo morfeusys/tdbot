@@ -3,18 +3,16 @@ package com.tdbot.runtime
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.td.TdChannel
 import com.justai.jaicf.channel.td.activator.RegexActivator
-import com.tdbot.bot.Scenarios
-import com.tdbot.bot.TdBot
 import com.justai.jaicf.model.scenario.Scenario
 import com.tdbot.api.TdBotApi
+import com.tdbot.bot.Scenarios
+import com.tdbot.bot.TdBot
 import com.tdbot.defaultRuntimeSettings
 import it.tdlight.client.APIToken
 import it.tdlight.client.TDLibSettings
 import it.tdlight.client.TelegramError
-import it.tdlight.common.ExceptionHandler
 import org.slf4j.LoggerFactory
 import java.nio.file.Path
-import kotlin.system.exitProcess
 
 class TdRuntime(
     private val settings: Settings = defaultRuntimeSettings

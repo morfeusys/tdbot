@@ -14,7 +14,6 @@ import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.bot.Scenarios
 import com.tdbot.runtime.AuthService
-import com.tdbot.runtime.LinkClientInteraction
 import it.tdlight.jni.TdApi
 
 class TdBotScenario(
@@ -37,7 +36,7 @@ class TdBotScenario(
 
 
             action {
-                reactions.say("\uD83D\uDC4B Hello ${request.message.from?.firstName}!")
+                reactions.say("\uD83D\uDC4B Hello ${request.message.from?.firstName}!", replyMarkup = ReplyKeyboardRemove())
                 reactions.go("/TdBotScenario.Scenarios")
             }
         }
@@ -48,7 +47,7 @@ class TdBotScenario(
             }
 
             action {
-                reactions.say("✋ Okay, ${me?.firstName}! I'm ready now.")
+                reactions.say("✋ Okay, ${me?.firstName}! I'm ready now.", replyMarkup = ReplyKeyboardRemove())
                 reactions.go("/TdBotScenario.Scenarios")
             }
         }

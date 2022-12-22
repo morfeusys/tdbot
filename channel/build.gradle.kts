@@ -5,7 +5,6 @@ plugins {
 dependencies {
     implementation(kotlin("stdlib"))
 
-    api(project(":telegram"))
     api(platform("it.tdlight:tdlight-java-bom:2.8.8.2"))
     api("it.tdlight:tdlight-java")
 

@@ -1,9 +1,9 @@
 package com.tdbot.bot.scenario
 
 import com.github.kotlintelegrambot.entities.KeyboardReplyMarkup
+import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.ReplyKeyboardRemove
 import com.github.kotlintelegrambot.entities.keyboard.KeyboardButton
-import com.github.kotlintelegrambot.entities.keyboard.WebAppInfo
 import com.justai.jaicf.builder.Scenario
 import com.justai.jaicf.channel.invocationapi.invocationRequest
 import com.justai.jaicf.channel.td.hook.TdClosedHook
@@ -11,7 +11,6 @@ import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.TelegramEvent
 import com.justai.jaicf.channel.telegram.contact
 import com.justai.jaicf.channel.telegram.telegram
-import com.justai.jaicf.channel.telegram.webAppData
 import com.justai.jaicf.hook.BeforeActionHook
 import com.justai.jaicf.hook.BotHookException
 import com.tdbot.runtime.AuthService
@@ -69,24 +68,22 @@ fun SignInScenario(authService: AuthService) = Scenario(telegram) {
 
                     authService.setPhoneNumber(request.chatId, phone)
 
-                    reactions.say(
-                        text = "If Telegram was sent you a confirmation code, click on the button below and enter the code.",
-                        replyMarkup = KeyboardReplyMarkup(
-                            KeyboardButton(
-                                text ="Enter code",
-                                webApp = WebAppInfo("https://tdbot.vercel.app/")
-                            ))
-                    )
+                    reactions.say("Telegram was sent you a confirmation code.\n" +
+                            "Send me this code *with spaces between digits.*\n\n" +
+                            "_For example: 4 5 6 7 8, not 45678._", ParseMode.MARKDOWN)
+                    reactions.say("⚠️ NOTE that code without spaces will be rejected by Telegram!",
+                        replyMarkup = ReplyKeyboardRemove())
                 }
             }
 
-            state("Data") {
+            state("Code") {
                 activators {
-                    event(TelegramEvent.WEB_APP_DATA)
+                    regex("([0-9]\\s+)+[0-9]")
                 }
 
-                action(telegram.webAppData) {
-                    authService.setConfirmationCode(request.data.data)
+                action {
+                    val code = request.input.replace(" ", "").trim()
+                    authService.setConfirmationCode(code)
                 }
             }
 

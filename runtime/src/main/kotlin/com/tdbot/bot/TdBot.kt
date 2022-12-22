@@ -5,12 +5,11 @@ import com.justai.jaicf.activator.regex.RegexActivator
 import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.hook.TdReadyHook
-import com.justai.jaicf.channel.telegram.TelegramChannel
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.helpers.kotlin.ifTrue
+import com.tdbot.bot.channel.TelegramChannel
 import com.tdbot.bot.scenario.TdBotScenario
 import com.tdbot.runtime.AuthService
-import com.tdbot.runtime.LinkClientInteraction
 import com.tdbot.runtime.MutableContextManager
 import com.tdbot.runtime.TdRuntime
 import it.tdlight.jni.TdApi
@@ -38,13 +37,10 @@ class TdBot(
 
     init {
         logger.info("Initializing...")
-        channel.bot.getMe().also { res ->
-            if (res.isSuccess) {
-                botId.complete(res.get().id)
-            } else {
-                throw IllegalStateException("Cannot get tdbot data. Check your bot token.")
-            }
-        }
+        val id = channel.bot.getMe().first?.let { res ->
+            res.body()?.result?.id
+        } ?: throw IllegalStateException("Cannot get tdbot data. Check your bot token.")
+        botId.complete(id)
     }
 
     fun getId(): Long = botId.get()
