@@ -3,6 +3,8 @@ package com.justai.jaicf.channel.td.scenario
 import com.justai.jaicf.activator.regex.RegexActivatorContext
 import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.channel.td.*
+import com.justai.jaicf.channel.td.hook.TdClosedHook
+import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.plugin.StateBody
@@ -11,6 +13,11 @@ import it.tdlight.jni.TdApi
 import org.intellij.lang.annotations.Language
 import java.util.*
 
+@ScenarioDsl
+fun TdScenarioRootBuilder.onReady(listener: TdReadyHook.() -> Unit) = handle(listener)
+
+@ScenarioDsl
+fun TdScenarioRootBuilder.onClose(listener: TdClosedHook.() -> Unit) = handle(listener)
 
 @ScenarioDsl
 @StateDeclaration

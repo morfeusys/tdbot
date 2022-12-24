@@ -6,6 +6,7 @@ import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onNewTextMessage
+import com.justai.jaicf.channel.td.scenario.onReady
 import it.tdlight.jni.TdApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -23,8 +24,8 @@ fun SearchChannelPostsOnMessage(
     val logger = LoggerFactory.getLogger("SearchChannelPostsOnMessage_$chat")
     var chatId: Long? = null
 
-    handle<TdReadyHook> {
-        api.send(TdApi.SearchPublicChat("@cats_cats")) { res ->
+    onReady {
+        api.send(TdApi.SearchPublicChat(chat)) { res ->
             if (res.isError || res.get() == null) {
                 logger.error("Cannot find @cats_cats")
             } else {

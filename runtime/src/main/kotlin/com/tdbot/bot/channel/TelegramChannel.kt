@@ -107,7 +107,7 @@ class TelegramChannel(
         botApi.process(telegramRequest, TelegramReactions(bot, telegramRequest, null), requestContext)
     }
 
-    fun run() {
+    fun start() {
         bot.startPolling()
     }
 

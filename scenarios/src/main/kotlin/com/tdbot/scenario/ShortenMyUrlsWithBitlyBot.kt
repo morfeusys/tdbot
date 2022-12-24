@@ -7,7 +7,7 @@ import com.tdbot.api.createBotClient
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
-fun BitlyUrlShortener(maxUrlLength: Int = 50) = TdScenario {
+fun ShortenMyUrlsWithBitlyBot(maxUrlLength: Int = 50) = TdScenario {
     val bot = createBotClient("@BitlyBot")
 
     onAnyNewTextMessage(isOutgoing, isNotBotChat(bot)) {

@@ -1,10 +1,11 @@
 package com.tdbot.scenario
 
+import com.github.kotlintelegrambot.entities.ParseMode
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.channel.invocationapi.invocationRequest
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.createTdModel
-import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdate
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
@@ -27,7 +28,7 @@ class CatchContact(
                 "\n_Please note that the user should be added to your contacts before._"
 
     override val model = createTdModel {
-        handle<TdReadyHook> {
+        onReady {
             telegramApi = api
         }
 
@@ -49,8 +50,12 @@ class CatchContact(
                 usersToCatch.find { it.id == userId }?.let { user ->
                     usersToCatch.remove(user)
                     context.session["user_to_catch"] = user
-                    reactions.say("\uD83D\uDD34 ${user.firstName} ${user.lastName} is online now!")
-                    reactions.sendContact(user.phoneNumber, user.firstName, user.lastName, true)
+                    val username = user.usernames.activeUsernames.firstOrNull()
+                    if (username != null) {
+                        reactions.say("\uD83D\uDD34 [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", ParseMode.MARKDOWN_V2)
+                    } else {
+                        reactions.say("\uD83D\uDD34 ${user.firstName} ${user.lastName} is online now")
+                    }
                     reactions.buttons("Catch later".toState("/CatchContact/catch"))
                 }
             }

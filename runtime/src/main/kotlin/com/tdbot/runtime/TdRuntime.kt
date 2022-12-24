@@ -23,25 +23,15 @@ class TdRuntime(
         databaseDirectoryPath = Path.of(settings.tdDirectory)
     }
 
-    private lateinit var tdBot: TdBot
+    private val tdBot: TdBot = TdBot(settings, authService)
     private lateinit var tdChannel: TdChannel
 
-    private val tdBotApi = object : TdBotApi {
-        override fun sendEvent(event: String, data: String) {
-            tdBot.invoke(event, data)
-        }
-
-        override fun sendMessage(message: String) =
-            sendEvent("TdBotScenario.onMessage", message)
-    }
-
-    fun start(scenarios: ScenariosBuilder.() -> Unit) {
-        val scenarios = ScenariosBuilder(tdBotApi).apply {
-            scenarios.invoke(this)
+    fun start(builder: ScenariosBuilder.() -> Unit) {
+        val scenarios = ScenariosBuilder(tdBot).apply {
+            builder.invoke(this)
         }.build()
 
-        tdBot = TdBot(settings, authService, scenarios)
-
+        tdBot.start(scenarios)
         val tdScenario = TdScenario(tdBot.getId(), scenarios)
 
         val tdEngine = BotEngine(

@@ -126,16 +126,6 @@ class TdBotScenario(
             }
         }
 
-        state("TdBotScenario.onMessage", noContext = true) {
-            activators {
-                event("TdBotScenario.onMessage")
-            }
-
-            action {
-                reactions.say(request.invocationRequest!!.requestData, ParseMode.MARKDOWN)
-            }
-        }
-
         scenarios.all.values.filterIsInstance(TdInteractiveScenario::class.java).forEach {
             append(it.tdBotScenario)
         }

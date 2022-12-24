@@ -1,9 +1,9 @@
 package com.tdbot.api
 
-import com.justai.jaicf.builder.RootBuilder
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.client.*
-import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.scenario.TdScenarioRootBuilder
+import com.justai.jaicf.channel.td.scenario.onReady
 import it.tdlight.client.GenericResultHandler
 import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory
 val isBotChat: (bot: BotClient?) -> OnlyIf = { isChat { it?.botUserId } }
 val isNotBotChat: (bot: BotClient?) -> OnlyIf = { isNotChat { it?.botUserId } }
 
-fun RootBuilder<DefaultTdRequest, TdReactions>.createBotClient(botName: String, initHandler: (client: BotClient) -> Unit = {}) =
+fun TdScenarioRootBuilder.createBotClient(botName: String, initHandler: (client: BotClient) -> Unit = {}) =
     BotClient(botName, initHandler).also { bot ->
-        handle<TdReadyHook> { bot.init(api) }
+        onReady { bot.init(api) }
     }
 
 class BotClient(

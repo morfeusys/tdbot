@@ -12,7 +12,7 @@ import com.tdbot.api.isBotChat
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
-fun TranscriberBot(language: String) = TdScenario {
+fun TranscribeMyVoiceNotesWithTranscriberBot(language: String) = TdScenario {
     val bot = createBotClient("@transcriber_bot") { it.start() }
 
     onNewTextMessage(".*choose a language.*", isIncoming, isBotChat(bot)) {
