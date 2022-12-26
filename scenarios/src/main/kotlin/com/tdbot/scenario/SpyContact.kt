@@ -26,7 +26,7 @@ fun SpyContact(
 
     onUpdate<TdApi.UpdateUserStatus> {
         if (request.update.userId == user?.id) {
-            handler(this, user!!, request.update as TdApi.UpdateUserStatus)
+            handler(this, user!!, request.update)
         }
     }
 }

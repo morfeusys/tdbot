@@ -7,10 +7,10 @@ import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.telegram.TelegramChannel
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.helpers.kotlin.ifTrue
 import com.tdbot.api.TdBotApi
-import com.tdbot.bot.channel.TelegramChannel
 import com.tdbot.bot.scenario.TdBotScenario
 import com.tdbot.runtime.AuthService
 import com.tdbot.runtime.MutableContextManager

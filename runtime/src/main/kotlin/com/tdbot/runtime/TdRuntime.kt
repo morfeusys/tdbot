@@ -21,6 +21,7 @@ class TdRuntime(
     private val authService = AuthService()
     private val tdSettings = TDLibSettings.create(APIToken(settings.apiId, settings.apiHash)).apply {
         databaseDirectoryPath = Path.of(settings.tdDirectory)
+        downloadedFilesDirectoryPath = Path.of(settings.tdDirectory, "downloads")
     }
 
     private val tdBot: TdBot = TdBot(settings, authService)

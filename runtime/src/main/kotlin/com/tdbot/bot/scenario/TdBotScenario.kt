@@ -4,7 +4,6 @@ import com.github.kotlintelegrambot.entities.ParseMode
 import com.github.kotlintelegrambot.entities.ReplyKeyboardRemove
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.builder.createModel
-import com.justai.jaicf.channel.invocationapi.invocationRequest
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.telegram
 import com.justai.jaicf.helpers.kotlin.ifTrue

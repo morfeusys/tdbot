@@ -17,12 +17,13 @@ interface TdBotApi {
     fun sendMessage(
         text: String,
         parseMode: ParseMode? = null,
+        entities: List<MessageEntity>? = null,
         disableWebPagePreview: Boolean? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendMessage(it, text, parseMode, disableWebPagePreview, disableNotification, replyToMessageId)
+        telegram.sendMessage(it, text, parseMode, entities, disableWebPagePreview, disableNotification, replyToMessageId)
     }
 
     fun forwardMessage(
@@ -51,36 +52,46 @@ interface TdBotApi {
         photo: File,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendPhoto(it, photo, caption, parseMode, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendPhoto(it, photo, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendPhoto(
         photo: String,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendPhoto(it, photo, caption, parseMode, disableNotification, replyToMessageId)
+        telegram.sendPhoto(it, photo, caption, parseMode, captionEntities, disableNotification, replyToMessageId)
     }
 
     fun sendAudio(
         audio: String,
         caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
+        duration: Int? = null,
+        performer: String? = null,
+        title: String? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendAudio(it, audio, caption, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendAudio(it, audio, caption, parseMode, captionEntities, duration, performer, title, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendAudio(
         audio: File,
+        caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         duration: Int? = null,
         performer: String? = null,
         title: String? = null,
@@ -88,53 +99,44 @@ interface TdBotApi {
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendAudio(it, audio, duration, performer, title, disableNotification, replyToMessageId, replyMarkup)
-    }
-
-    fun sendAudio(
-        audio: String,
-        duration: Int? = null,
-        performer: String? = null,
-        title: String? = null,
-        disableNotification: Boolean? = null,
-        replyToMessageId: Long? = null,
-        replyMarkup: ReplyMarkup? = null
-    ) = withChatId {
-        telegram.sendAudio(it, audio, duration, performer, title, disableNotification, replyToMessageId)
+        telegram.sendAudio(it, audio, caption, parseMode, captionEntities, duration, performer, title, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendDocument(
         document: File,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendDocument(it, document, caption, parseMode, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendDocument(it, document, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendDocument(
         fileBytes: ByteArray,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null,
         fileName: String
     ) = withChatId {
-        telegram.sendDocument(it, fileBytes, caption, parseMode, disableNotification, replyToMessageId, replyMarkup, fileName)
+        telegram.sendDocument(it, fileBytes, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup, fileName)
     }
 
     fun sendDocument(
         fileId: String,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendDocument(it, fileId, caption, parseMode, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendDocument(it, fileId, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendVideo(
@@ -143,11 +145,13 @@ interface TdBotApi {
         width: Int? = null,
         height: Int? = null,
         caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendVideo(it, video, duration, width, height, caption, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendVideo(it, video, duration, width, height, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendVideo(
@@ -156,11 +160,13 @@ interface TdBotApi {
         width: Int? = null,
         height: Int? = null,
         caption: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendVideo(it, fileId, duration, width, height, caption, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendVideo(it, fileId, duration, width, height, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendAnimation(
@@ -169,12 +175,13 @@ interface TdBotApi {
         width: Int? = null,
         height: Int? = null,
         caption: String? = null,
-        parseMode: String? = null,
+        parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendAnimation(it, animation, duration, width, height, caption, parseMode, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendAnimation(it, animation, duration, width, height, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendAnimation(
@@ -184,11 +191,12 @@ interface TdBotApi {
         height: Int? = null,
         caption: String? = null,
         parseMode: ParseMode? = null,
+        captionEntities: List<MessageEntity>? = null,
         disableNotification: Boolean? = null,
         replyToMessageId: Long? = null,
         replyMarkup: ReplyMarkup? = null
     ) = withChatId {
-        telegram.sendAnimation(it, fileId, duration, width, height, caption, parseMode, disableNotification, replyToMessageId, replyMarkup)
+        telegram.sendAnimation(it, fileId, duration, width, height, caption, parseMode, captionEntities, disableNotification, replyToMessageId, replyMarkup)
     }
 
     fun sendVoice(
