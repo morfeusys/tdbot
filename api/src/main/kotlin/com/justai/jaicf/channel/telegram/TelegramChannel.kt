@@ -17,6 +17,7 @@ import com.github.kotlintelegrambot.dispatcher.video
 import com.github.kotlintelegrambot.dispatcher.videoNote
 import com.github.kotlintelegrambot.dispatcher.voice
 import com.github.kotlintelegrambot.entities.Update
+import com.github.kotlintelegrambot.logging.LogLevel
 import com.github.kotlintelegrambot.network.serialization.GsonFactory
 import com.github.kotlintelegrambot.updater.Updater
 import com.justai.jaicf.api.BotApi

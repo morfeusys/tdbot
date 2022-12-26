@@ -41,6 +41,7 @@ fun ForwardIncomingMessagesIncognito(
                 logger.error("Cannot find chat \"$toChat\"")
             } else {
                 toChatId = res.get().chatIds.first()
+                logger.info("Found chat \"$toChat\" = $toChatId")
             }
         }
     }
