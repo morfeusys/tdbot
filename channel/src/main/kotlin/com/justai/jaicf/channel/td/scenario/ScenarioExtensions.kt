@@ -1,8 +1,6 @@
 package com.justai.jaicf.channel.td.scenario
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.hook.TdClosedHook
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.model.scenario.Scenario
 import it.tdlight.jni.TdApi
 import org.slf4j.LoggerFactory
@@ -26,7 +24,7 @@ fun Scenario.onlyWithContact(query: String) = let { scenario ->
     var userId: Long? = null
 
     TdScenario {
-        handle<TdReadyHook> {
+        onReady {
             api.send(TdApi.SearchContacts(query, 1)) { res ->
                 if (res.isError || res.get().totalCount == 0) {
                     logger.error("Cannot find \"$query\" contact")
@@ -36,7 +34,7 @@ fun Scenario.onlyWithContact(query: String) = let { scenario ->
             }
         }
 
-        handle<TdClosedHook> {
+        onClose {
             userId = null
         }
 
@@ -49,7 +47,7 @@ fun Scenario.onlyInChat(query: String) = let { scenario ->
     var chatId: Long? = null
 
     TdScenario {
-        handle<TdReadyHook> {
+        onReady {
             api.send(TdApi.SearchChats(query, 1)) { res ->
                 if (res.isError || res.get().totalCount == 0) {
                     logger.error("Cannot find \"$query\" chat")
@@ -59,7 +57,7 @@ fun Scenario.onlyInChat(query: String) = let { scenario ->
             }
         }
 
-        handle<TdClosedHook> {
+        onClose {
             chatId = null
         }
 
