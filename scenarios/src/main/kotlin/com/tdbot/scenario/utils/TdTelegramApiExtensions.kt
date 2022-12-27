@@ -12,3 +12,11 @@ fun TdTelegramApi.searchChats(query: String, limit: Int = 1, resultHandler: Gene
             resultHandler.onResult(res1)
         }
     }
+
+suspend fun TdTelegramApi.searchChats(query: String, limit: Int = 1): TdApi.Chats {
+    var chats = send(TdApi.SearchChats(query, limit))
+    if (chats.totalCount == 0) {
+        chats = send(TdApi.SearchChatsOnServer(query, limit))
+    }
+    return chats
+}

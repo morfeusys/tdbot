@@ -2,24 +2,20 @@ package com.tdbot.scenario
 
 import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.MessageEntity
+import com.github.kotlintelegrambot.entities.MessageEntity.Type.*
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyNewMessage
 import com.justai.jaicf.channel.td.scenario.onAnyNewTextMessage
 import com.justai.jaicf.channel.td.scenario.onReady
-import com.justai.jaicf.helpers.kotlin.ifTrue
 import com.tdbot.api.TdBotApi
 import com.tdbot.scenario.utils.searchChats
-import it.tdlight.client.TelegramError
 import it.tdlight.jni.TdApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 fun ForwardIncomingMessagesIncognito(
     toChat: String,
@@ -33,6 +29,7 @@ fun ForwardIncomingMessagesIncognito(
     lateinit var tdApi: TdTelegramApi
 
     val chats = mutableMapOf<Long, TdApi.Chat>()
+    val users = mutableMapOf<Long, TdApi.User>()
 
     onReady {
         tdApi = api
@@ -46,19 +43,11 @@ fun ForwardIncomingMessagesIncognito(
         }
     }
 
-    suspend fun <R : TdApi.Object> TdTelegramApi.send(function: TdApi.Function<R>) =
-        suspendCoroutine<R> { continuation ->
-            send(function) { res ->
-                if (res.isError) {
-                    continuation.resumeWithException(TelegramError(res.error))
-                } else {
-                    continuation.resume(res.get())
-                }
-            }
-        }
+    suspend fun getChat(chatId: Long) =
+        chats.getOrPut(chatId) { tdApi.send(TdApi.GetChat(chatId)) }
 
-    suspend fun TdTelegramApi.getChat(chatId: Long) =
-        send(TdApi.GetChat(chatId))
+    suspend fun getUser(userId: Long) =
+        users.getOrPut(userId) { tdApi.send(TdApi.GetUser(userId)) }
 
     suspend fun TdTelegramApi.downloadFile(file: TdApi.File) =
         send(TdApi.DownloadFile(file.id, 1, 0L, 0L, true))
@@ -105,39 +94,59 @@ fun ForwardIncomingMessagesIncognito(
             tdBotApi.telegram.sendVideoNote(chatId, file, content.videoNote.duration, content.videoNote.length)
         }
 
-    suspend fun sendMessage(from: TdApi.Chat, forwardedForm: TdApi.Chat?, content: TdApi.MessageContent) {
-        val title = from.title +
-                forwardedForm?.let { " from ${it.title}" }.orEmpty() + "\n" +
-                (content !is TdApi.MessageText).ifTrue { "\n" }.orEmpty()
+    suspend fun sendMessage(from: TdApi.Chat, sender: TdApi.Object, forwardedFrom: TdApi.Object?, content: TdApi.MessageContent) {
+        val senderTitle = when (sender) {
+            is TdApi.Chat -> sender.title
+            is TdApi.User -> "${sender.firstName} ${sender.lastName}".trim()
+            else -> from.title
+        }
+
+        val fromTitle = when {
+            senderTitle != from.title -> from.title
+            else -> null
+        }
+
+        val forwardedFromTitle = when (forwardedFrom) {
+            is TdApi.Chat -> forwardedFrom.title
+            is TdApi.User -> "${forwardedFrom.firstName} ${forwardedFrom.lastName}".trim()
+            else -> null
+        }?.let {
+            when {
+                it != from.title -> it
+                else -> null
+            }
+        }
+
+        val title = senderTitle +
+                fromTitle?.let { " → $it" }.orEmpty() +
+                forwardedFromTitle?.let { " ← $it" }.orEmpty() + "\n" +
+                content.text?.takeIf { it.text.length > 25 }?.let { "\n" }.orEmpty()
 
         val offset = title.length
         val text = title + content.text?.text.orEmpty()
 
-        val entities = mutableListOf(MessageEntity(MessageEntity.Type.BOLD, 0, from.title.length))
-        forwardedForm?.let { f ->
-            entities.add(MessageEntity(MessageEntity.Type.BOLD, title.indexOf("from") + 5, f.title.length))
-        }
+        val entities = mutableListOf(MessageEntity(BOLD, 0, title.length))
 
         entities.addAll(
             content.text?.entities?.mapNotNull { e ->
                 val type = e.type
                 when (type) {
-                    is TdApi.TextEntityTypeUrl -> MessageEntity(MessageEntity.Type.URL, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeTextUrl -> MessageEntity(MessageEntity.Type.TEXT_LINK, e.offset + offset, e.length, url = type.url)
-                    is TdApi.TextEntityTypeBold -> MessageEntity(MessageEntity.Type.BOLD, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeBotCommand -> MessageEntity(MessageEntity.Type.BOT_COMMAND, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeCashtag -> MessageEntity(MessageEntity.Type.CASHTAG, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypePreCode -> MessageEntity(MessageEntity.Type.CODE, e.offset + offset, e.length, language = type.language)
-                    is TdApi.TextEntityTypeCustomEmoji -> MessageEntity(MessageEntity.Type.CUSTOM_EMOJI, e.offset + offset, e.length, customEmojiId = type.customEmojiId)
-                    is TdApi.TextEntityTypeItalic -> MessageEntity(MessageEntity.Type.ITALIC, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeEmailAddress -> MessageEntity(MessageEntity.Type.EMAIL, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeHashtag -> MessageEntity(MessageEntity.Type.HASHTAG, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeMention -> MessageEntity(MessageEntity.Type.MENTION, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypePhoneNumber -> MessageEntity(MessageEntity.Type.PHONE_NUMBER, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypePre -> MessageEntity(MessageEntity.Type.PRE, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeStrikethrough -> MessageEntity(MessageEntity.Type.STRIKETHROUGH, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeUnderline -> MessageEntity(MessageEntity.Type.UNDERLINE, e.offset + offset, e.length)
-                    is TdApi.TextEntityTypeSpoiler -> MessageEntity(MessageEntity.Type.SPOILER, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeUrl -> MessageEntity(URL, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeTextUrl -> MessageEntity(TEXT_LINK, e.offset + offset, e.length, url = type.url)
+                    is TdApi.TextEntityTypeBold -> MessageEntity(BOLD, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeBotCommand -> MessageEntity(BOT_COMMAND, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeCashtag -> MessageEntity(CASHTAG, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypePreCode -> MessageEntity(CODE, e.offset + offset, e.length, language = type.language)
+                    is TdApi.TextEntityTypeCustomEmoji -> MessageEntity(CUSTOM_EMOJI, e.offset + offset, e.length, customEmojiId = type.customEmojiId)
+                    is TdApi.TextEntityTypeItalic -> MessageEntity(ITALIC, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeEmailAddress -> MessageEntity(EMAIL, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeHashtag -> MessageEntity(HASHTAG, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeMention -> MessageEntity(MENTION, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypePhoneNumber -> MessageEntity(PHONE_NUMBER, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypePre -> MessageEntity(PRE, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeStrikethrough -> MessageEntity(STRIKETHROUGH, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeUnderline -> MessageEntity(UNDERLINE, e.offset + offset, e.length)
+                    is TdApi.TextEntityTypeSpoiler -> MessageEntity(SPOILER, e.offset + offset, e.length)
                     else -> null
                 }
             }.orEmpty()
@@ -157,20 +166,26 @@ fun ForwardIncomingMessagesIncognito(
 
     fun sendMessage(request: TdNewMessageRequest<*>) {
         GlobalScope.launch {
-            val chat = chats.getOrPut(request.chatId!!) {
-                tdApi.getChat(request.chatId!!)
-            }
-            val forwardedFrom = request.update.message.forwardInfo?.origin?.let { origin ->
-                when (origin) {
-                    is TdApi.MessageForwardOriginChannel -> origin.chatId
-                    else -> null
-                }?.let { chatId ->
-                    chats.getOrPut(chatId) {
-                        tdApi.getChat(chatId)
-                    }
+            val chat = getChat(request.chatId!!)
+
+            val sender = request.update.message.senderId.let { sender ->
+                when (sender) {
+                    is TdApi.MessageSenderChat -> if (sender.chatId != chat.id) { getChat(sender.chatId) } else chat
+                    is TdApi.MessageSenderUser -> if (sender.userId != chat.id) { getUser(sender.userId) } else chat
+                    else -> chat
                 }
             }
-            sendMessage(chat, forwardedFrom, request.content)
+
+            val forwardedFrom = request.update.message.forwardInfo?.origin?.let { origin ->
+                when (origin) {
+                    is TdApi.MessageForwardOriginChannel -> getChat(origin.chatId)
+                    is TdApi.MessageForwardOriginChat -> getChat(origin.senderChatId)
+                    is TdApi.MessageForwardOriginUser -> getUser(origin.senderUserId)
+                    else -> null
+                }
+            }
+
+            sendMessage(chat, sender, forwardedFrom, request.content)
         }
     }
 
