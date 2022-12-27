@@ -7,7 +7,7 @@ import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyNewMessage
-import com.justai.jaicf.channel.td.scenario.onAnyNewTextMessage
+import com.justai.jaicf.channel.td.scenario.onAnyTextMessage
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.tdbot.api.TdBotApi
 import com.tdbot.scenario.utils.searchChats
@@ -193,7 +193,7 @@ fun ForwardIncomingMessagesIncognito(
         sendMessage(request)
     }
 
-    onAnyNewTextMessage(isIncoming, isNotChat { toChatId }) {
+    onAnyTextMessage(isIncoming, isNotChat { toChatId }) {
         sendMessage(request)
     }
 }

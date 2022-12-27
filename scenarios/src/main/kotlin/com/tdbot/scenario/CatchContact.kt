@@ -6,7 +6,7 @@ import com.justai.jaicf.channel.invocationapi.invocationRequest
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.onReady
-import com.justai.jaicf.channel.td.scenario.onUpdate
+import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
@@ -32,7 +32,7 @@ class CatchContact(
             telegramApi = api
         }
 
-        onUpdate<TdApi.UpdateUserStatus> {
+        onUpdateUserStatus {
             if (request.update.status is TdApi.UserStatusOnline && usersToCatch.any { it.id == request.update.userId }) {
                 tdBotApi.sendEvent("CatchContactOnline", request.update.userId.toString())
             }

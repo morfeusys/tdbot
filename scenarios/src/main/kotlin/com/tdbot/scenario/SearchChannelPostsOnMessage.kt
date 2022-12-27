@@ -2,10 +2,9 @@ package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.TdActionContext
 import com.justai.jaicf.channel.td.client.TdTelegramApi
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
-import com.justai.jaicf.channel.td.scenario.onNewTextMessage
+import com.justai.jaicf.channel.td.scenario.onTextMessage
 import com.justai.jaicf.channel.td.scenario.onReady
 import it.tdlight.jni.TdApi
 import kotlinx.coroutines.GlobalScope
@@ -41,7 +40,7 @@ fun SearchChannelPostsOnMessage(
             }
         }
 
-    onNewTextMessage(pattern, isNotChat { chatId }) {
+    onTextMessage(pattern, isNotChat { chatId }) {
         GlobalScope.launch {
             mutableListOf<TdApi.Message>().apply {
                 when {
@@ -51,7 +50,7 @@ fun SearchChannelPostsOnMessage(
                     addAll(reactions.api.searchPosts(query))
                 }
             }.also { result ->
-                resultHandler(this@onNewTextMessage, result)
+                resultHandler(this@onTextMessage, result)
             }
         }
     }

@@ -9,6 +9,7 @@ dependencies {
     api("it.tdlight:tdlight-java")
 
     implementation("com.just-ai.jaicf:core:1.2.4")
+    implementation("org.reflections:reflections:0.10.2")
 }
 
 tasks {

@@ -63,7 +63,7 @@ fun TdScenarioRootBuilder.onAnyNewMessage(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onNewTextMessage(
+fun TdScenarioRootBuilder.onTextMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>.() -> Unit
@@ -81,7 +81,7 @@ fun TdScenarioRootBuilder.onNewTextMessage(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onAnyNewTextMessage(
+fun TdScenarioRootBuilder.onAnyTextMessage(
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>.() -> Unit
-) = onNewTextMessage(".*", *conditions, body = body)
+) = onTextMessage(".*", *conditions, body = body)
