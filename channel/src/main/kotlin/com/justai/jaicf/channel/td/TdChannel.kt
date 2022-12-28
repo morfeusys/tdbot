@@ -11,7 +11,6 @@ import it.tdlight.client.AuthenticationData
 import it.tdlight.client.ClientInteraction
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.client.TDLibSettings
-import it.tdlight.common.ExceptionHandler
 import it.tdlight.jni.TdApi
 
 class TdChannel(
@@ -77,8 +76,8 @@ class TdChannel(
         api.client.addUpdatesHandler { update ->
             val request = when (update) {
                 is TdApi.UpdateNewMessage -> when (update.message.content) {
-                    is TdApi.MessageText -> TdNewTextMessageRequest(me, update)
-                    else -> TdNewEventMessageRequest(me, update)
+                    is TdApi.MessageText -> TdTextMessageRequest(me, update)
+                    else -> TdEventMessageRequest(me, update)
                 }
                 else -> TdUpdateRequest(me, update)
             }

@@ -9,20 +9,15 @@ fun main() {
 
     val messages = ref.getSubTypesOf(TdApi.MessageContent::class.java)
         .map { it.simpleName.substring(7) }
-        .filterNot { it == "Text" }
         .sorted()
 
     val updates = ref.getSubTypesOf(TdApi.Update::class.java)
         .map { it.simpleName }.sorted()
 
     val file = File("./channel/src/main/kotlin/com/justai/jaicf/channel/td/scenario/TdScenarioHandlers.kt")
-    file.writeText("package com.justai.jaicf.channel.td.scenario\n" +
-            "\n" +
+    file.writeText("package com.justai.jaicf.channel.td.scenario\n\n" +
             "import com.justai.jaicf.builder.ScenarioDsl\n" +
-            "import com.justai.jaicf.channel.td.OnlyIf\n" +
-            "import com.justai.jaicf.channel.td.TdNewMessageRequest\n" +
-            "import com.justai.jaicf.channel.td.TdReactions\n" +
-            "import com.justai.jaicf.channel.td.TdRequest\n" +
+            "import com.justai.jaicf.channel.td.*\n" +
             "import com.justai.jaicf.context.ActionContext\n" +
             "import com.justai.jaicf.context.ActivatorContext\n" +
             "import com.justai.jaicf.plugin.StateBody\n" +

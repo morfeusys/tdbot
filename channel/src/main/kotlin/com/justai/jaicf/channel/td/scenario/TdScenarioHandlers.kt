@@ -1,10 +1,7 @@
 package com.justai.jaicf.channel.td.scenario
 
 import com.justai.jaicf.builder.ScenarioDsl
-import com.justai.jaicf.channel.td.OnlyIf
-import com.justai.jaicf.channel.td.TdNewMessageRequest
-import com.justai.jaicf.channel.td.TdReactions
-import com.justai.jaicf.channel.td.TdRequest
+import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.plugin.StateBody
@@ -13,380 +10,387 @@ import it.tdlight.jni.TdApi
 
 @ScenarioDsl
 @StateDeclaration
+fun TdScenarioRootBuilder.onTextMessage(
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageText>, TdReactions>.() -> Unit
+) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
 fun TdScenarioRootBuilder.onAnimatedEmojiMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageAnimatedEmoji>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageAnimatedEmoji>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onAnimationMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageAnimation>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageAnimation>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onAudioMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageAudio>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageAudio>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onBasicGroupChatCreateMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageBasicGroupChatCreate>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageBasicGroupChatCreate>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onCallMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageCall>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageCall>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatAddMembersMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatAddMembers>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatAddMembers>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatChangePhotoMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatChangePhoto>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatChangePhoto>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatChangeTitleMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatChangeTitle>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatChangeTitle>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatDeleteMemberMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatDeleteMember>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatDeleteMember>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatDeletePhotoMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatDeletePhoto>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatDeletePhoto>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatJoinByLinkMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatJoinByLink>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatJoinByLink>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatJoinByRequestMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatJoinByRequest>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatJoinByRequest>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatSetThemeMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatSetTheme>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetTheme>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatSetTtlMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatSetTtl>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetTtl>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatUpgradeFromMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatUpgradeFrom>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatUpgradeFrom>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onChatUpgradeToMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageChatUpgradeTo>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatUpgradeTo>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onContactMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageContact>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageContact>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onContactRegisteredMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageContactRegistered>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageContactRegistered>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onCustomServiceActionMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageCustomServiceAction>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageCustomServiceAction>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onDiceMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageDice>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageDice>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onDocumentMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageDocument>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageDocument>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onExpiredPhotoMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageExpiredPhoto>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageExpiredPhoto>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onExpiredVideoMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageExpiredVideo>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageExpiredVideo>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onForumTopicCreatedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageForumTopicCreated>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageForumTopicCreated>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onForumTopicEditedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageForumTopicEdited>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageForumTopicEdited>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onForumTopicIsClosedToggledMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageForumTopicIsClosedToggled>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageForumTopicIsClosedToggled>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onGameMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageGame>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageGame>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onGameScoreMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageGameScore>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageGameScore>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onGiftedPremiumMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageGiftedPremium>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageGiftedPremium>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onInviteVideoChatParticipantsMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageInviteVideoChatParticipants>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageInviteVideoChatParticipants>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onInvoiceMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageInvoice>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageInvoice>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onLocationMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageLocation>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageLocation>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPassportDataReceivedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePassportDataReceived>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePassportDataReceived>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPassportDataSentMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePassportDataSent>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePassportDataSent>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPaymentSuccessfulMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePaymentSuccessful>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePaymentSuccessful>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPaymentSuccessfulBotMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePaymentSuccessfulBot>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePaymentSuccessfulBot>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPhotoMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePhoto>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePhoto>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPinMessageMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePinMessage>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePinMessage>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onPollMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessagePoll>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePoll>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onProximityAlertTriggeredMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageProximityAlertTriggered>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageProximityAlertTriggered>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onScreenshotTakenMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageScreenshotTaken>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageScreenshotTaken>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onStickerMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageSticker>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageSticker>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onSupergroupChatCreateMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageSupergroupChatCreate>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageSupergroupChatCreate>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onUnsupportedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageUnsupported>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageUnsupported>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVenueMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVenue>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVenue>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVideoMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVideo>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVideo>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVideoChatEndedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVideoChatEnded>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVideoChatEnded>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVideoChatScheduledMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVideoChatScheduled>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVideoChatScheduled>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVideoChatStartedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVideoChatStarted>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVideoChatStarted>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVideoNoteMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVideoNote>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVideoNote>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onVoiceNoteMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageVoiceNote>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVoiceNote>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onWebAppDataReceivedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageWebAppDataReceived>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageWebAppDataReceived>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onWebAppDataSentMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageWebAppDataSent>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageWebAppDataSent>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onWebsiteConnectedMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageWebsiteConnected>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageWebsiteConnected>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl

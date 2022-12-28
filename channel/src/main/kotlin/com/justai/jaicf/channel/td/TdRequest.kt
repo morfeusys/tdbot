@@ -11,8 +11,8 @@ typealias DefaultTdRequest = TdRequest<out TdApi.Update>
 
 val BotRequest.td get() = this as? DefaultTdRequest
 
-val DefaultTdRequest.message get() = this as? TdNewMessageRequest<out TdApi.MessageContent>
-val DefaultTdRequest.text get() = this as? TdNewTextMessageRequest
+val DefaultTdRequest.message get() = this as? TdMessageRequest<out TdApi.MessageContent>
+val DefaultTdRequest.text get() = this as? TdTextMessageRequest
 
 val DefaultTdRequest.messageId get() = message?.update?.message?.id
 val DefaultTdRequest.chatId get() = message?.update?.message?.chatId
@@ -33,7 +33,7 @@ interface TdRequest<U : TdApi.Update> : BotRequest {
     val update: U
 }
 
-interface TdNewMessageRequest<M : TdApi.MessageContent> : TdRequest<TdApi.UpdateNewMessage> {
+interface TdMessageRequest<M : TdApi.MessageContent> : TdRequest<TdApi.UpdateNewMessage> {
     val content: M
 }
 
@@ -42,16 +42,16 @@ data class TdUpdateRequest(
     override val update: TdApi.Update
 ) : TdRequest<TdApi.Update>, EventBotRequest(clientId = update.getClientId(me), input = event(update))
 
-data class TdNewTextMessageRequest(
+data class TdTextMessageRequest(
     override val me: TdApi.User,
     override val update: TdApi.UpdateNewMessage,
-): TdNewMessageRequest<TdApi.MessageText>, QueryBotRequest(clientId = update.getClientId(me), input = (update.message.content as TdApi.MessageText).text.text) {
+): TdMessageRequest<TdApi.MessageText>, QueryBotRequest(clientId = update.getClientId(me), input = (update.message.content as TdApi.MessageText).text.text) {
     override val content = update.message.content as TdApi.MessageText
 }
 
-data class TdNewEventMessageRequest(
+data class TdEventMessageRequest(
     override val me: TdApi.User,
     override val update: TdApi.UpdateNewMessage,
-): TdNewMessageRequest<TdApi.MessageContent>, EventBotRequest(clientId = update.getClientId(me), input = event(update)) {
+): TdMessageRequest<TdApi.MessageContent>, EventBotRequest(clientId = update.getClientId(me), input = event(update)) {
     override val content = update.message.content
 }

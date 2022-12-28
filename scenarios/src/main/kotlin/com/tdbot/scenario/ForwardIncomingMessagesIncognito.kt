@@ -6,8 +6,7 @@ import com.github.kotlintelegrambot.entities.MessageEntity.Type.*
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.TdScenario
-import com.justai.jaicf.channel.td.scenario.onAnyNewMessage
-import com.justai.jaicf.channel.td.scenario.onAnyTextMessage
+import com.justai.jaicf.channel.td.scenario.onAnyMessage
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.tdbot.api.TdBotApi
 import com.tdbot.scenario.utils.searchChats
@@ -164,7 +163,7 @@ fun ForwardIncomingMessagesIncognito(
         }
     }
 
-    fun sendMessage(request: TdNewMessageRequest<*>) {
+    fun sendMessage(request: TdMessageRequest<*>) {
         GlobalScope.launch {
             val chat = getChat(request.chatId!!)
 
@@ -189,11 +188,7 @@ fun ForwardIncomingMessagesIncognito(
         }
     }
 
-    onAnyNewMessage(isIncoming, isNotChat { toChatId }) {
-        sendMessage(request)
-    }
-
-    onAnyTextMessage(isIncoming, isNotChat { toChatId }) {
+    onAnyMessage(isIncoming, isNotChat { toChatId }) {
         sendMessage(request)
     }
 }

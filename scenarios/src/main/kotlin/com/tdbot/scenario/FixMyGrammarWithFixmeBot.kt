@@ -2,7 +2,7 @@ package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.isOutgoing
 import com.justai.jaicf.channel.td.scenario.TdScenario
-import com.justai.jaicf.channel.td.scenario.onAnyTextMessage
+import com.justai.jaicf.channel.td.scenario.onTextMessage
 import com.tdbot.api.createBotClient
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
@@ -10,7 +10,7 @@ import it.tdlight.jni.TdApi
 val FixMyGrammarWithFixmeBot = TdScenario {
     val bot = createBotClient("@fixmebot")
 
-    onAnyTextMessage(isOutgoing, isNotBotChat(bot)) {
+    onTextMessage(isOutgoing, isNotBotChat(bot)) {
         bot.sendInlineQuery(request.input) { res ->
             if (!res.isError) {
                 res.get().results

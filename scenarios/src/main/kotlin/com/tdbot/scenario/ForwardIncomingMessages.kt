@@ -3,9 +3,9 @@ package com.tdbot.scenario
 import com.justai.jaicf.channel.td.isIncoming
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
-import com.justai.jaicf.channel.td.scenario.onAnyNewMessage
-import com.justai.jaicf.channel.td.scenario.onAnyTextMessage
+import com.justai.jaicf.channel.td.scenario.onAnyMessage
 import com.justai.jaicf.channel.td.scenario.onReady
+import com.justai.jaicf.channel.td.scenario.onTextMessage
 import com.tdbot.scenario.utils.searchChats
 import org.slf4j.LoggerFactory
 
@@ -24,11 +24,11 @@ fun ForwardIncomingMessages(toChat: String) = TdScenario {
         }
     }
 
-    onAnyNewMessage(isIncoming, isNotChat { chatId }) {
+    onAnyMessage(isIncoming, isNotChat { chatId }) {
         chatId?.let { reactions.forward(it) }
     }
 
-    onAnyTextMessage(isIncoming, isNotChat { chatId }) {
+    onTextMessage(isIncoming, isNotChat { chatId }) {
         chatId?.let { reactions.forward(it) }
     }
 }

@@ -40,33 +40,43 @@ inline fun <reified U : TdApi.Update> TdScenarioRootBuilder.onUpdate(
 @StateDeclaration
 inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage(
     vararg conditions: OnlyIf,
-    @StateBody noinline body: ActionContext<ActivatorContext, TdNewMessageRequest<M>, TdReactions>.() -> Unit
+    @StateBody noinline body: ActionContext<ActivatorContext, TdMessageRequest<M>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
     activators {
-        update<TdApi.UpdateNewMessage>().apply {
-            onlyIf { request.td?.message?.update?.message?.content is M }
+        when (M::class.java) {
+            TdApi.MessageText::class.java -> catchAll().onlyIf { request is TdTextMessageRequest }
+            TdApi.MessageContent::class.java -> catchAll().onlyIf { request.td?.message != null }
+            else -> update<TdApi.UpdateNewMessage>().onlyIf { request.td?.message?.update?.message?.content is M }
+        }.apply {
             conditions.forEach(::onlyIf)
         }
     }
 
-    action(tdNewMessageToken()) {
+    action(tdMessageToken()) {
         body(this)
     }
 }
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onAnyNewMessage(
+fun TdScenarioRootBuilder.onAnyUpdate(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdNewMessageRequest<TdApi.MessageContent>, TdReactions>.() -> Unit
-) = onNewMessage(*conditions, body = body)
+    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.Update>, TdReactions>.() -> Unit
+) = onUpdate(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
+fun TdScenarioRootBuilder.onAnyMessage(
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageContent>, TdReactions>.() -> Unit
+) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onTextMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdTextMessageRequest, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
     activators {
         regex(pattern).apply {
@@ -74,14 +84,7 @@ fun TdScenarioRootBuilder.onTextMessage(
         }
     }
 
-    action(tdNewTextMessage) {
+    action(tdRegexMessage) {
         body(this)
     }
 }
-
-@ScenarioDsl
-@StateDeclaration
-fun TdScenarioRootBuilder.onAnyTextMessage(
-    vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>.() -> Unit
-) = onTextMessage(".*", *conditions, body = body)

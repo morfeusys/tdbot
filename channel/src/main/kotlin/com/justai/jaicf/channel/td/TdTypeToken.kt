@@ -10,10 +10,10 @@ typealias TdTypeToken = ChannelTypeToken<DefaultTdRequest, TdReactions>
 
 val td: TdTypeToken = ChannelTypeToken()
 
-val tdNewTextMessage = ContextTypeToken<RegexActivatorContext, TdNewTextMessageRequest, TdReactions>()
+val tdRegexMessage = ContextTypeToken<RegexActivatorContext, TdTextMessageRequest, TdReactions>()
 
-fun <M : TdApi.MessageContent> tdNewMessageToken() =
-    ContextTypeToken<ActivatorContext, TdNewMessageRequest<M>, TdReactions>()
+fun <M : TdApi.MessageContent> tdMessageToken() =
+    ContextTypeToken<ActivatorContext, TdMessageRequest<M>, TdReactions>()
 
 fun <U : TdApi.Update> tdUpdateToken() =
     ContextTypeToken<ActivatorContext, TdRequest<U>, TdReactions>()
