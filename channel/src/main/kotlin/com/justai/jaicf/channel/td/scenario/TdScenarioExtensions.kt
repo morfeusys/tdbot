@@ -26,7 +26,10 @@ inline fun <reified U : TdApi.Update> TdScenarioRootBuilder.onUpdate(
     @StateBody noinline body: ActionContext<ActivatorContext, TdRequest<U>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
     activators {
-        update<U>().apply {
+        when (U::class.java) {
+            TdApi.Update::class.java -> catchAll().onlyIf { request is TdUpdateRequest }
+            else -> update<U>()
+        }.apply {
             conditions.forEach(::onlyIf)
         }
     }
@@ -45,7 +48,7 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
     activators {
         when (M::class.java) {
             TdApi.MessageText::class.java -> catchAll().onlyIf { request is TdTextMessageRequest }
-            TdApi.MessageContent::class.java -> catchAll().onlyIf { request.td?.message != null }
+            TdApi.MessageContent::class.java -> catchAll().onlyIf { request is TdEventMessageRequest }
             else -> update<TdApi.UpdateNewMessage>().onlyIf { request.td?.message?.update?.message?.content is M }
         }.apply {
             conditions.forEach(::onlyIf)
