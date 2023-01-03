@@ -108,9 +108,9 @@ fun TdScenarioRootBuilder.onChatSetThemeMessage(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onChatSetTtlMessage(
+fun TdScenarioRootBuilder.onChatSetAutoDeleteTimeMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetTtl>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetMessageAutoDeleteTime>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -556,9 +556,9 @@ fun TdScenarioRootBuilder.onUpdateChatMessageSender(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onUpdateChatMessageTtl(
+fun TdScenarioRootBuilder.onUpdateChatMessageAutoDeleteTime(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.UpdateChatMessageTtl>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.UpdateChatMessageAutoDeleteTime>, TdReactions>.() -> Unit
 ) = onUpdate(conditions = conditions, body = body)
 
 @ScenarioDsl

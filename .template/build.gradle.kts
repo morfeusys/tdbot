@@ -12,22 +12,16 @@ application {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk8"))
     implementation(project(":scenarios"))
     implementation(project(":runtime"))
 
-    implementation("ch.qos.logback:logback-classic:1.4.0")
+    implementation("ch.qos.logback:logback-classic:1.3.0")
 }
 
 tasks {
     shadowJar {
         archiveFileName.set("tdbot.jar")
-    }
-    compileKotlin {
-        kotlinOptions.jvmTarget = "17"
-    }
-    compileTestKotlin {
-        kotlinOptions.jvmTarget = "17"
     }
 }
 

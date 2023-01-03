@@ -12,7 +12,7 @@ import it.tdlight.client.APIToken
 import it.tdlight.client.TDLibSettings
 import it.tdlight.client.TelegramError
 import org.slf4j.LoggerFactory
-import java.nio.file.Path
+import java.nio.file.Paths
 
 class TdRuntime(
     private val settings: Settings = defaultRuntimeSettings
@@ -20,8 +20,8 @@ class TdRuntime(
     private val logger = LoggerFactory.getLogger(javaClass)
     private val authService = AuthService()
     private val tdSettings = TDLibSettings.create(APIToken(settings.apiId, settings.apiHash)).apply {
-        databaseDirectoryPath = Path.of(settings.tdDirectory)
-        downloadedFilesDirectoryPath = Path.of(settings.tdDirectory, "downloads")
+        databaseDirectoryPath = Paths.get(settings.tdDirectory)
+        downloadedFilesDirectoryPath = Paths.get(settings.tdDirectory, "downloads")
     }
 
     private val tdBot: TdBot = TdBot(settings, authService)

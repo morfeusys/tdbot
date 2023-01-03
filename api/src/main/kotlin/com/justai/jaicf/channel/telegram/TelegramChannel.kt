@@ -30,7 +30,6 @@ import com.justai.jaicf.channel.jaicp.JaicpCompatibleAsyncBotChannel
 import com.justai.jaicf.channel.jaicp.JaicpCompatibleAsyncChannelFactory
 import com.justai.jaicf.channel.jaicp.JaicpLiveChatProvider
 import com.justai.jaicf.context.RequestContext
-import com.justai.jaicf.helpers.http.withTrailingSlash
 import com.justai.jaicf.helpers.kotlin.PropertyWithBackingField
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -47,7 +46,7 @@ class TelegramChannel(
 
     val bot = bot {
         logLevel = LogLevel.Network.Basic
-        apiUrl = telegramApiUrl.withTrailingSlash()
+        apiUrl = telegramApiUrl
         token = telegramBotToken
         botUpdater = updater
 

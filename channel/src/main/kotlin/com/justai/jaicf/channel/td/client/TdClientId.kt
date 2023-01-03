@@ -20,7 +20,7 @@ internal val TdApi.Update.clientId get() = when (this) {
     is TdApi.UpdateChatLastMessage -> chatId
     is TdApi.UpdateChatMember -> chatId
     is TdApi.UpdateChatMessageSender -> chatId
-    is TdApi.UpdateChatMessageTtl -> chatId
+    is TdApi.UpdateChatMessageAutoDeleteTime -> chatId
     is TdApi.UpdateChatNotificationSettings -> chatId
     is TdApi.UpdateChatOnlineMemberCount -> chatId
     is TdApi.UpdateChatPendingJoinRequests -> chatId

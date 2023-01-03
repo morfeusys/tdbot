@@ -18,8 +18,9 @@ fun Td.photo(
     width: Int = 0,
     height: Int = 0,
     caption: TdApi.FormattedText? = null,
-    ttl: Int = 0,
-) = photo(TdApi.InputFileRemote(id), thumbnail, addedStickerFileIds, width, height, caption, ttl)
+    selfDestructTime: Int = 0,
+    hasSpoiler: Boolean = false,
+) = photo(TdApi.InputFileRemote(id), thumbnail, addedStickerFileIds, width, height, caption, selfDestructTime, hasSpoiler)
 
 fun Td.photo(
     file: TdApi.InputFile,
@@ -28,8 +29,9 @@ fun Td.photo(
     width: Int = 0,
     height: Int = 0,
     caption: TdApi.FormattedText? = null,
-    ttl: Int = 0,
-) = TdApi.InputMessagePhoto(file, thumbnail, addedStickerFileIds, width, height, caption, ttl)
+    selfDestructTime: Int = 0,
+    hasSpoiler: Boolean = false,
+) = TdApi.InputMessagePhoto(file, thumbnail, addedStickerFileIds, width, height, caption, selfDestructTime, hasSpoiler)
 
 fun Td.animation(
     id: String,
@@ -39,7 +41,8 @@ fun Td.animation(
     width: Int = 0,
     height: Int = 0,
     caption: TdApi.FormattedText? = null,
-) = animation(TdApi.InputFileRemote(id), thumbnail, addedStickerFileIds, duration, width, height, caption)
+    hasSpoiler: Boolean = false,
+) = animation(TdApi.InputFileRemote(id), thumbnail, addedStickerFileIds, duration, width, height, caption, hasSpoiler)
 
 fun Td.animation(
     file: TdApi.InputFile,
@@ -49,7 +52,8 @@ fun Td.animation(
     width: Int = 0,
     height: Int = 0,
     caption: TdApi.FormattedText? = null,
-) = TdApi.InputMessageAnimation(file, thumbnail, addedStickerFileIds, duration, width, height, caption)
+    hasSpoiler: Boolean = false,
+) = TdApi.InputMessageAnimation(file, thumbnail, addedStickerFileIds, duration, width, height, caption, hasSpoiler)
 
 fun Td.audio(
     id: String,
@@ -57,7 +61,7 @@ fun Td.audio(
     duration: Int = 0,
     title: String? = null,
     performer: String? = null,
-    caption: TdApi.FormattedText? = null
+    caption: TdApi.FormattedText? = null,
 ) = audio(TdApi.InputFileRemote(id), albumCoverThumbnail, duration, title, performer, caption)
 
 fun Td.audio(
@@ -183,8 +187,9 @@ fun Td.video(
     height: Int = 0,
     supportsStreaming: Boolean = false,
     caption: TdApi.FormattedText? = null,
-    ttl: Int = 0
-) = TdApi.InputMessageVideo(file, thumbnail, addedStickerFileIds, duration, width, height, supportsStreaming, caption, ttl)
+    ttl: Int = 0,
+    hasSpoiler: Boolean = false,
+) = TdApi.InputMessageVideo(file, thumbnail, addedStickerFileIds, duration, width, height, supportsStreaming, caption, ttl, hasSpoiler)
 
 fun Td.videoNote(
     id: String,

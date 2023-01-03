@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim
+FROM openjdk:8-jdk-slim
 
 RUN apt-get update
 RUN apt-get install -y \
@@ -16,7 +16,6 @@ ENV PATH=$PATH:$GRADLE_HOME/bin
 
 WORKDIR /runtime
 COPY . .
-RUN rm -f .td
 
 RUN gradle :bot:shadowJar
 
