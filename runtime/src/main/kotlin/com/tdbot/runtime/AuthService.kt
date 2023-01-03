@@ -1,16 +1,14 @@
 package com.tdbot.runtime
 
-import it.tdlight.client.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import it.tdlight.client.AuthenticationData
+import it.tdlight.client.ClientInteraction
+import it.tdlight.client.InputParameter
+import it.tdlight.client.ParameterInfo
 import org.slf4j.LoggerFactory
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
-class AuthService : ClientInteraction, CoroutineScope {
-    override val coroutineContext = Dispatchers.IO
-
+class AuthService : ClientInteraction {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     private lateinit var phoneNumber: CompletableFuture<Long>
@@ -33,12 +31,12 @@ class AuthService : ClientInteraction, CoroutineScope {
 
     fun setPhoneNumber(userId: Long, phone: Long) {
         this.userId = userId
-        launch { phoneNumber.complete(phone) }
+        phoneNumber.complete(phone)
     }
 
-    fun setConfirmationCode(code: String) = launch {
+    fun setConfirmationCode(code: String) =
         confirmationCode.complete(code)
-    }
+
 
     override fun onParameterRequest(
         parameter: InputParameter?,

@@ -8,17 +8,14 @@ import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
 val FixMyGrammarWithFixmeBot = TdScenario {
-    val bot = createBotClient("@fixmebot")
+    val fixmeBot = createBotClient("@fixmebot")
 
-    onTextMessage(isOutgoing, isNotBotChat(bot)) {
-        bot.sendInlineQuery(request.input) { res ->
-            if (!res.isError) {
-                res.get().results
-                    .filterIsInstance(TdApi.InlineQueryResultArticle::class.java)
-                    .map { it.description }
-                    .firstOrNull { it != request.input }
-                    ?.let { result -> reactions.editText(result) }
-            }
-        }
+    onTextMessage(isOutgoing, isNotBotChat(fixmeBot)) {
+        fixmeBot.sendInlineQuery(request.input)
+            .results
+            .filterIsInstance(TdApi.InlineQueryResultArticle::class.java)
+            .map { it.description }
+            .firstOrNull { it != request.input }
+            ?.let { result -> reactions.editText(result) }
     }
 }

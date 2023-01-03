@@ -5,14 +5,12 @@ import com.github.kotlintelegrambot.entities.MessageEntity
 import com.github.kotlintelegrambot.entities.MessageEntity.Type.*
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.client.searchChats
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyMessage
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.tdbot.api.TdBotApi
-import com.tdbot.scenario.utils.searchChats
 import it.tdlight.jni.TdApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import java.io.File
 
@@ -20,7 +18,7 @@ fun ForwardIncomingMessagesIncognito(
     toChat: String,
     tdBotApi: TdBotApi
 ) = TdScenario {
-    val logger = LoggerFactory.getLogger("ForwardIncomingMessagesIncognito-$toChat")
+    val logger = LoggerFactory.getLogger("ForwardIncomingMessagesIncognito")
 
     var toChatId: Long? = null
     val chatId by lazy { ChatId.fromId(toChatId!!) }
@@ -32,26 +30,22 @@ fun ForwardIncomingMessagesIncognito(
 
     onReady {
         tdApi = api
-        api.searchChats(toChat) { res ->
-            if (res.isError || res.get().totalCount == 0) {
-                logger.error("Cannot find chat \"$toChat\"")
-            } else {
-                toChatId = res.get().chatIds.first()
-                logger.info("Found chat \"$toChat\" = $toChatId")
-            }
+        toChatId = api.searchChats(toChat).chatIds.firstOrNull()
+        if (toChatId == null) {
+            logger.error("Cannot find chat \"$toChat\"")
         }
     }
 
-    suspend fun getChat(chatId: Long) =
+    fun getChat(chatId: Long) =
         chats.getOrPut(chatId) { tdApi.send(TdApi.GetChat(chatId)) }
 
-    suspend fun getUser(userId: Long) =
+    fun getUser(userId: Long) =
         users.getOrPut(userId) { tdApi.send(TdApi.GetUser(userId)) }
 
-    suspend fun TdTelegramApi.downloadFile(file: TdApi.File) =
+    fun TdTelegramApi.downloadFile(file: TdApi.File) =
         send(TdApi.DownloadFile(file.id, 1, 0L, 0L, true))
 
-    suspend fun <R> withTempFile(file: TdApi.File, handler: (file: File) -> R) =
+    fun <R> withTempFile(file: TdApi.File, handler: (file: File) -> R) =
         File(tdApi.downloadFile(file).local.path).let {
             try {
                 handler(it)
@@ -63,37 +57,37 @@ fun ForwardIncomingMessagesIncognito(
     fun sendText(text: String, entities: List<MessageEntity>?) =
         tdBotApi.telegram.sendMessage(chatId, text, entities = entities)
 
-    suspend fun sendPhoto(caption: String, entities: List<MessageEntity>?, content: TdApi.MessagePhoto) =
+     fun sendPhoto(caption: String, entities: List<MessageEntity>?, content: TdApi.MessagePhoto) =
         withTempFile(content.photo.sizes.maxBy { it.photo.size }.photo) { file ->
             tdBotApi.telegram.sendPhoto(chatId, file, caption, captionEntities = entities)
         }
 
-    suspend fun sendAnimation(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageAnimation) =
+     fun sendAnimation(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageAnimation) =
         withTempFile(content.animation.animation) { file ->
             tdBotApi.telegram.sendAnimation(chatId, file, content.animation.duration, content.animation.width, content.animation.height, caption, captionEntities = entities)
         }
 
-    suspend fun sendVideo(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageVideo) =
+     fun sendVideo(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageVideo) =
         withTempFile(content.video.video) { file ->
             tdBotApi.telegram.sendVideo(chatId, file, content.video.duration, content.video.width, content.video.height, caption, captionEntities = entities)
         }
 
-    suspend fun sendVoiceNote(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageVoiceNote) =
+     fun sendVoiceNote(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageVoiceNote) =
         withTempFile(content.voiceNote.voice) { file ->
             tdBotApi.telegram.sendVoice(chatId, file, caption, null, entities, content.voiceNote.duration)
         }
 
-    suspend fun sendAudio(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageAudio) =
+     fun sendAudio(caption: String, entities: List<MessageEntity>?, content: TdApi.MessageAudio) =
         withTempFile(content.audio.audio) { file ->
             tdBotApi.telegram.sendAudio(chatId, file, caption, null, entities, content.audio.duration, content.audio.performer, content.audio.title)
         }
 
-    suspend fun sendVideoNote(content: TdApi.MessageVideoNote) =
+     fun sendVideoNote(content: TdApi.MessageVideoNote) =
         withTempFile(content.videoNote.video) { file ->
             tdBotApi.telegram.sendVideoNote(chatId, file, content.videoNote.duration, content.videoNote.length)
         }
 
-    suspend fun sendMessage(from: TdApi.Chat, sender: TdApi.Object, forwardedFrom: TdApi.Object?, content: TdApi.MessageContent) {
+     fun sendMessage(from: TdApi.Chat, sender: TdApi.Object, forwardedFrom: TdApi.Object?, content: TdApi.MessageContent) {
         val senderTitle = when (sender) {
             is TdApi.Chat -> sender.title
             is TdApi.User -> "${sender.firstName} ${sender.lastName}".trim()
@@ -164,28 +158,26 @@ fun ForwardIncomingMessagesIncognito(
     }
 
     fun sendMessage(request: TdMessageRequest<*>) {
-        GlobalScope.launch {
-            val chat = getChat(request.chatId!!)
+        val chat = getChat(request.chatId!!)
 
-            val sender = request.update.message.senderId.let { sender ->
-                when (sender) {
-                    is TdApi.MessageSenderChat -> if (sender.chatId != chat.id) { getChat(sender.chatId) } else chat
-                    is TdApi.MessageSenderUser -> if (sender.userId != chat.id) { getUser(sender.userId) } else chat
-                    else -> chat
-                }
+        val sender = request.update.message.senderId.let { sender ->
+            when (sender) {
+                is TdApi.MessageSenderChat -> if (sender.chatId != chat.id) { getChat(sender.chatId) } else chat
+                is TdApi.MessageSenderUser -> if (sender.userId != chat.id) { getUser(sender.userId) } else chat
+                else -> chat
             }
-
-            val forwardedFrom = request.update.message.forwardInfo?.origin?.let { origin ->
-                when (origin) {
-                    is TdApi.MessageForwardOriginChannel -> getChat(origin.chatId)
-                    is TdApi.MessageForwardOriginChat -> getChat(origin.senderChatId)
-                    is TdApi.MessageForwardOriginUser -> getUser(origin.senderUserId)
-                    else -> null
-                }
-            }
-
-            sendMessage(chat, sender, forwardedFrom, request.content)
         }
+
+        val forwardedFrom = request.update.message.forwardInfo?.origin?.let { origin ->
+            when (origin) {
+                is TdApi.MessageForwardOriginChannel -> getChat(origin.chatId)
+                is TdApi.MessageForwardOriginChat -> getChat(origin.senderChatId)
+                is TdApi.MessageForwardOriginUser -> getUser(origin.senderUserId)
+                else -> null
+            }
+        }
+
+        sendMessage(chat, sender, forwardedFrom, request.content)
     }
 
     onAnyMessage(isIncoming, isNotChat { toChatId }) {

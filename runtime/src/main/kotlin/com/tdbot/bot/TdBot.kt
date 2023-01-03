@@ -71,12 +71,10 @@ class TdBot(
 
     fun onReady(api: TdTelegramApi) {
         logger.info("Ready")
-        api.send(TdApi.GetMe()) { res ->
-            user = res.get()
-            val engine = channel.botApi as BotEngine
-            engine.hooks.triggerHook(TdReadyHook(api, user))
-            sendEvent("ready")
-        }
+        user = api.send(TdApi.GetMe())
+        val engine = channel.botApi as BotEngine
+        engine.hooks.triggerHook(TdReadyHook(api, user))
+        sendEvent("ready")
     }
 
     fun onClose(api: TdTelegramApi) {

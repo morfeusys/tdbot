@@ -10,6 +10,7 @@ dependencies {
 
     implementation("com.just-ai.jaicf:core:1.2.4")
     implementation("org.reflections:reflections:0.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.2-native-mt")
 }
 
 tasks {

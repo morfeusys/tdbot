@@ -1,20 +1,15 @@
 package com.tdbot.scenario.utils
 
 import com.justai.jaicf.channel.td.*
+import com.justai.jaicf.channel.td.client.searchChats
 import com.justai.jaicf.channel.td.scenario.*
 import com.justai.jaicf.model.scenario.Scenario
 import it.tdlight.jni.TdApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicReference
-
-private val coroutineScope = GlobalScope
 
 private fun TdScenarioRootBuilder.searchChannel(query: String) = AtomicReference<Long?>().also { ref ->
     onReady {
-        coroutineScope.launch {
-            api.searchChats(query).chatIds.firstOrNull()?.let(ref::set)
-        }
+        api.searchChats(query).chatIds.firstOrNull()?.let(ref::set)
     }
 
     onClose {
@@ -24,9 +19,7 @@ private fun TdScenarioRootBuilder.searchChannel(query: String) = AtomicReference
 
 private fun TdScenarioRootBuilder.searchContact(query: String) = AtomicReference<Long?>().also { ref ->
     onReady {
-        coroutineScope.launch {
-            api.send(TdApi.SearchContacts(query, 1)).userIds.firstOrNull()?.let(ref::set)
-        }
+        api.send(TdApi.SearchContacts(query, 1)).userIds.firstOrNull()?.let(ref::set)
     }
 
     onClose {

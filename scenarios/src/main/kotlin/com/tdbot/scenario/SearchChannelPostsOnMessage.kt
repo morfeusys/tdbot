@@ -4,15 +4,10 @@ import com.justai.jaicf.channel.td.TdActionContext
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
-import com.justai.jaicf.channel.td.scenario.onTextMessage
 import com.justai.jaicf.channel.td.scenario.onReady
+import com.justai.jaicf.channel.td.scenario.onTextMessage
 import it.tdlight.jni.TdApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.intellij.lang.annotations.Language
-import org.slf4j.LoggerFactory
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 fun SearchChannelPostsOnMessage(
     chat: String,
@@ -20,38 +15,25 @@ fun SearchChannelPostsOnMessage(
     limit: Int = 100,
     resultHandler: TdActionContext.(messages: List<TdApi.Message>) -> Unit
 ) = TdScenario {
-    val logger = LoggerFactory.getLogger("SearchChannelPostsOnMessage_$chat")
     var chatId: Long? = null
 
     onReady {
-        api.send(TdApi.SearchPublicChat(chat)) { res ->
-            if (res.isError || res.get() == null) {
-                logger.error("Cannot find @cats_cats")
-            } else {
-                chatId = res.get().id
-            }
-        }
+        chatId = api.send(TdApi.SearchPublicChat(chat)).id
     }
 
-    suspend fun TdTelegramApi.searchPosts(query: String) =
-        suspendCoroutine<List<TdApi.Message>> { continuation ->
-            send(TdApi.SearchChatMessages(chatId!!, query, null, 0, 0, limit, null, 0L)) { res ->
-                continuation.resume(res.get().messages.toList())
-            }
-        }
+    fun TdTelegramApi.searchPosts(query: String) =
+        send(TdApi.SearchChatMessages(chatId!!, query, null, 0, 0, limit, null, 0L))
 
     onTextMessage(pattern, isNotChat { chatId }) {
-        GlobalScope.launch {
-            mutableListOf<TdApi.Message>().apply {
-                when {
-                    activator.matcher.groupCount() == 1 -> request.input
-                    else -> activator.matcher.groupCount().downTo(1).mapNotNull { activator.group(it) }.joinToString(" ")
-                }.let { query ->
-                    addAll(reactions.api.searchPosts(query))
-                }
-            }.also { result ->
-                resultHandler(this@onTextMessage, result)
+        mutableListOf<TdApi.Message>().apply {
+            when {
+                activator.matcher.groupCount() == 1 -> request.input
+                else -> activator.matcher.groupCount().downTo(1).mapNotNull { activator.group(it) }.joinToString(" ")
+            }.let { query ->
+                addAll(reactions.api.searchPosts(query).messages)
             }
+        }.also { result ->
+            resultHandler(this@onTextMessage, result)
         }
     }
 }

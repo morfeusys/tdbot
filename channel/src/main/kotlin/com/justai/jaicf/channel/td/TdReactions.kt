@@ -5,7 +5,6 @@ import com.justai.jaicf.logging.AudioReaction
 import com.justai.jaicf.logging.ImageReaction
 import com.justai.jaicf.logging.SayReaction
 import com.justai.jaicf.reactions.Reactions
-import it.tdlight.client.GenericResultHandler
 import it.tdlight.jni.TdApi
 
 val Reactions.td get() = this as? TdReactions
@@ -18,15 +17,15 @@ class TdReactions(
 
     private fun <R> withChatId(function: (chatId: Long) -> R): R? = chatId?.let { function(it) }
 
-    fun sendContent(content: TdApi.InputMessageContent, handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()) =
+    fun sendContent(content: TdApi.InputMessageContent) =
         withChatId { chatId ->
-            api.sendMessage(chatId, content = content, handler = handler)
+            api.sendMessage(chatId, content = content)
         }
 
-    fun reply(content: TdApi.InputMessageContent, handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()) =
+    fun reply(content: TdApi.InputMessageContent) =
         withChatId { chatId ->
             request.messageId?.let { messageId ->
-                api.sendMessage(chatId, replyToMessageId = messageId, content = content, handler = handler)
+                api.sendMessage(chatId, replyToMessageId = messageId, content = content)
             }
         }
 
@@ -44,42 +43,36 @@ class TdReactions(
         }
     }
 
-    override fun say(text: String) = say(text, DefaultResultHandler())
-
-    fun say(text: String, handler: GenericResultHandler<TdApi.Message>) = SayReaction.create(text).also {
-        sendContent(Td.text(text), handler)
+    override fun say(text: String) = SayReaction.create(text).also {
+        sendContent(Td.text(text))
     }
 
-    override fun image(url: String) = image(url, DefaultResultHandler())
-
-    fun image(url: String, handler: GenericResultHandler<TdApi.Message>) = ImageReaction.create(url).also {
-        sendContent(Td.photo(url), handler)
+    override fun image(url: String) = ImageReaction.create(url).also {
+        sendContent(Td.photo(url))
     }
 
-    override fun audio(url: String) = audio(url, DefaultResultHandler())
-
-    fun audio(url: String, handler: GenericResultHandler<TdApi.Message>) = AudioReaction.create(url).also {
-        sendContent(Td.audio(url), handler)
+    override fun audio(url: String) = AudioReaction.create(url).also {
+        sendContent(Td.audio(url))
     }
 
-    fun forward(message: TdApi.Message, chat: Long? = chatId, handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()) =
-        forward(arrayOf(message), chat, handler)
+    fun forward(message: TdApi.Message, chat: Long? = chatId) =
+        forward(arrayOf(message), chat)
 
-    fun forward(messages: Array<TdApi.Message>, chat: Long? = chatId, handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()) {
+    fun forward(messages: Array<TdApi.Message>, chat: Long? = chatId) {
         if (chat != null)
-            api.forwardMessages(chat, fromChatId = messages.first().chatId, messageIds = messages.map { it.id }.toTypedArray(), handler = handler)
+            api.forwardMessages(chat, fromChatId = messages.first().chatId, messageIds = messages.map { it.id }.toTypedArray())
     }
 
-    fun forward(chat: Long, handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()) {
+    fun forward(chat: Long) {
         request.message?.let { message ->
             if (message.update.message.canBeForwarded) {
-                api.forwardMessages(chat, fromChatId = message.chatId!!, messageIds = arrayOf(message.messageId!!), handler = handler)
+                api.forwardMessages(chat, fromChatId = message.chatId!!, messageIds = arrayOf(message.messageId!!))
             }
         }
     }
 
-    fun deleteMessages(messages: LongArray, revoke: Boolean = false, handler: GenericResultHandler<TdApi.Ok> = DefaultResultHandler()) =
+    fun deleteMessages(messages: LongArray, revoke: Boolean = false) =
         withChatId { chatId ->
-            api.send(TdApi.DeleteMessages(chatId, messages, revoke), handler)
+            api.send(TdApi.DeleteMessages(chatId, messages, revoke))
         }
 }

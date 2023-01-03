@@ -1,12 +1,6 @@
 package com.justai.jaicf.channel.td.client
 
-import it.tdlight.client.GenericResultHandler
-import it.tdlight.client.Result
 import it.tdlight.jni.TdApi
-
-class DefaultResultHandler<R : TdApi.Object> : GenericResultHandler<R> {
-    override fun onResult(result: Result<R>?) {}
-}
 
 fun TdTelegramApi.sendMessage(
     chatId: Long,
@@ -15,11 +9,7 @@ fun TdTelegramApi.sendMessage(
     options: TdApi.MessageSendOptions? = null,
     replyMarkup: TdApi.ReplyMarkup? = null,
     content: TdApi.InputMessageContent,
-    handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()
-) = send(
-    TdApi.SendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content),
-    handler
-)
+) = send(TdApi.SendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content))
 
 fun TdTelegramApi.addMessageReaction(
     chatId: Long,
@@ -27,8 +17,7 @@ fun TdTelegramApi.addMessageReaction(
     reactionType: TdApi.ReactionType,
     isBig: Boolean = false,
     updateRecentReactions: Boolean = false,
-    handler: GenericResultHandler<TdApi.Ok> = DefaultResultHandler()
-) = send(TdApi.AddMessageReaction(chatId, messageId, reactionType, isBig, updateRecentReactions), handler)
+) = send(TdApi.AddMessageReaction(chatId, messageId, reactionType, isBig, updateRecentReactions))
 
 fun TdTelegramApi.forwardMessages(
     chatId: Long,
@@ -39,35 +28,28 @@ fun TdTelegramApi.forwardMessages(
     sendCopy: Boolean = false,
     removeCaption: Boolean = false,
     onlyPreview: Boolean = false,
-    handler: GenericResultHandler<TdApi.Messages> = DefaultResultHandler()
-) = send(
-    TdApi.ForwardMessages(chatId, messageThreadId, fromChatId, messageIds.toLongArray(), options, sendCopy, removeCaption, onlyPreview),
-    handler
-)
+) = send(TdApi.ForwardMessages(chatId, messageThreadId, fromChatId, messageIds.toLongArray(), options, sendCopy, removeCaption, onlyPreview))
 
 fun TdTelegramApi.editMessageText(
     chatId: Long,
     messageId: Long,
     replyMarkup: TdApi.ReplyMarkup? = null,
     content: TdApi.InputMessageContent,
-    handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()
-) = send(TdApi.EditMessageText(chatId, messageId, replyMarkup, content), handler)
+) = send(TdApi.EditMessageText(chatId, messageId, replyMarkup, content))
 
 fun TdTelegramApi.editMessageMedia(
     chatId: Long,
     messageId: Long,
     replyMarkup: TdApi.ReplyMarkup? = null,
     content: TdApi.InputMessageContent,
-    handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()
-) = send(TdApi.EditMessageMedia(chatId, messageId, replyMarkup, content), handler)
+) = send(TdApi.EditMessageMedia(chatId, messageId, replyMarkup, content))
 
 fun TdTelegramApi.editMessageCaption(
     chatId: Long,
     messageId: Long,
     replyMarkup: TdApi.ReplyMarkup? = null,
     caption: TdApi.FormattedText,
-    handler: GenericResultHandler<TdApi.Message> = DefaultResultHandler()
-) = send(TdApi.EditMessageCaption(chatId, messageId, replyMarkup, caption), handler)
+) = send(TdApi.EditMessageCaption(chatId, messageId, replyMarkup, caption))
 
 fun TdTelegramApi.getInlineQueryResults(
     botUserId: Long,
@@ -75,5 +57,4 @@ fun TdTelegramApi.getInlineQueryResults(
     userLocation: TdApi.Location? = null,
     query: String,
     offset: String? = null,
-    handler: GenericResultHandler<TdApi.InlineQueryResults>
-) = send(TdApi.GetInlineQueryResults(botUserId, chatId, userLocation, query, offset), handler)
+) = send(TdApi.GetInlineQueryResults(botUserId, chatId, userLocation, query, offset))

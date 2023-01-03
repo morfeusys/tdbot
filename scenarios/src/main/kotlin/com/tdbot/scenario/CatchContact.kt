@@ -70,15 +70,14 @@ class CatchContact(
                 val userName = activator.matcher.group(1)
                 context.cleanSessionData()
 
-                telegramApi.send(TdApi.SearchContacts(userName, 1)) { res ->
-                    if (res.isError || res.get().totalCount == 0) {
+                telegramApi.send(TdApi.SearchContacts(userName, 1)).let { res ->
+                    if (res.totalCount == 0) {
                         reactions.say("Sorry, \"$userName\" was not found in your contacts")
                     } else {
-                        telegramApi.send(TdApi.GetUser(res.get().userIds.first())) { user ->
-                            context.session["user_to_catch"] = user.get()
-                            reactions.say("Would you like to catch ${user.get().firstName} ${user.get().lastName}?")
-                            reactions.buttons("Yes", "No")
-                        }
+                        val user = telegramApi.send(TdApi.GetUser(res.userIds.first()))
+                        context.session["user_to_catch"] = user
+                        reactions.say("Would you like to catch ${user.firstName} ${user.lastName}?")
+                        reactions.buttons("Yes", "No")
                     }
                 }
             }

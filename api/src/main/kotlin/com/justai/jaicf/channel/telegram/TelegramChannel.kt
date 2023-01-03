@@ -46,6 +46,7 @@ class TelegramChannel(
     private lateinit var botUpdater: Updater
 
     val bot = bot {
+        logLevel = LogLevel.Network.Basic
         apiUrl = telegramApiUrl.withTrailingSlash()
         token = telegramBotToken
         botUpdater = updater

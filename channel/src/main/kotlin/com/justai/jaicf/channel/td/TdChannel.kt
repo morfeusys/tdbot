@@ -12,6 +12,9 @@ import it.tdlight.client.ClientInteraction
 import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.client.TDLibSettings
 import it.tdlight.jni.TdApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 
 class TdChannel(
     override val botApi: BotEngine,
@@ -19,6 +22,8 @@ class TdChannel(
     settings: TDLibSettings,
     clientInteraction: ClientInteraction? = null,
 ) : BotChannel {
+    private val botProcessScope = CoroutineScope(newSingleThreadContext("TdChannel process thread"))
+
     private val api = TdTelegramApi(
         SimpleTelegramClient(settings).apply {
             clientInteraction?.let { setClientInteraction(it) }
@@ -42,38 +47,33 @@ class TdChannel(
     }
 
     fun onReady(handler: (client: TdTelegramApi) -> Unit): TdChannel = apply {
-        api.client.addUpdateHandler(TdApi.UpdateAuthorizationState::class.java) { state ->
+        api.onUpdate<TdApi.UpdateAuthorizationState> { state ->
             if (state.authorizationState is TdApi.AuthorizationStateReady) {
-                handler.invoke(api)
+                handler(api)
             }
         }
     }
 
     fun onClose(handler: (api: TdTelegramApi) -> Unit): TdChannel = apply {
-        api.client.addUpdateHandler(TdApi.UpdateAuthorizationState::class.java) { state ->
+        api.onUpdate<TdApi.UpdateAuthorizationState> { state ->
             if (state.authorizationState is TdApi.AuthorizationStateClosed) {
-                handler.invoke(api)
+                handler(api)
             }
         }
     }
 
-    fun onException(handler: (e: Throwable) -> Unit) = apply {
-        api.client.addDefaultExceptionHandler(handler)
+    fun onException(handler: (Throwable) -> Unit) = apply {
+        api.onException(handler)
     }
 
-    private fun ready(client: TdTelegramApi) {
-        client.send(TdApi.GetMe()) { res ->
-            if (res.error().isPresent) {
-                throw IllegalStateException(res.error.message)
-            } else {
-                botApi.hooks.triggerHook(TdReadyHook(client, res.get()))
-                addHandlers(res.get())
-            }
-        }
+    private fun ready(api: TdTelegramApi) {
+        val me = api.send(TdApi.GetMe())
+        botApi.hooks.triggerHook(TdReadyHook(api, me))
+        addHandlers(me)
     }
 
     private fun addHandlers(me: TdApi.User) {
-        api.client.addUpdatesHandler { update ->
+        api.onUpdates { update ->
             val request = when (update) {
                 is TdApi.UpdateNewMessage -> when (update.message.content) {
                     is TdApi.MessageText -> TdTextMessageRequest(me, update)
@@ -82,7 +82,9 @@ class TdChannel(
                 else -> TdUpdateRequest(me, update)
             }
 
-            botApi.process(request, TdReactions(api, request), RequestContext.DEFAULT)
+            botProcessScope.launch {
+                botApi.process(request, TdReactions(api, request), RequestContext.DEFAULT)
+            }
         }
 
         onClose { client ->
