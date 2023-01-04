@@ -1,7 +1,7 @@
 package com.tdbot.scenario.utils
 
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
+import io.ktor.client.engine.apache.*
 import io.ktor.client.features.json.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -10,7 +10,7 @@ import kotlinx.coroutines.runBlocking
 typealias RequestBuilder = HttpRequestBuilder.() -> Unit
 
 object Http {
-    val client = HttpClient(CIO) {
+    val client = HttpClient(Apache) {
         install(JsonFeature) {
             serializer = GsonSerializer()
         }
