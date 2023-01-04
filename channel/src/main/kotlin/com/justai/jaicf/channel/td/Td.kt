@@ -4,6 +4,9 @@ import it.tdlight.jni.TdApi
 
 object Td
 
+fun Td.text(messageText: TdApi.MessageText) =
+    text(messageText.text.text, messageText.text.entities)
+
 fun Td.text(
     text: String,
     entities: Array<out TdApi.TextEntity> = emptyArray(),
@@ -169,7 +172,7 @@ fun Td.venue(
 fun Td.video(
     id: String,
     thumbnail: TdApi.InputThumbnail? = null,
-    addedStickerFileIds: IntArray?,
+    addedStickerFileIds: IntArray? = null,
     duration: Int = 0,
     width: Int = 0,
     height: Int = 0,

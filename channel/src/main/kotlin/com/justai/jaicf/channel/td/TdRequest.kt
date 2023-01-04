@@ -11,14 +11,14 @@ typealias DefaultTdRequest = TdRequest<out TdApi.Update>
 
 val BotRequest.td get() = this as? DefaultTdRequest
 
-val DefaultTdRequest.message get() = this as? TdMessageRequest<out TdApi.MessageContent>
-val DefaultTdRequest.text get() = this as? TdTextMessageRequest
+val DefaultTdRequest.messageRequest get() = this as? TdMessageRequest<out TdApi.MessageContent>
+val DefaultTdRequest.textRequest get() = this as? TdTextMessageRequest
 
-val DefaultTdRequest.messageId get() = message?.update?.message?.id
-val DefaultTdRequest.chatId get() = message?.update?.message?.chatId
-val DefaultTdRequest.senderId get() = message?.update?.senderId
-val DefaultTdRequest.isOutgoing get() = message?.update?.message?.isOutgoing
-val DefaultTdRequest.isChannelPost get() = message?.update?.message?.isChannelPost
+val DefaultTdRequest.messageId get() = messageRequest?.update?.message?.id
+val DefaultTdRequest.chatId get() = messageRequest?.update?.message?.chatId
+val DefaultTdRequest.senderId get() = messageRequest?.update?.senderId
+val DefaultTdRequest.isOutgoing get() = messageRequest?.update?.message?.isOutgoing
+val DefaultTdRequest.isChannelPost get() = messageRequest?.update?.message?.isChannelPost
 
 val TdApi.UpdateNewMessage.senderId get() = when (message.senderId) {
     is TdApi.MessageSenderUser -> (message.senderId as TdApi.MessageSenderUser).userId

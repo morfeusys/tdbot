@@ -47,9 +47,9 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
 ) = state(UUID.randomUUID().toString()) {
     activators {
         when (M::class.java) {
-            TdApi.MessageText::class.java -> catchAll().onlyIf { request.td?.text != null }
-            TdApi.MessageContent::class.java -> catchAll().onlyIf { request.td?.message != null }
-            else -> update<TdApi.UpdateNewMessage>().onlyIf { request.td?.message?.update?.message?.content is M }
+            TdApi.MessageText::class.java -> catchAll().onlyIf { request.td?.textRequest != null }
+            TdApi.MessageContent::class.java -> catchAll().onlyIf { request.td?.messageRequest != null }
+            else -> update<TdApi.UpdateNewMessage>().onlyIf { request.td?.messageRequest?.update?.message?.content is M }
         }.apply {
             conditions.forEach(::onlyIf)
         }

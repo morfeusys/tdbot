@@ -4,6 +4,7 @@ import com.justai.jaicf.channel.td.client.*
 import com.justai.jaicf.logging.AudioReaction
 import com.justai.jaicf.logging.ImageReaction
 import com.justai.jaicf.logging.SayReaction
+import com.justai.jaicf.logging.VideoReaction
 import com.justai.jaicf.reactions.Reactions
 import it.tdlight.jni.TdApi
 
@@ -17,19 +18,27 @@ class TdReactions(
 
     private fun <R> withChatId(function: (chatId: Long) -> R): R? = chatId?.let { function(it) }
 
-    fun sendContent(content: TdApi.InputMessageContent) =
-        withChatId { chatId ->
-            api.sendMessage(chatId, content = content)
-        }
+    fun sendMessage(
+        content: TdApi.InputMessageContent,
+        options: TdApi.MessageSendOptions? = null,
+        messageThreadId: Long = 0,
+        replyToMessageId: Long = 0
+    ) = withChatId { chatId ->
+        api.sendMessage(chatId, messageThreadId, replyToMessageId, options, content = content)
+    }
 
-    fun reply(content: TdApi.InputMessageContent) =
-        withChatId { chatId ->
-            request.messageId?.let { messageId ->
-                api.sendMessage(chatId, replyToMessageId = messageId, content = content)
-            }
+    fun reply(
+        content: TdApi.InputMessageContent,
+        options: TdApi.MessageSendOptions? = null,
+        messageThreadId: Long = 0
+    ) = withChatId { chatId ->
+        request.messageId?.let { messageId ->
+            api.sendMessage(chatId, messageThreadId, messageId, options, content = content)
         }
+    }
 
-    fun editText(text: String) = editText(Td.text(text))
+    fun editText(text: String, entities: Array<out TdApi.TextEntity> = emptyArray()) =
+        editText(Td.text(text, entities))
 
     fun editText(text: TdApi.InputMessageText) = withChatId { chatId ->
         request.messageId?.let { messageId ->
@@ -37,42 +46,46 @@ class TdReactions(
         }
     }
 
-    fun editCaption(text: String, entities: Array<out TdApi.TextEntity>? = null) = withChatId { chatId ->
+    fun editCaption(text: String, entities: Array<out TdApi.TextEntity> = emptyArray()) = withChatId { chatId ->
         request.messageId?.let { messageId ->
             api.editMessageCaption(chatId, messageId, caption = TdApi.FormattedText(text, entities))
         }
     }
 
     override fun say(text: String) = SayReaction.create(text).also {
-        sendContent(Td.text(text))
+        sendMessage(Td.text(text))
     }
 
+    fun say(text: String, entities: Array<out TdApi.TextEntity>) =
+        sendMessage(Td.text(text, entities))
+
     override fun image(url: String) = ImageReaction.create(url).also {
-        sendContent(Td.photo(url))
+        sendMessage(Td.photo(url))
+    }
+
+    fun animation(url: String) = ImageReaction.create(url).also {
+        sendMessage(Td.animation(url))
     }
 
     override fun audio(url: String) = AudioReaction.create(url).also {
-        sendContent(Td.audio(url))
+        sendMessage(Td.audio(url))
     }
 
-    fun forward(message: TdApi.Message, chat: Long? = chatId) =
-        forward(arrayOf(message), chat)
-
-    fun forward(messages: Array<TdApi.Message>, chat: Long? = chatId) {
-        if (chat != null)
-            api.forwardMessages(chat, fromChatId = messages.first().chatId, messageIds = messages.map { it.id }.toTypedArray())
+    fun video(url: String) = VideoReaction.create(url).also {
+        sendMessage(Td.video(url))
     }
 
-    fun forward(chat: Long) {
-        request.message?.let { message ->
-            if (message.update.message.canBeForwarded) {
-                api.forwardMessages(chat, fromChatId = message.chatId!!, messageIds = arrayOf(message.messageId!!))
-            }
+    fun forward(message: TdApi.Message) = withChatId { chatId ->
+        api.forwardMessages(chatId, fromChatId = message.chatId, messageIds = arrayOf(message.id))
+    }
+
+    fun forward(toChatId: Long) = request.messageRequest?.let { mr ->
+        if (mr.update.message.canBeForwarded) {
+            api.forwardMessages(toChatId, fromChatId = request.chatId!!, messageIds = arrayOf(request.messageId!!))
         }
     }
 
-    fun deleteMessages(messages: LongArray, revoke: Boolean = false) =
-        withChatId { chatId ->
-            api.send(TdApi.DeleteMessages(chatId, messages, revoke))
-        }
+    fun delete(revoke: Boolean = false) = request.messageRequest?.let { mr ->
+        api.send(TdApi.DeleteMessages(mr.chatId!!, longArrayOf(mr.messageId!!), revoke))
+    }
 }

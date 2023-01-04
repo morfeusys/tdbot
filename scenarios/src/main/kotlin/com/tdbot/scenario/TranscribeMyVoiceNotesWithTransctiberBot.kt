@@ -20,7 +20,7 @@ fun TranscribeMyVoiceNotesWithTranscriberBot(language: String) = TdScenario {
             if (text.text.text.length <= 1024) {
                 reactions.editCaption(text.text.text)
             } else {
-                reactions.reply(Td.text(text.text.text))
+                reactions.reply(Td.text(text))
             }
         }
     }
