@@ -86,6 +86,15 @@ class TdReactions(
     }
 
     fun delete(revoke: Boolean = false) = request.messageRequest?.let { mr ->
-        api.send(TdApi.DeleteMessages(mr.chatId!!, longArrayOf(mr.messageId!!), revoke))
+        api.send(TdApi.DeleteMessages(chatId!!, longArrayOf(mr.messageId!!), revoke))
+    }
+
+    fun addEmojiReaction(reaction: TdApi.ReactionTypeEmoji, isBig: Boolean = false, updateRecentReactions: Boolean = false) =
+        request.messageRequest?.let { mr ->
+            api.addMessageReaction(chatId!!, mr.messageId!!, reaction, isBig, updateRecentReactions)
+        }
+
+    fun clickAnimatedEmoji() = request.messageRequest?.let { mr ->
+        api.send(TdApi.ClickAnimatedEmojiMessage(chatId!!, mr.messageId!!))
     }
 }
