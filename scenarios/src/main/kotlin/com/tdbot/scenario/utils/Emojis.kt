@@ -3,6 +3,10 @@ package com.tdbot.scenario.utils
 import com.vdurmont.emoji.EmojiManager
 import it.tdlight.jni.TdApi
 
+/**
+ * See all available emoji aliases on https://github.com/vdurmont/emoji-java/blob/master/EMOJIS.md
+ */
+
 val String.asEmoji
     get() = EmojiManager.getForAlias(this)
 
