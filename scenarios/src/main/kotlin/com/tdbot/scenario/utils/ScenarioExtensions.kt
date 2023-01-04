@@ -45,31 +45,31 @@ val Scenario.onlyChannelPosts get() = onlyIf(isChannelPost)
 
 val Scenario.onlyNonChannelPosts get() = onlyIf(isNotChannelPost)
 
-fun Scenario.onlyWithContact(query: String) = let { scenario ->
+fun Scenario.onlyWithContacts(vararg contacts: String) = let { scenario ->
     TdScenario {
-        val userId = searchContact(query)
-        append(scenario.onlyIf(isChat { userId.get() }))
+        val userIds = contacts.map(::searchContact)
+        append(scenario.onlyIf(isChats { userIds.mapNotNull { it.get() }.toLongArray() }))
     }
 }
 
-fun Scenario.onlyWithNotContact(query: String) = let { scenario ->
+fun Scenario.onlyWithNotContacts(vararg contacts: String) = let { scenario ->
     TdScenario {
-        val userId = searchContact(query)
-        append(scenario.onlyIf(isNotChat { userId.get() }))
+        val userIds = contacts.map(::searchContact)
+        append(scenario.onlyIf(isNotChats { userIds.mapNotNull { it.get() }.toLongArray() }))
     }
 }
 
-fun Scenario.onlyInChat(query: String) = let { scenario ->
+fun Scenario.onlyInChats(vararg chats: String) = let { scenario ->
     TdScenario {
-        val chatId = searchChannel(query)
-        append(scenario.onlyIf(isChat { chatId.get() }))
+        val chatIds = chats.map(::searchChannel)
+        append(scenario.onlyIf(isChats { chatIds.mapNotNull { it.get() }.toLongArray() }))
     }
 }
 
-fun Scenario.onlyNotInChat(query: String) = let { scenario ->
+fun Scenario.onlyNotInChats(vararg chats: String) = let { scenario ->
     TdScenario {
-        val chatId = searchChannel(query)
-        append(scenario.onlyIf(isNotChat { chatId.get() }))
+        val chatIds = chats.map(::searchChannel)
+        append(scenario.onlyIf(isNotChats { chatIds.mapNotNull { it.get() }.toLongArray() }))
     }
 }
 
