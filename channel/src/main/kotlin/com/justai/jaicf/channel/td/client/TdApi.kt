@@ -1,6 +1,16 @@
 package com.justai.jaicf.channel.td.client
 
+import com.justai.jaicf.channel.td.Td
 import it.tdlight.jni.TdApi
+
+fun TdTelegramApi.sendTextMessage(
+    chatId: Long,
+    text: String,
+    messageThreadId: Long = 0,
+    replyToMessageId: Long = 0,
+    options: TdApi.MessageSendOptions? = null,
+    replyMarkup: TdApi.ReplyMarkup? = null,
+) = sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, Td.text(text))
 
 fun TdTelegramApi.sendMessage(
     chatId: Long,

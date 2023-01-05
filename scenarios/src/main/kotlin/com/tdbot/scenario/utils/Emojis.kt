@@ -15,13 +15,16 @@ val String.asEmoji
     get() = EmojiManager.getForAlias(this)
 
 val String.asEmojiPattern
+    get() = asEmojiUnicode
+
+val String.asEmojiUnicode
     get() = asEmoji.unicode
 
 val String.asEmojiReaction
-    get() = TdApi.ReactionTypeEmoji(asEmoji.unicode)
+    get() = TdApi.ReactionTypeEmoji(asEmojiUnicode)
 
 fun TdApi.MessageSticker.isEmoji(emojiAlias: String) =
-    sticker.emoji == emojiAlias.asEmoji.unicode
+    sticker.emoji == emojiAlias.asEmojiUnicode
 
 fun TdApi.MessageAnimatedEmoji.isEmoji(emojiAlias: String) =
-    emoji == emojiAlias.asEmoji.unicode
+    emoji == emojiAlias.asEmojiUnicode

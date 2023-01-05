@@ -5,6 +5,7 @@ import com.justai.jaicf.channel.td.TdChannel
 import com.justai.jaicf.channel.td.activator.RegexActivator
 import com.justai.jaicf.model.scenario.Scenario
 import com.tdbot.api.TdBotApi
+import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.bot.Scenarios
 import com.tdbot.bot.TdBot
 import com.tdbot.defaultRuntimeSettings
@@ -81,6 +82,9 @@ class TdRuntime(
                 throw IllegalArgumentException("There is another scenario exists with name $this")
             } else {
                 map[this] = scenario
+                if (scenario is TdInteractiveScenario) {
+                    scenario.tdBotApi = tdBotApi
+                }
             }
         }
 

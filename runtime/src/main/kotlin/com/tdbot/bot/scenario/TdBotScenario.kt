@@ -125,7 +125,7 @@ class TdBotScenario(
             }
         }
 
-        scenarios.all.values.filterIsInstance(TdInteractiveScenario::class.java).forEach {
+        scenarios.all.values.filterIsInstance<TdInteractiveScenario>().forEach {
             append(it.tdBotScenario)
         }
 
