@@ -7,7 +7,7 @@ import com.tdbot.api.createBotClient
 import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
-val FixMyGrammarWithFixmeBot = TdScenario {
+val FixMySpellWithFixmeBot = TdScenario {
     val fixmeBot = createBotClient("@fixmebot")
 
     onTextMessage(isOutgoing, isNotBotChat(fixmeBot)) {

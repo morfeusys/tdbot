@@ -1,6 +1,6 @@
 package com.tdbot.scenario
 
-import com.justai.jaicf.channel.td.TdActionContext
+import com.justai.jaicf.channel.td.TdRegexMessageActionContext
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
@@ -13,7 +13,7 @@ fun SearchChannelPostsOnMessage(
     chat: String,
     @Language("regexp") pattern: String,
     limit: Int = 100,
-    resultHandler: TdActionContext.(messages: List<TdApi.Message>) -> Unit
+    resultHandler: TdRegexMessageActionContext.(messages: List<TdApi.Message>) -> Unit
 ) = TdScenario {
     var chatId: Long? = null
 

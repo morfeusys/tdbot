@@ -113,7 +113,7 @@ fun ForwardIncomingMessagesIncognito(
         val title = senderTitle +
                 fromTitle?.let { " → $it" }.orEmpty() +
                 forwardedFromTitle?.let { " ← $it" }.orEmpty() + "\n" +
-                content.text?.takeIf { it.text.length > 25 }?.let { "\n" }.orEmpty()
+                content.takeIf { it !is TdApi.MessageText }?.let { "\n" }.orEmpty()
 
         val offset = title.length
         val text = title + content.text?.text.orEmpty()

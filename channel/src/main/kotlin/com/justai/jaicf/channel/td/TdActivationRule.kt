@@ -22,6 +22,7 @@ val isSenders: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.senderId
 val isNotSenders: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { !p(this).contains(it) } ?: false } }
 
 val isMyMessage: OnlyIf = isSender { request.td?.me?.id }
+val isNotMyMessage: OnlyIf = isNotSender { request.td?.me?.id }
 
 fun ActivationRule.ifOutgoing() = onlyIf(isOutgoing)
 fun ActivationRule.ifIncoming() = onlyIf(isIncoming)

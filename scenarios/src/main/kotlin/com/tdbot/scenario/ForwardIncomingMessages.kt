@@ -6,7 +6,6 @@ import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyMessage
 import com.justai.jaicf.channel.td.scenario.onReady
-import com.justai.jaicf.channel.td.scenario.onTextMessage
 
 fun ForwardIncomingMessages(toChat: String) = TdScenario {
     var chatId: Long? = null
@@ -16,10 +15,6 @@ fun ForwardIncomingMessages(toChat: String) = TdScenario {
     }
 
     onAnyMessage(isIncoming, isNotChat { chatId }) {
-        chatId?.let { reactions.forward(it) }
-    }
-
-    onTextMessage(isIncoming, isNotChat { chatId }) {
         chatId?.let { reactions.forward(it) }
     }
 }

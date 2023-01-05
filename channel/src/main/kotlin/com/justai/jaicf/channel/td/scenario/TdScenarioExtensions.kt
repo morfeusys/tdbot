@@ -1,6 +1,5 @@
 package com.justai.jaicf.channel.td.scenario
 
-import com.justai.jaicf.activator.regex.RegexActivatorContext
 import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.hook.TdClosedHook
@@ -64,14 +63,14 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
 @StateDeclaration
 fun TdScenarioRootBuilder.onAnyUpdate(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.Update>, TdReactions>.() -> Unit
+    @StateBody body: TdActionContext.() -> Unit
 ) = onUpdate(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
 fun TdScenarioRootBuilder.onAnyMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageContent>, TdReactions>.() -> Unit
+    @StateBody body: TdMessageActionContext.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -79,7 +78,7 @@ fun TdScenarioRootBuilder.onAnyMessage(
 fun TdScenarioRootBuilder.onTextMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<RegexActivatorContext, TdTextMessageRequest, TdReactions>.() -> Unit
+    @StateBody body: TdRegexMessageActionContext.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
     activators {
         regex(pattern).apply {

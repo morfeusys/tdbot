@@ -1,11 +1,9 @@
 package com.tdbot.scenario
 
 import com.google.gson.JsonArray
-import com.justai.jaicf.channel.td.isIncoming
 import com.justai.jaicf.channel.td.isOutgoing
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onTextMessage
-import com.justai.jaicf.helpers.logging.logger
 import com.tdbot.scenario.utils.Http
 import io.ktor.client.request.*
 import kotlin.math.abs

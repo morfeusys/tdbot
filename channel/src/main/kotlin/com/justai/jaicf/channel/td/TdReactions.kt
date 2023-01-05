@@ -28,6 +28,11 @@ class TdReactions(
     }
 
     fun reply(
+        text: String,
+        options: TdApi.MessageSendOptions? = null,
+        messageThreadId: Long = 0) = reply(Td.text(text), options, messageThreadId)
+
+    fun reply(
         content: TdApi.InputMessageContent,
         options: TdApi.MessageSendOptions? = null,
         messageThreadId: Long = 0
