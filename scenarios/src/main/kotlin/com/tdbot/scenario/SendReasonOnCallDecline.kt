@@ -1,9 +1,7 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.client.TdTelegramApi
-import com.justai.jaicf.channel.td.client.sendMessage
 import com.justai.jaicf.channel.td.client.sendTextMessage
-import com.justai.jaicf.channel.td.isIncoming
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateCall
