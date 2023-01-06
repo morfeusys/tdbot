@@ -2,6 +2,7 @@ package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.TdReactions
 import com.justai.jaicf.channel.td.TdRequest
+import com.justai.jaicf.channel.td.isClient
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
@@ -19,9 +20,7 @@ fun SpyContact(
         user = api.send(TdApi.SearchUserByPhoneNumber(phoneNumber))
     }
 
-    onUpdateUserStatus {
-        if (request.update.userId == user?.id) {
-            handler(this, user!!)
-        }
+    onUpdateUserStatus(isClient {user?.id?.toString()}) {
+        handler(this, user!!)
     }
 }

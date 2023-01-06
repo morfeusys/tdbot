@@ -5,6 +5,8 @@ import com.justai.jaicf.model.activation.ActivationRule
 typealias OnlyIf = ActivationRule.OnlyIfContext.() -> Boolean
 private typealias IdProducer = ActivationRule.OnlyIfContext.() -> Long?
 private typealias IdsProducer = ActivationRule.OnlyIfContext.() -> LongArray
+private typealias ClientIdProducer = ActivationRule.OnlyIfContext.() -> String?
+private typealias ClientIdsProducer = ActivationRule.OnlyIfContext.() -> List<String?>
 
 val isOutgoing: OnlyIf = { request.td?.isOutgoing == true }
 val isIncoming: OnlyIf = { request.td?.isOutgoing == false }
@@ -23,6 +25,11 @@ val isNotSenders: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.sende
 
 val isMyMessage: OnlyIf = isSender { request.td?.me?.id }
 val isNotMyMessage: OnlyIf = isNotSender { request.td?.me?.id }
+
+val isClient: (producer: ClientIdProducer) -> OnlyIf = { p -> { request.clientId == p(this) } }
+val isNotClient: (producer: ClientIdProducer) -> OnlyIf = { p -> { p(this)?.let { request.clientId != it } ?: false } }
+val isClients: (producer: ClientIdsProducer) -> OnlyIf = { p -> { p(this).filterNotNull().contains(request.clientId) } }
+val isNotClients: (producer: ClientIdsProducer) -> OnlyIf = { p -> { !p(this).filterNotNull().contains(request.clientId) } }
 
 fun ActivationRule.ifOutgoing() = onlyIf(isOutgoing)
 fun ActivationRule.ifIncoming() = onlyIf(isIncoming)
