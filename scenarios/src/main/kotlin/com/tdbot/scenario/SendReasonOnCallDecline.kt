@@ -8,7 +8,7 @@ import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateCall
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
-import com.tdbot.api.TdBotScenario
+import com.tdbot.api.createInteractiveScenario
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.api.event
 import com.tdbot.scenario.utils.asEmojiUnicode
@@ -34,12 +34,12 @@ class SendReasonOnCallDecline(
         onUpdateCall {
             val state = request.update.call.state
             if (state is TdApi.CallStateDiscarded && state.reason is TdApi.CallDiscardReasonEmpty) {
-                sendTdBotEvent("SendReasonOnCallDecline", request.clientId)
+                sendToInteractiveScenario("SendReasonOnCallDecline", request.clientId)
             }
         }
     }
 
-    override val tdBotScenario = TdBotScenario {
+    override val interactiveScenario = createInteractiveScenario {
         event("SendReasonOnCallDecline") { userId ->
             val user = telegramApi.send(TdApi.GetUser(userId.toLong()))
 

@@ -11,7 +11,7 @@ private fun Scenario.build(builder: TdScenarioRootBuilder.(Scenario) -> Unit): S
     return if (scenario is TdInteractiveScenario) {
         object : TdInteractiveScenario() {
             override val helpMarkdownText = scenario.helpMarkdownText
-            override val tdBotScenario = scenario.tdBotScenario
+            override val interactiveScenario = scenario.interactiveScenario
             override val model = createTdModel {
                 builder(this, scenario)
             }

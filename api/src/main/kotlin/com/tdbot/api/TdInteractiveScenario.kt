@@ -10,23 +10,17 @@ import com.justai.jaicf.channel.telegram.telegram
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.model.scenario.Scenario
-import com.justai.jaicf.model.scenario.ScenarioModel
 import com.justai.jaicf.plugin.StateBody
 import com.justai.jaicf.plugin.StateDeclaration
 
-typealias TdBotModel = RootBuilder<TelegramBotRequest, TelegramReactions>.() -> Unit
+typealias TdBotModel = TdBotScenarioRootBuilder.() -> Unit
 typealias TdBotScenarioRootBuilder = RootBuilder<TelegramBotRequest, TelegramReactions>
 
 @ScenarioDsl
-fun createTdBotModel(
-    @StateBody body: TdBotModel
-): ScenarioModel = createModel(telegram, body)
-
-@ScenarioDsl
-fun TdBotScenario(
+fun createInteractiveScenario(
     @StateBody body: TdBotModel,
 ): Scenario = object : Scenario {
-    override val model by lazy { createTdBotModel(body) }
+    override val model by lazy { createModel(telegram, body) }
 }
 
 @ScenarioDsl
@@ -39,7 +33,7 @@ fun TdBotScenarioRootBuilder.event(
         event(event)
     }
 
-    action(telegram) {
+    action {
         body(this, request.invocationRequest?.requestData.orEmpty())
     }
 }
@@ -47,9 +41,9 @@ fun TdBotScenarioRootBuilder.event(
 abstract class TdInteractiveScenario : Scenario {
     lateinit var tdBotApi: TdBotApi
     abstract val helpMarkdownText: String
-    abstract val tdBotScenario: Scenario
+    abstract val interactiveScenario: Scenario
 
-    protected fun sendTdBotEvent(event: String, data: String = "") {
+    protected fun sendToInteractiveScenario(event: String, data: String = "") {
         if (this::tdBotApi.isInitialized) {
             tdBotApi.sendEvent(event, data)
         }

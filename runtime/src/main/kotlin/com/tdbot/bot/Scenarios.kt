@@ -12,6 +12,8 @@ class Scenarios(
 
     val enabled get() = all.filterKeys { !disabled.containsKey(it) }
 
+    val interactive get() = all.values.filterIsInstance<TdInteractiveScenario>()
+
     fun toggle(scenario: String) = when {
         isEnabled(scenario) -> disable(scenario)
         else -> enable(scenario)

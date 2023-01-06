@@ -3,10 +3,6 @@ package com.tdbot.runtime
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.td.TdChannel
 import com.justai.jaicf.channel.td.activator.RegexActivator
-import com.justai.jaicf.model.scenario.Scenario
-import com.tdbot.api.TdBotApi
-import com.tdbot.api.TdInteractiveScenario
-import com.tdbot.bot.Scenarios
 import com.tdbot.bot.TdBot
 import com.tdbot.defaultRuntimeSettings
 import it.tdlight.client.APIToken
@@ -70,25 +66,6 @@ class TdRuntime(
                 "PHONE_CODE_INVALID" -> tdChannel.close()
             }
         }
-    }
-
-    class ScenariosBuilder(
-        val tdBotApi: TdBotApi,
-    ) {
-        private val map = mutableMapOf<String, Scenario>()
-
-        infix fun String.to(scenario: Scenario) {
-            if (map.containsKey(this)) {
-                throw IllegalArgumentException("There is another scenario exists with name $this")
-            } else {
-                map[this] = scenario
-                if (scenario is TdInteractiveScenario) {
-                    scenario.tdBotApi = tdBotApi
-                }
-            }
-        }
-
-        internal fun build() = Scenarios(map.toMap())
     }
 
     data class Settings(

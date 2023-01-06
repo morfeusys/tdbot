@@ -10,7 +10,7 @@ import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
-import com.tdbot.api.TdBotScenario
+import com.tdbot.api.createInteractiveScenario
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.api.event
 import com.tdbot.scenario.utils.asEmojiUnicode
@@ -33,12 +33,12 @@ object CatchContact : TdInteractiveScenario() {
 
         onUpdateUserStatus(isClients { usersToCatch.map { it.id.toString() }}) {
             if (request.update.status is TdApi.UserStatusOnline) {
-                sendTdBotEvent("CatchContactOnline", request.clientId)
+                sendToInteractiveScenario("CatchContactOnline", request.clientId)
             }
         }
     }
 
-    override val tdBotScenario = TdBotScenario {
+    override val interactiveScenario = createInteractiveScenario {
         event("CatchContactOnline") { data ->
             val userId = data.toLong()
             usersToCatch.find { it.id == userId }?.let { user ->

@@ -88,7 +88,7 @@ class TdBotScenario(
         state("TdBotScenario.Scenario") {
             activators {
                 scenarios.all.keys.forEach {
-                    regex("/($it)")
+                    regex("/?($it)")
                 }
             }
 
@@ -125,8 +125,8 @@ class TdBotScenario(
             }
         }
 
-        scenarios.all.values.filterIsInstance<TdInteractiveScenario>().forEach {
-            append(it.tdBotScenario)
+        scenarios.interactive.forEach {
+            append(it.interactiveScenario)
         }
 
     }
