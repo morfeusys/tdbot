@@ -7,14 +7,12 @@ import com.justai.jaicf.model.scenario.Scenario
 import it.tdlight.jni.TdApi
 import java.util.concurrent.atomic.AtomicReference
 
-private fun Scenario.build(builder: TdScenarioRootBuilder.(Scenario) -> Unit): Scenario = let { scenario ->
-    return if (scenario is TdInteractiveScenario) {
+private fun Scenario.build(builder: TdScenarioRootBuilder.(Scenario) -> Unit) = let { scenario ->
+    if (scenario is TdInteractiveScenario) {
         object : TdInteractiveScenario() {
-            override val helpMarkdownText = scenario.helpMarkdownText
+            override val config = scenario.config
             override val interactiveScenario = scenario.interactiveScenario
-            override val model = createTdModel {
-                builder(this, scenario)
-            }
+            override val model = createTdModel { builder(this, scenario) }
         }
     } else {
         TdScenario {

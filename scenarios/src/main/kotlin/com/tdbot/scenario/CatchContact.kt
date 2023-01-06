@@ -16,24 +16,23 @@ import com.tdbot.api.event
 import com.tdbot.scenario.utils.asEmojiUnicode
 import it.tdlight.jni.TdApi
 
-object CatchContact : TdInteractiveScenario() {
+object CatchContact : TdInteractiveScenario({
+    helpMarkdownText = "Catches the user when they become online. " +
+            "\nOnce the user becomes online, TdBot informs you with notification ${"red_circle".asEmojiUnicode}\n" +
+            "\nJust type *catch <CONTACT NAME>* to track the contact status.\n" +
+            "\n_Please note that the user should be added to your contacts before._"
+}) {
     private lateinit var telegramApi: TdTelegramApi
     private val usersToCatch = mutableSetOf<TdApi.User>()
-
-    override val helpMarkdownText =
-        "Catches the user when they become online. " +
-                "\nOnce the user becomes online, TdBot informs you with notification ${"red_circle".asEmojiUnicode}\n" +
-                "\nJust type *catch <CONTACT NAME>* to track the contact status.\n" +
-                "\n_Please note that the user should be added to your contacts before._"
 
     override val model = createTdModel {
         onReady {
             telegramApi = api
         }
 
-        onUpdateUserStatus(isClients { usersToCatch.map { it.id.toString() }}) {
+        onUpdateUserStatus(isClients { usersToCatch.map { it.id.toString() } }) {
             if (request.update.status is TdApi.UserStatusOnline) {
-                sendToInteractiveScenario("CatchContactOnline", request.clientId)
+                sendInteractiveScenarioEvent("CatchContactOnline", request.clientId)
             }
         }
     }
@@ -46,7 +45,10 @@ object CatchContact : TdInteractiveScenario() {
                 context.session["user_to_catch"] = user
                 val username = user.usernames.activeUsernames.firstOrNull()
                 if (username != null) {
-                    reactions.say("${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", ParseMode.MARKDOWN_V2)
+                    reactions.say(
+                        "${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now",
+                        ParseMode.MARKDOWN_V2
+                    )
                 } else {
                     reactions.say("${"red_circle".asEmojiUnicode} ${user.firstName} ${user.lastName} is online now")
                 }

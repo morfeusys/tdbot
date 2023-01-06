@@ -12,6 +12,7 @@ import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.plugin.StateBody
 import com.justai.jaicf.plugin.StateDeclaration
+import com.justai.jaicf.reactions.ButtonToState
 
 typealias TdBotModel = TdBotScenarioRootBuilder.() -> Unit
 typealias TdBotScenarioRootBuilder = RootBuilder<TelegramBotRequest, TelegramReactions>
@@ -38,14 +39,20 @@ fun TdBotScenarioRootBuilder.event(
     }
 }
 
-abstract class TdInteractiveScenario : Scenario {
+abstract class TdInteractiveScenario(builder: Config.() -> Unit = {}) : Scenario {
     lateinit var tdBotApi: TdBotApi
-    abstract val helpMarkdownText: String
+    open val config = Config().apply(builder)
+
     abstract val interactiveScenario: Scenario
 
-    protected fun sendToInteractiveScenario(event: String, data: String = "") {
+    protected fun sendInteractiveScenarioEvent(event: String, data: String = "") {
         if (this::tdBotApi.isInitialized) {
             tdBotApi.sendEvent(event, data)
         }
     }
+
+    data class Config(
+        var startButton: ButtonToState? = null,
+        var helpMarkdownText: String? = null,
+    )
 }

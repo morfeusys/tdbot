@@ -29,8 +29,8 @@ class TdScenario(
                 }
             }
 
-            scenarios.all.forEach { scenario ->
-                append("/${scenario.key}", scenario.value, modal = true)
+            scenarios.all.forEach { (name, scenario) ->
+                append("/$name", scenario, modal = true)
             }
 
             fallback(rootState) {

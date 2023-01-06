@@ -14,17 +14,12 @@ import com.tdbot.api.event
 import com.tdbot.scenario.utils.asEmojiUnicode
 import it.tdlight.jni.TdApi
 
-class SendReasonOnCallDecline(
-    vararg reasons: String
-) : TdInteractiveScenario() {
+class SendReasonOnCallDecline(vararg reasons: String) : TdInteractiveScenario() {
     private lateinit var telegramApi: TdTelegramApi
 
     private val buttons = reasons.map {
         it.take(21).replaceRange(18..20, "...") toState "/SendReasonText/$it"
     }.toTypedArray()
-
-    override val helpMarkdownText =
-        "Sends a reason text to the caller each time you decline their call."
 
     override val model = createTdModel {
         onReady {
@@ -34,7 +29,7 @@ class SendReasonOnCallDecline(
         onUpdateCall {
             val state = request.update.call.state
             if (state is TdApi.CallStateDiscarded && state.reason is TdApi.CallDiscardReasonEmpty) {
-                sendToInteractiveScenario("SendReasonOnCallDecline", request.clientId)
+                sendInteractiveScenarioEvent("SendReasonOnCallDecline", request.clientId)
             }
         }
     }
