@@ -15,7 +15,7 @@ import com.tdbot.api.event
 import com.tdbot.scenario.utils.asEmojiUnicode
 import it.tdlight.jni.TdApi
 
-class CatchContact : TdInteractiveScenario() {
+object CatchContact : TdInteractiveScenario() {
     private lateinit var telegramApi: TdTelegramApi
     private val usersToCatch = mutableSetOf<TdApi.User>()
 

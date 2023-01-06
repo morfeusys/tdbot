@@ -26,7 +26,7 @@ class BotClient(
     private lateinit var api: TdTelegramApi
     private var startMessage: TdApi.Message? = null
 
-    val started
+    val isStarted
         get() = startMessage != null
 
     var botUserId = 0L
@@ -58,7 +58,7 @@ class BotClient(
     }
 
     fun start(): TdApi.Message {
-        if (!started) {
+        if (!isStarted) {
             startMessage = api.sendMessage(botUserId, content = Td.text("/start"))
         }
         return startMessage!!
