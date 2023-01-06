@@ -17,8 +17,11 @@ import it.tdlight.jni.TdApi
 class SendReasonOnCallDecline(
     vararg reasons: String
 ) : TdInteractiveScenario() {
-    private val buttons = reasons.map { it.take(21) toState "/SendReasonText/$it" }.toTypedArray()
     private lateinit var telegramApi: TdTelegramApi
+
+    private val buttons = reasons.map {
+        it.take(21).replaceRange(18..20, "...") toState "/SendReasonText/$it"
+    }.toTypedArray()
 
     override val helpMarkdownText =
         "Sends a reason text to the caller each time you decline their call."
@@ -42,7 +45,7 @@ class SendReasonOnCallDecline(
 
             context.session["user_to_send_call_dismiss_reason"] = user
 
-            reactions.say("${"telephone_receiver".asEmojiUnicode} You've declined incoming call from *${user.firstName} ${user.lastName}*.\n"
+            reactions.say("${"telephone_receiver".asEmojiUnicode} You've declined incoming call from *${user.firstName} ${user.lastName}*.\n\n"
                     + "Click one of the buttons below to send a reason text back to them.", ParseMode.MARKDOWN)
             reactions.buttons(*buttons)
         }
