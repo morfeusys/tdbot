@@ -106,7 +106,7 @@ class TdBotScenario(
                     if (scenario.config.helpMarkdownText?.isNotBlank() == true) {
                         buttons.add("How to use" toState "help")
                     }
-                    scenario.config.startButton?.also(buttons::add)
+                    buttons.addAll(scenario.config.actionButtons)
                 }
 
                 reactions.buttons(*buttons.toTypedArray())
@@ -131,7 +131,7 @@ class TdBotScenario(
                             scenario.config.helpMarkdownText!!, ParseMode.MARKDOWN)
 
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("../toggle"))
-                    scenario.config.startButton?.also(buttons::add)
+                    buttons.addAll(scenario.config.actionButtons)
                     reactions.buttons(*buttons.toTypedArray())
                 }
             }

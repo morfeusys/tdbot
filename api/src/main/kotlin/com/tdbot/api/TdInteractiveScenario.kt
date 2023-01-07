@@ -52,7 +52,7 @@ abstract class TdInteractiveScenario(builder: Config.() -> Unit = {}) : Scenario
     }
 
     data class Config(
-        var startButton: ButtonToState? = null,
         var helpMarkdownText: String? = null,
+        var actionButtons: List<ButtonToState> = emptyList(),
     )
 }

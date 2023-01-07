@@ -3,15 +3,14 @@ package com.tdbot.scenario
 import com.github.kotlintelegrambot.entities.ParseMode
 import com.justai.jaicf.activator.regex.regex
 import com.justai.jaicf.channel.td.client.TdTelegramApi
-import com.justai.jaicf.channel.td.isClients
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
-import com.tdbot.api.createInteractiveScenario
 import com.tdbot.api.TdInteractiveScenario
+import com.tdbot.api.createInteractiveScenario
 import com.tdbot.api.event
 import com.tdbot.scenario.utils.asEmojiUnicode
 import it.tdlight.jni.TdApi
@@ -30,8 +29,8 @@ object CatchContact : TdInteractiveScenario({
             telegramApi = api
         }
 
-        onUpdateUserStatus(isClients { usersToCatch.map { it.id.toString() } }) {
-            if (request.update.status is TdApi.UserStatusOnline) {
+        onUpdateUserStatus {
+            if (request.update.status is TdApi.UserStatusOnline && usersToCatch.any { it.id == request.update.userId }) {
                 sendInteractiveScenarioEvent("CatchContactOnline", request.clientId)
             }
         }
