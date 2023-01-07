@@ -59,7 +59,7 @@ class BotClient(
 
     fun start(): TdApi.Message {
         if (!isStarted) {
-            startMessage = api.sendMessage(botUserId, content = Td.text("/start"))
+            startMessage = api.sendMessage(botUserId, content = TdMessage.text("/start"))
         }
         return startMessage!!
     }
@@ -119,7 +119,7 @@ class BotClient(
     fun sendMessage(
         content: String,
         replyHandler: (TdApi.Message) -> Unit = {}
-    ) = sendMessage(Td.text(content), replyHandler)
+    ) = sendMessage(TdMessage.text(content), replyHandler)
 
     fun sendMessage(
         content: TdApi.InputMessageContent,

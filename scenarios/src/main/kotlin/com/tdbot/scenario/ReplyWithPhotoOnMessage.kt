@@ -1,6 +1,6 @@
 package com.tdbot.scenario
 
-import com.justai.jaicf.channel.td.Td
+import com.justai.jaicf.channel.td.TdMessage
 import com.justai.jaicf.channel.td.TdRegexMessageActionContext
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onTextMessage
@@ -13,7 +13,7 @@ fun ReplyWithPhotoOnMessage(
 
     onTextMessage(pattern) {
         photoUrl(this)?.let { url ->
-            reactions.reply(Td.photo(url))
+            reactions.reply(TdMessage.photo(url))
         }
     }
 }

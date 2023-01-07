@@ -1,6 +1,6 @@
 package com.tdbot.scenario
 
-import com.justai.jaicf.channel.td.Td
+import com.justai.jaicf.channel.td.TdMessage
 import com.justai.jaicf.channel.td.isOutgoing
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onVoiceNoteMessage
@@ -19,7 +19,7 @@ fun TranscribeMyVoiceNotesWithTranscriberBot(language: String) = TdScenario {
             if (text.text.text.length <= 1024) {
                 reactions.editCaption(text.text.text)
             } else {
-                reactions.reply(Td.text(text))
+                reactions.reply(TdMessage.text(text))
             }
         }
     }

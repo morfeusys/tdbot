@@ -6,6 +6,7 @@ import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
+import com.justai.jaicf.helpers.logging.logger
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
@@ -31,7 +32,7 @@ object CatchContact : TdInteractiveScenario({
 
         onUpdateUserStatus {
             if (request.update.status is TdApi.UserStatusOnline && usersToCatch.any { it.id == request.update.userId }) {
-                sendInteractiveScenarioEvent("CatchContactOnline", request.clientId)
+                sendInteractiveScenarioEvent("CatchContactOnline", request.update.userId.toString())
             }
         }
     }
@@ -45,11 +46,11 @@ object CatchContact : TdInteractiveScenario({
                 val username = user.usernames.activeUsernames.firstOrNull()
                 if (username != null) {
                     reactions.say(
-                        "${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now",
+                        "${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName.orEmpty()}](https://t.me/$username) is online now",
                         ParseMode.MARKDOWN_V2
                     )
                 } else {
-                    reactions.say("${"red_circle".asEmojiUnicode} ${user.firstName} ${user.lastName} is online now")
+                    reactions.say("${"red_circle".asEmojiUnicode} ${user.firstName} ${user.lastName.orEmpty()} is online now")
                 }
                 reactions.buttons("Catch later".toState("/CatchContact/catch"))
             }

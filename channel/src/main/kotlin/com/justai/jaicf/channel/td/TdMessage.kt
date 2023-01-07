@@ -2,7 +2,7 @@ package com.justai.jaicf.channel.td
 
 import it.tdlight.jni.TdApi
 
-object Td {
+object TdMessage {
     fun text(messageText: TdApi.MessageText) =
         text(messageText.text.text, messageText.text.entities)
 

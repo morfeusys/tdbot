@@ -1,6 +1,6 @@
 package com.justai.jaicf.channel.td.client
 
-import com.justai.jaicf.channel.td.Td
+import com.justai.jaicf.channel.td.TdMessage
 import it.tdlight.jni.TdApi
 
 fun TdTelegramApi.sendTextMessage(
@@ -10,7 +10,7 @@ fun TdTelegramApi.sendTextMessage(
     replyToMessageId: Long = 0,
     options: TdApi.MessageSendOptions? = null,
     replyMarkup: TdApi.ReplyMarkup? = null,
-) = sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, Td.text(text))
+) = sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, TdMessage.text(text))
 
 fun TdTelegramApi.sendMessage(
     chatId: Long,
@@ -68,3 +68,19 @@ fun TdTelegramApi.getInlineQueryResults(
     query: String,
     offset: String? = null,
 ) = send(TdApi.GetInlineQueryResults(botUserId, chatId, userLocation, query, offset))
+
+fun TdTelegramApi.searchChats(query: String, limit: Int = 1) =
+    send(TdApi.SearchChats(query, limit)).let {
+        when (it.totalCount) {
+            0 -> send(TdApi.SearchChatsOnServer(query, limit))
+            else -> it
+        }
+    }
+
+fun TdTelegramApi.searchPublicChats(query: String, limit: Int = 1) =
+    searchChats(query, limit).let {
+        when (it.totalCount) {
+            0 -> send(TdApi.SearchPublicChats(query))
+            else -> it
+        }
+    }

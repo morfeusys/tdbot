@@ -3,33 +3,45 @@ package com.justai.jaicf.channel.td
 import com.justai.jaicf.model.activation.ActivationRule
 
 typealias OnlyIf = ActivationRule.OnlyIfContext.() -> Boolean
+
 private typealias IdProducer = ActivationRule.OnlyIfContext.() -> Long?
 private typealias IdsProducer = ActivationRule.OnlyIfContext.() -> LongArray
-private typealias ClientIdProducer = ActivationRule.OnlyIfContext.() -> String?
-private typealias ClientIdsProducer = ActivationRule.OnlyIfContext.() -> List<String?>
+private typealias OnlyIfId = (IdProducer) -> OnlyIf
+private typealias OnlyIfIds = (IdsProducer) -> OnlyIf
+
+private fun createIdCondition(idProducer: IdProducer, predicate: (Long, Long) -> Boolean): OnlyIfId 
+    = { p -> { idProducer(this)?.let { id -> p(this)?.let { predicate(it, id) } } ?: false } }
+
+private fun createIdsCondition(idProducer: IdProducer, predicate: (LongArray, Long) -> Boolean): OnlyIfIds
+    = { p -> { idProducer(this)?.let { id -> predicate(p(this), id) } ?: false }}
+
+private fun createIdEqualsCondition(idProducer: IdProducer) = createIdCondition(idProducer) { id1, id2 -> id1 == id2 }
+private fun createIdNotEqualCondition(idProducer: IdProducer) = createIdCondition(idProducer) { id1, id2 -> id1 != id2 }
+private fun createContainsIdCondition(idProducer: IdProducer) = createIdsCondition(idProducer) { ids, id -> ids.contains(id) }
+private fun createNotContainIdCondition(idProducer: IdProducer) = createIdsCondition(idProducer) { ids, id -> !ids.contains(id) }
 
 val isOutgoing: OnlyIf = { request.td?.isOutgoing == true }
 val isIncoming: OnlyIf = { request.td?.isOutgoing == false }
 val isChannelPost: OnlyIf = { request.td?.isChannelPost == true }
 val isNotChannelPost: OnlyIf = { request.td?.isChannelPost == false }
 
-val isChat: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.chatId?.let { it == p(this) } ?: false } }
-val isNotChat: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.chatId?.let { id -> p(this)?.let { id != it } } ?: false } }
-val isChats: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.chatId?.let { p(this).contains(it) } ?: false } }
-val isNotChats: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.chatId?.let { !p(this).contains(it) } ?: false } }
+val isFromId = createIdEqualsCondition { request.td?.fromId }
+val isNotFromId = createIdNotEqualCondition { request.td?.fromId }
+val isFromIds = createContainsIdCondition { request.td?.fromId }
+val isNotFromIds = createNotContainIdCondition { request.td?.fromId }
 
-val isSender: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { it == p(this) } ?: false } }
-val isNotSender: (producer: IdProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { id -> p(this)?.let { id != it } } ?: false } }
-val isSenders: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { p(this).contains(it) } ?: false } }
-val isNotSenders: (producer: IdsProducer) -> OnlyIf = { p -> { request.td?.senderId?.let { !p(this).contains(it) } ?: false } }
+val isChat = createIdEqualsCondition { request.td?.chatId }
+val isNotChat = createIdNotEqualCondition { request.td?.chatId }
+val isChats = createContainsIdCondition { request.td?.chatId }
+val isNotChats = createNotContainIdCondition { request.td?.chatId }
+
+val isSender = createIdEqualsCondition { request.td?.senderId }
+val isNotSender = createIdNotEqualCondition { request.td?.senderId }
+val isSenders = createContainsIdCondition { request.td?.senderId }
+val isNotSenders = createNotContainIdCondition { request.td?.senderId }
 
 val isMyMessage: OnlyIf = isSender { request.td?.me?.id }
 val isNotMyMessage: OnlyIf = isNotSender { request.td?.me?.id }
-
-val isClient: (producer: ClientIdProducer) -> OnlyIf = { p -> { request.clientId == p(this) } }
-val isNotClient: (producer: ClientIdProducer) -> OnlyIf = { p -> { p(this)?.let { request.clientId != it } ?: false } }
-val isClients: (producer: ClientIdsProducer) -> OnlyIf = { p -> { p(this).filterNotNull().contains(request.clientId) } }
-val isNotClients: (producer: ClientIdsProducer) -> OnlyIf = { p -> { !p(this).filterNotNull().contains(request.clientId) } }
 
 fun ActivationRule.ifOutgoing() = onlyIf(isOutgoing)
 fun ActivationRule.ifIncoming() = onlyIf(isIncoming)

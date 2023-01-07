@@ -30,7 +30,7 @@ class TdReactions(
     fun reply(
         text: String,
         options: TdApi.MessageSendOptions? = null,
-        messageThreadId: Long = 0) = reply(Td.text(text), options, messageThreadId)
+        messageThreadId: Long = 0) = reply(TdMessage.text(text), options, messageThreadId)
 
     fun reply(
         content: TdApi.InputMessageContent,
@@ -43,7 +43,7 @@ class TdReactions(
     }
 
     fun editText(text: String, entities: Array<out TdApi.TextEntity> = emptyArray()) =
-        editText(Td.text(text, entities))
+        editText(TdMessage.text(text, entities))
 
     fun editText(text: TdApi.InputMessageText) = withChatId { chatId ->
         request.messageId?.let { messageId ->
@@ -58,26 +58,26 @@ class TdReactions(
     }
 
     override fun say(text: String) = SayReaction.create(text).also {
-        sendMessage(Td.text(text))
+        sendMessage(TdMessage.text(text))
     }
 
     fun say(text: String, entities: Array<out TdApi.TextEntity>) =
-        sendMessage(Td.text(text, entities))
+        sendMessage(TdMessage.text(text, entities))
 
     override fun image(url: String) = ImageReaction.create(url).also {
-        sendMessage(Td.photo(url))
+        sendMessage(TdMessage.photo(url))
     }
 
     fun animation(url: String) = ImageReaction.create(url).also {
-        sendMessage(Td.animation(url))
+        sendMessage(TdMessage.animation(url))
     }
 
     override fun audio(url: String) = AudioReaction.create(url).also {
-        sendMessage(Td.audio(url))
+        sendMessage(TdMessage.audio(url))
     }
 
     fun video(url: String) = VideoReaction.create(url).also {
-        sendMessage(Td.video(url))
+        sendMessage(TdMessage.video(url))
     }
 
     fun forward(message: TdApi.Message) = withChatId { chatId ->

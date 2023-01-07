@@ -3,7 +3,7 @@ package com.justai.jaicf.channel.td
 import com.justai.jaicf.api.BotRequest
 import com.justai.jaicf.api.EventBotRequest
 import com.justai.jaicf.api.QueryBotRequest
-import com.justai.jaicf.channel.td.client.clientId
+import com.justai.jaicf.channel.td.client.fromId
 import com.justai.jaicf.channel.td.scenario.event
 import it.tdlight.jni.TdApi
 
@@ -14,6 +14,7 @@ val BotRequest.td get() = this as? DefaultTdRequest
 val DefaultTdRequest.messageRequest get() = this as? TdMessageRequest<out TdApi.MessageContent>
 val DefaultTdRequest.textRequest get() = this as? TdTextMessageRequest
 
+val DefaultTdRequest.fromId get() = update.fromId
 val DefaultTdRequest.messageId get() = messageRequest?.update?.message?.id
 val DefaultTdRequest.chatId get() = messageRequest?.update?.message?.chatId
 val DefaultTdRequest.senderId get() = messageRequest?.update?.senderId
@@ -26,7 +27,7 @@ val TdApi.UpdateNewMessage.senderId get() = when (message.senderId) {
     else -> null
 }
 
-internal fun TdApi.Update.getClientId(user: TdApi.User) = clientId?.toString() ?: user.id.toString()
+internal fun TdApi.Update.getClientId(user: TdApi.User) = fromId?.toString() ?: user.id.toString()
 
 interface TdRequest<U : TdApi.Update> : BotRequest {
     val me: TdApi.User

@@ -22,30 +22,14 @@ private fun Scenario.build(builder: TdScenarioRootBuilder.(Scenario) -> Unit) = 
 }
 
 private fun TdScenarioRootBuilder.searchChannel(query: String) = AtomicReference<Long?>().also { ref ->
-    onReady {
-        api.searchChats(query).chatIds.firstOrNull()?.let(ref::set)
-    }
-
-    onClose {
-        ref.set(null)
-    }
+    onReady { api.searchChats(query).chatIds.firstOrNull()?.let(ref::set) }
 }
 
 private fun TdScenarioRootBuilder.searchContact(query: String) = AtomicReference<Long?>().also { ref ->
-    onReady {
-        api.send(TdApi.SearchContacts(query, 1)).userIds.firstOrNull()?.let(ref::set)
-    }
-
-    onClose {
-        ref.set(null)
-    }
+    onReady { api.send(TdApi.SearchContacts(query, 1)).userIds.firstOrNull()?.let(ref::set) }
 }
 
-fun Scenario.onlyIf(predicate: OnlyIf) = apply {
-    model.transitions.forEach {
-        it.rule.onlyIf(predicate)
-    }
-}
+fun Scenario.onlyIf(predicate: OnlyIf) = apply { model.transitions.forEach { it.rule.onlyIf(predicate) } }
 
 val Scenario.onlyIncoming get() = onlyIf(isIncoming)
 
@@ -61,12 +45,12 @@ val Scenario.onlyNonChannelPosts get() = onlyIf(isNotChannelPost)
 
 fun Scenario.onlyWithContacts(vararg contacts: String) = build { scenario ->
     val userIds = contacts.map(::searchContact)
-    append(scenario.onlyIf(isChats { userIds.mapNotNull { it.get() }.toLongArray() }))
+    append(scenario.onlyIf(isFromIds { userIds.mapNotNull { it.get() }.toLongArray() }))
 }
 
 fun Scenario.onlyWithNotContacts(vararg contacts: String) = build { scenario ->
     val userIds = contacts.map(::searchContact)
-    append(scenario.onlyIf(isNotChats { userIds.mapNotNull { it.get() }.toLongArray() }))
+    append(scenario.onlyIf(isNotFromIds { userIds.mapNotNull { it.get() }.toLongArray() }))
 }
 
 fun Scenario.onlyInChats(vararg chats: String) = build { scenario ->
