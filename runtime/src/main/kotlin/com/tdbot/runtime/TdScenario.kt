@@ -2,13 +2,10 @@ package com.tdbot.runtime
 
 import com.github.kotlintelegrambot.entities.User
 import com.justai.jaicf.api.BotApi
+import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.client.TdTelegramApi
-import com.justai.jaicf.channel.td.fromId
 import com.justai.jaicf.channel.td.hook.TdReadyHook
-import com.justai.jaicf.channel.td.messageId
 import com.justai.jaicf.channel.td.scenario.createTdModel
-import com.justai.jaicf.channel.td.senderId
-import com.justai.jaicf.channel.td.td
 import com.justai.jaicf.context.BotContext
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.hook.BotHookException
@@ -34,14 +31,14 @@ class TdScenario(tdBotUser: User, scenarios: Scenarios) : Scenario {
             }
 
             handle<BotRequestHook> {
-                if (request.td?.fromId == tdBotUser.id) {
-                    throw BotHookException("Rejected tdBot's request")
-                }
-                if (request.td?.fromId == botFather.botUserId) {
-                    throw BotHookException("Rejected BotFather's request")
-                }
                 if (telegrapApi.isOutgoing(request.td)) {
                     throw BotHookException("Self message rejected [${request.td?.messageId}]")
+                }
+                if (request.td?.chatId == tdBotUser.id) {
+                    throw BotHookException("Rejected tdBot's chat request")
+                }
+                if (request.td?.chatId == botFather.botUserId) {
+                    throw BotHookException("Rejected BotFather's chat request")
                 }
             }
 
