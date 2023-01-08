@@ -28,4 +28,6 @@ class Scenarios(
     fun isDisabled(scenario: String) = _disabled.contains(scenario)
 
     fun isInteractive(scenario: String) = all[scenario] is TdInteractiveScenario
+
+    fun findScenarioName(query: String) = all.keys.find { it.equals(query, true) }
 }

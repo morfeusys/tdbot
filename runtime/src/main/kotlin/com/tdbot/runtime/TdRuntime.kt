@@ -30,7 +30,7 @@ class TdRuntime(
         }.build()
 
         tdBot.start(scenarios)
-        val tdScenario = TdScenario(tdBot.getId(), scenarios)
+        val tdScenario = TdScenario(tdBot.getUser(), scenarios)
 
         val tdEngine = BotEngine(
             scenario = tdScenario,

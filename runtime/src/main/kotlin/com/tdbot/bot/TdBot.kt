@@ -1,6 +1,7 @@
 package com.tdbot.bot
 
 import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.entities.User
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.activator.regex.RegexActivator
 import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
@@ -24,7 +25,7 @@ class TdBot(
     private val authService: AuthService,
 ) : TdBotApi {
     private val logger = LoggerFactory.getLogger(javaClass.name)
-    private val botId = CompletableFuture<Long>()
+    private val me = CompletableFuture<User>()
 
     private lateinit var channel: TelegramChannel
     private lateinit var user: TdApi.User
@@ -60,14 +61,14 @@ class TdBot(
             start()
         }
 
-        botId.complete(
+        me.complete(
             channel.bot.getMe().first?.let { res ->
-                res.body()?.result?.id
+                res.body()?.result
             } ?: throw IllegalStateException("Cannot get tdbot data. Check your bot token.")
         )
     }
 
-    fun getId(): Long = botId.get()
+    fun getUser(): User = me.get()
 
     fun onReady(api: TdTelegramApi) {
         logger.info("Ready")

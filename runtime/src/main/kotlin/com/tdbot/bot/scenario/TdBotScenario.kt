@@ -31,7 +31,8 @@ class TdBotScenario(
 
         state("TdBotScenario.Start") {
             activators {
-                regex("/start.*")
+                regex("/?start.*")
+                regex("restart")
             }
 
 
@@ -94,23 +95,23 @@ class TdBotScenario(
             }
 
             action(regex) {
-                val name = activator.matcher.group(1)
-                val enabled = scenarios.isEnabled(name)
-                val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("toggle"))
+                scenarios.findScenarioName(activator.matcher.group(1))?.also { name ->
+                    val enabled = scenarios.isEnabled(name)
+                    val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("toggle"))
 
-                context.session["selected_scenario"] = name
-                reactions.say("$name scenario is ${enabled.status} now.")
+                    context.session["selected_scenario"] = name
+                    reactions.say("_${name}_ scenario is _${enabled.status}_ now.", ParseMode.MARKDOWN)
 
-                if (scenarios.isInteractive(name)) {
-                    val scenario = scenarios.all[name] as TdInteractiveScenario
-                    if (scenario.config.helpMarkdownText?.isNotBlank() == true) {
-                        buttons.add("How to use" toState "help")
+                    if (scenarios.isInteractive(name)) {
+                        val scenario = scenarios.all[name] as TdInteractiveScenario
+                        if (scenario.config.helpMarkdownText?.isNotBlank() == true) {
+                            buttons.add("How to use" toState "help")
+                        }
+                        buttons.addAll(scenario.config.actionButtons)
                     }
-                    buttons.addAll(scenario.config.actionButtons)
+
+                    reactions.buttons(*buttons.toTypedArray())
                 }
-
-                reactions.buttons(*buttons.toTypedArray())
-
             }
 
             state("toggle") {
