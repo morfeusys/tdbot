@@ -26,10 +26,10 @@ class TdScenario(tdBotUser: User, scenarios: Scenarios) : Scenario {
         val rootState = UUID.randomUUID().toString()
 
         createTdModel {
-            val botFather = createBotClient("@BotFather").apply {
-                sendMessage("/setcommands")
-                sendMessage("@${tdBotUser.username}")
-                sendMessage("start - Go to main menu\n" +
+            val botFather = createBotClient("@BotFather") { bot ->
+                bot.sendMessage("/setcommands")
+                bot.sendMessage("@${tdBotUser.username}")
+                bot.sendMessage("start - Go to main menu\n" +
                         scenarios.all.keys.joinToString("\n") { "${it.lowercase()} - Open scenario menu" })
             }
 
