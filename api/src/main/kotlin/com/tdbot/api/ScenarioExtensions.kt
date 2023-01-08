@@ -45,12 +45,12 @@ val Scenario.onlyNonChannelPosts get() = onlyIf(isNotChannelPost)
 
 fun Scenario.onlyWithContacts(vararg contacts: String) = build { scenario ->
     val userIds = contacts.map(::searchContact)
-    append(scenario.onlyIf(isFromIds { userIds.mapNotNull { it.get() }.toLongArray() }))
+    append(scenario.onlyIf(isChats { userIds.mapNotNull { it.get() }.toLongArray() }))
 }
 
 fun Scenario.onlyWithNotContacts(vararg contacts: String) = build { scenario ->
     val userIds = contacts.map(::searchContact)
-    append(scenario.onlyIf(isNotFromIds { userIds.mapNotNull { it.get() }.toLongArray() }))
+    append(scenario.onlyIf(isNotChats { userIds.mapNotNull { it.get() }.toLongArray() }))
 }
 
 fun Scenario.onlyInChats(vararg chats: String) = build { scenario ->
