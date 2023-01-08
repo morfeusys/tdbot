@@ -3,6 +3,9 @@ package com.tdbot.runtime
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.td.TdChannel
 import com.justai.jaicf.channel.td.activator.RegexActivator
+import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.hook.TdClosedHook
+import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.tdbot.bot.TdBot
 import com.tdbot.defaultRuntimeSettings
 import it.tdlight.client.APIToken
@@ -52,8 +55,10 @@ class TdRuntime(
             settings = tdSettings,
             clientInteraction = authService
         )
+            .onReady { tdEngine.hooks.triggerHook(TdReadyHook(it)) }
             .onReady(tdBot::onReady)
             .onClose(tdBot::onClose)
+            .onClose { tdEngine.hooks.triggerHook(TdClosedHook(it)) }
             .onClose { startTdChannel(tdEngine) }
             .onException(tdBot::onException)
             .onException(::onException)

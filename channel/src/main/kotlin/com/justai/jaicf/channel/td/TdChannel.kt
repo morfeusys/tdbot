@@ -67,19 +67,18 @@ class TdChannel(
     }
 
     private fun ready(api: TdTelegramApi) {
-        val me = api.send(TdApi.GetMe())
-        botApi.hooks.triggerHook(TdReadyHook(api, me))
-        addHandlers(me)
+        botApi.hooks.triggerHook(TdReadyHook(api))
+        addHandlers()
     }
 
-    private fun addHandlers(me: TdApi.User) {
+    private fun addHandlers() {
         api.onUpdates { update ->
             val request = when (update) {
                 is TdApi.UpdateNewMessage -> when (update.message.content) {
-                    is TdApi.MessageText -> TdTextMessageRequest(me, update)
-                    else -> TdEventMessageRequest(me, update)
+                    is TdApi.MessageText -> TdTextMessageRequest(api.me, update)
+                    else -> TdEventMessageRequest(api.me, update)
                 }
-                else -> TdUpdateRequest(me, update)
+                else -> TdUpdateRequest(api.me, update)
             }
 
             botProcessScope.launch {
@@ -87,8 +86,8 @@ class TdChannel(
             }
         }
 
-        onClose { client ->
-            botApi.hooks.triggerHook(TdClosedHook(client, me))
+        onClose {
+            botApi.hooks.triggerHook(TdClosedHook(it))
         }
     }
 }

@@ -14,7 +14,7 @@ val BotRequest.td get() = this as? DefaultTdRequest
 val DefaultTdRequest.messageRequest get() = this as? TdMessageRequest<out TdApi.MessageContent>
 val DefaultTdRequest.textRequest get() = this as? TdTextMessageRequest
 
-val DefaultTdRequest.fromId get() = update.fromId
+val DefaultTdRequest.fromId get() = senderId ?: update.fromId
 val DefaultTdRequest.messageId get() = messageRequest?.update?.message?.id
 val DefaultTdRequest.chatId get() = messageRequest?.update?.message?.chatId
 val DefaultTdRequest.senderId get() = messageRequest?.update?.senderId

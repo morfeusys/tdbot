@@ -11,15 +11,15 @@ import org.slf4j.LoggerFactory
 val isBotChat: (bot: BotClient?) -> OnlyIf = { isChat { it?.botUserId } }
 val isNotBotChat: (bot: BotClient?) -> OnlyIf = { isNotChat { it?.botUserId } }
 
-fun TdScenarioRootBuilder.createBotClient(botName: String, initHandler: (client: BotClient) -> Unit = {}) =
-    BotClient(botName, initHandler).also { bot ->
+fun TdScenarioRootBuilder.createBotClient(botName: String, readyHandler: (client: BotClient) -> Unit = {}) =
+    BotClient(botName, readyHandler).also { bot ->
         onReady { bot.init(api) }
         onClose { bot.stop() }
     }
 
 class BotClient(
     private val botName: String,
-    private val initHandler: (client: BotClient) -> Unit = {}
+    private val readyHandler: (client: BotClient) -> Unit = {}
 ) {
     private val logger = LoggerFactory.getLogger("BotClient-$botName")
     private val handlers = mutableMapOf<Int, HandlerHolder>()
@@ -87,7 +87,7 @@ class BotClient(
             }
         }
 
-        initHandler(this)
+        readyHandler(this)
     }
 
     private fun removeOutdatedHandlers(timeout: Long = 180000) = synchronized(handlers) {

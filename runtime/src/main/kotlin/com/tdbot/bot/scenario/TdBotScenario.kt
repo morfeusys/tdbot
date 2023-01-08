@@ -8,7 +8,6 @@ import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.telegram
 import com.justai.jaicf.helpers.kotlin.ifTrue
 import com.justai.jaicf.model.scenario.Scenario
-import com.justai.jaicf.reactions.ButtonToState
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdInteractiveScenario
@@ -20,9 +19,9 @@ class TdBotScenario(
     authService: AuthService,
     scenarios: Scenarios,
 ) : Scenario {
-    private var me: TdApi.User? = null
-
     override val model = createModel(telegram) {
+        var me: TdApi.User? = null
+
         append(SignInScenario(authService))
 
         handle<TdReadyHook> {

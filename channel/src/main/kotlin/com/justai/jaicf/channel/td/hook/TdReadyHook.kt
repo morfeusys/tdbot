@@ -3,12 +3,12 @@ package com.justai.jaicf.channel.td.hook
 import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.context.BotContext
 import com.justai.jaicf.context.DialogContext
+import com.justai.jaicf.helpers.logging.WithLogger
 import com.justai.jaicf.hook.BotHook
-import it.tdlight.jni.TdApi
 
 data class TdReadyHook(
-    val api: TdTelegramApi,
-    val user: TdApi.User,
-): BotHook {
+    val api: TdTelegramApi
+): BotHook, WithLogger {
+    val user get() = api.me
     override val context = BotContext(user.id.toString(), DialogContext())
 }
