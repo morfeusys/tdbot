@@ -26,8 +26,7 @@ class TdScenario(tdBotUser: User, scenarios: Scenarios) : Scenario {
             val botFather = createBotClient("@BotFather") { bot ->
                 bot.sendMessage("/setcommands")
                 bot.sendMessage("@${tdBotUser.username}")
-                bot.sendMessage("start - Go to main menu\n" +
-                        scenarios.all.keys.joinToString("\n") { "${it.lowercase()} - Open scenario menu" })
+                bot.sendMessage("scenarios - Show scenarios list")
             }
 
             handle<BotRequestHook> {
