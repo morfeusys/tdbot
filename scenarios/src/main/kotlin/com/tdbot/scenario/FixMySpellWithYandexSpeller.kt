@@ -6,7 +6,6 @@ import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onTextMessage
 import com.tdbot.scenario.utils.Http
 import io.ktor.client.request.*
-import kotlin.math.abs
 
 val FixMySpellWithYandexSpeller = TdScenario {
 
@@ -21,7 +20,7 @@ val FixMySpellWithYandexSpeller = TdScenario {
                 val pos = index + e["pos"].asInt
                 val len = e["len"].asInt
                 val replacement = e.getAsJsonArray("s").first().asString
-                index += abs(replacement.length - len)
+                index += replacement.length - len
                 text = text.replaceRange(pos, pos + len, replacement)
             }
 
