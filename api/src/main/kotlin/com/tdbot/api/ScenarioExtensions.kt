@@ -1,7 +1,7 @@
 package com.tdbot.api
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.client.searchChats
+import com.justai.jaicf.channel.td.api.searchChats
 import com.justai.jaicf.channel.td.scenario.*
 import com.justai.jaicf.model.scenario.Scenario
 import it.tdlight.jni.TdApi

@@ -2,12 +2,11 @@ package com.tdbot.scenario
 
 import com.github.kotlintelegrambot.entities.ParseMode
 import com.justai.jaicf.activator.regex.regex
-import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.api.TdTelegramApi
 import com.justai.jaicf.channel.td.isFromIds
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
-import com.justai.jaicf.helpers.logging.logger
 import com.justai.jaicf.model.activation.onlyIfInSession
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState

@@ -4,6 +4,7 @@ import com.google.gson.JsonArray
 import com.justai.jaicf.channel.td.isOutgoing
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onTextMessage
+import com.justai.jaicf.helpers.logging.logger
 import com.tdbot.scenario.utils.Http
 import io.ktor.client.request.*
 
@@ -25,7 +26,9 @@ val FixMySpellWithYandexSpeller = TdScenario {
             }
 
         if (text != request.input) {
-            reactions.editText(text)
+            reactions.editText(text).also {
+                logger.info("Edited message ${it?.id}")
+            }
         }
     }
 }

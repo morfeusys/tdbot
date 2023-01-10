@@ -1,6 +1,6 @@
 package com.justai.jaicf.channel.td
 
-import com.justai.jaicf.channel.td.client.*
+import com.justai.jaicf.channel.td.api.*
 import com.justai.jaicf.logging.AudioReaction
 import com.justai.jaicf.logging.ImageReaction
 import com.justai.jaicf.logging.SayReaction

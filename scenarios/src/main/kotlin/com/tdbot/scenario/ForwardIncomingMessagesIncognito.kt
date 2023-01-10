@@ -4,8 +4,8 @@ import com.github.kotlintelegrambot.entities.ChatId
 import com.github.kotlintelegrambot.entities.MessageEntity
 import com.github.kotlintelegrambot.entities.MessageEntity.Type.*
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.client.TdTelegramApi
-import com.justai.jaicf.channel.td.client.searchChats
+import com.justai.jaicf.channel.td.api.TdTelegramApi
+import com.justai.jaicf.channel.td.api.searchChats
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyMessage
 import com.justai.jaicf.channel.td.scenario.onReady

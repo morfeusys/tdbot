@@ -1,8 +1,8 @@
 package com.tdbot.scenario
 
 import com.github.kotlintelegrambot.entities.ParseMode
-import com.justai.jaicf.channel.td.client.TdTelegramApi
-import com.justai.jaicf.channel.td.client.sendTextMessage
+import com.justai.jaicf.channel.td.api.TdTelegramApi
+import com.justai.jaicf.channel.td.api.sendTextMessage
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateCall

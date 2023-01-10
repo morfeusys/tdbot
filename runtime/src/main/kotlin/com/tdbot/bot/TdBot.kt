@@ -5,7 +5,7 @@ import com.github.kotlintelegrambot.entities.User
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.activator.regex.RegexActivator
 import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
-import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.api.TdTelegramApi
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.telegram.TelegramChannel

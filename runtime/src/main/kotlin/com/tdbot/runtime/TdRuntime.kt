@@ -3,7 +3,6 @@ package com.tdbot.runtime
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.td.TdChannel
 import com.justai.jaicf.channel.td.activator.RegexActivator
-import com.justai.jaicf.channel.td.client.TdTelegramApi
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.tdbot.bot.TdBot

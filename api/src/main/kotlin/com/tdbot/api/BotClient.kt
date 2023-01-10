@@ -1,7 +1,7 @@
 package com.tdbot.api
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.client.*
+import com.justai.jaicf.channel.td.api.*
 import com.justai.jaicf.channel.td.scenario.TdScenarioRootBuilder
 import com.justai.jaicf.channel.td.scenario.onClose
 import com.justai.jaicf.channel.td.scenario.onReady

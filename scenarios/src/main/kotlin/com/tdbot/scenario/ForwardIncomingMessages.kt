@@ -1,6 +1,6 @@
 package com.tdbot.scenario
 
-import com.justai.jaicf.channel.td.client.searchChats
+import com.justai.jaicf.channel.td.api.searchChats
 import com.justai.jaicf.channel.td.isIncoming
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario

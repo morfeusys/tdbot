@@ -1,13 +1,29 @@
-package com.justai.jaicf.channel.td.client
+package com.justai.jaicf.channel.td.api
 
 import it.tdlight.jni.TdApi
 
-val TdApi.Update.fromId: Long? get() = when (this) {
+val TdApi.Update.messageId: Long? get() = when (this) {
+    is TdApi.UpdateNewMessage -> message.id
+    is TdApi.UpdateMessageEdited -> messageId
+    is TdApi.UpdateMessageContent -> messageId
+    is TdApi.UpdateMessageContentOpened -> messageId
+    is TdApi.UpdateMessageInteractionInfo -> messageId
+    is TdApi.UpdateMessageIsPinned -> messageId
+    is TdApi.UpdateMessageLiveLocationViewed -> messageId
+    is TdApi.UpdateMessageMentionRead -> messageId
+    is TdApi.UpdateMessageSendAcknowledged -> messageId
+    is TdApi.UpdateMessageSendFailed -> message.id
+    is TdApi.UpdateMessageSendSucceeded -> message.id
+    is TdApi.UpdateMessageUnreadReactions -> messageId
+    else -> null
+}
+
+val TdApi.Update.chatId: Long? get() = when (this) {
     is TdApi.UpdateAccessHash -> accessHash.chatId
     is TdApi.UpdateAnimatedEmojiMessageClicked -> chatId
-    is TdApi.UpdateBasicGroup -> basicGroup.id
-    is TdApi.UpdateBasicGroupFullInfo -> basicGroupId
-    is TdApi.UpdateCall -> call.userId
+    is TdApi.UpdateNewCallbackQuery -> chatId
+    is TdApi.UpdateNewChat -> chat.id
+    is TdApi.UpdateNewChatJoinRequest -> chatId
     is TdApi.UpdateChatAction -> chatId
     is TdApi.UpdateChatActionBar -> chatId
     is TdApi.UpdateChatAvailableReactions -> chatId
@@ -37,8 +53,6 @@ val TdApi.Update.fromId: Long? get() = when (this) {
     is TdApi.UpdateChatVideoChat -> chatId
     is TdApi.UpdateDeleteMessages -> chatId
     is TdApi.UpdateForumTopicInfo -> chatId
-    is TdApi.UpdateGroupCall -> groupCall.id.toLong()
-    is TdApi.UpdateGroupCallParticipant -> groupCallId.toLong()
     is TdApi.UpdateMessageContent -> chatId
     is TdApi.UpdateMessageContentOpened -> chatId
     is TdApi.UpdateMessageEdited -> chatId
@@ -50,24 +64,34 @@ val TdApi.Update.fromId: Long? get() = when (this) {
     is TdApi.UpdateMessageSendFailed -> message.chatId
     is TdApi.UpdateMessageSendSucceeded -> message.chatId
     is TdApi.UpdateMessageUnreadReactions -> chatId
-    is TdApi.UpdateNewCallSignalingData -> callId.toLong()
-    is TdApi.UpdateNewCallbackQuery -> chatId
-    is TdApi.UpdateNewChat -> chat.id
-    is TdApi.UpdateNewChatJoinRequest -> chatId
+    is TdApi.UpdateNewMessage -> message.chatId
+    is TdApi.UpdateSecretChat -> secretChat.id.toLong()
+    else -> null
+}
+
+val TdApi.Update.userId: Long? get() = when (this) {
+    is TdApi.UpdateCall -> call.userId
     is TdApi.UpdateNewChosenInlineResult -> senderUserId
     is TdApi.UpdateNewInlineCallbackQuery -> senderUserId
     is TdApi.UpdateNewInlineQuery -> senderUserId
-    is TdApi.UpdateNewMessage -> message.chatId
     is TdApi.UpdateNewPreCheckoutQuery -> senderUserId
     is TdApi.UpdateNewShippingQuery -> senderUserId
-    is TdApi.UpdatePoll -> poll.id
     is TdApi.UpdatePollAnswer -> userId
-    is TdApi.UpdateSecretChat -> secretChat.id.toLong()
-    is TdApi.UpdateSupergroup -> supergroup.id
-    is TdApi.UpdateSupergroupFullInfo -> supergroupId
     is TdApi.UpdateUser -> user.id
     is TdApi.UpdateUserFullInfo -> userId
     is TdApi.UpdateUserStatus -> userId
-    is TdApi.UpdateWebAppMessageSent -> webAppLaunchId
     else -> null
+}
+
+val TdApi.Update.fromId: Long? get() = when (this) {
+    is TdApi.UpdateBasicGroup -> basicGroup.id
+    is TdApi.UpdateBasicGroupFullInfo -> basicGroupId
+    is TdApi.UpdateGroupCall -> groupCall.id.toLong()
+    is TdApi.UpdateGroupCallParticipant -> groupCallId.toLong()
+    is TdApi.UpdateNewCallSignalingData -> callId.toLong()
+    is TdApi.UpdatePoll -> poll.id
+    is TdApi.UpdateSupergroup -> supergroup.id
+    is TdApi.UpdateSupergroupFullInfo -> supergroupId
+    is TdApi.UpdateWebAppMessageSent -> webAppLaunchId
+    else -> userId ?: chatId
 }

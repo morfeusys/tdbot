@@ -1,7 +1,7 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.TdRegexMessageActionContext
-import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.api.TdTelegramApi
 import com.justai.jaicf.channel.td.isNotChat
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onReady

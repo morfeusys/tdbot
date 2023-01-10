@@ -2,7 +2,8 @@ package com.justai.jaicf.channel.td
 
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.BotChannel
-import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.api.TdTelegramApi
+import com.justai.jaicf.channel.td.api.messageId
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.context.RequestContext
@@ -15,6 +16,7 @@ import it.tdlight.jni.TdApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
+import org.slf4j.LoggerFactory
 
 class TdChannel(
     override val botApi: BotEngine,
@@ -73,16 +75,17 @@ class TdChannel(
 
     private fun addHandlers() {
         api.onUpdates { update ->
-            val request = when (update) {
-                is TdApi.UpdateNewMessage -> when (update.message.content) {
-                    is TdApi.MessageText -> TdTextMessageRequest(api.me, update)
-                    else -> TdEventMessageRequest(api.me, update)
-                }
-                else -> TdUpdateRequest(api.me, update)
-            }
-
             botProcessScope.launch {
-                botApi.process(request, TdReactions(api, request), RequestContext.DEFAULT)
+                if (api.sentMessages.none { it.id == update.messageId }) {
+                    val request = when (update) {
+                        is TdApi.UpdateNewMessage -> when (update.message.content) {
+                            is TdApi.MessageText -> TdTextMessageRequest(api.me, update)
+                            else -> TdEventMessageRequest(api.me, update)
+                        }
+                        else -> TdUpdateRequest(api.me, update)
+                    }
+                    botApi.process(request, TdReactions(api, request), RequestContext.DEFAULT)
+                }
             }
         }
 

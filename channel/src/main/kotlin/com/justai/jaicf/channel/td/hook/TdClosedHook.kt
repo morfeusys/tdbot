@@ -1,6 +1,6 @@
 package com.justai.jaicf.channel.td.hook
 
-import com.justai.jaicf.channel.td.client.TdTelegramApi
+import com.justai.jaicf.channel.td.api.TdTelegramApi
 import com.justai.jaicf.context.BotContext
 import com.justai.jaicf.context.DialogContext
 import com.justai.jaicf.helpers.logging.WithLogger
