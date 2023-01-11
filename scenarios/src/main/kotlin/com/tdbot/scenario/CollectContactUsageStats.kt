@@ -98,7 +98,7 @@ class CollectContactUsageStats(
                 action {
                     val users = stats.values
                         .filter { it.hasData && it.user.id != telegramApi.me.id }
-                        .sortedBy { it.user.firstName }
+                        .sortedByDescending { it.totalSeconds }
 
                     if (users.isEmpty()) {
                         reactions.say("Looks like there is no any statistics data from your contacts yet. " +
