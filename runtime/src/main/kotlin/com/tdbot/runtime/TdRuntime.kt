@@ -19,8 +19,8 @@ class TdRuntime(
     private val logger = LoggerFactory.getLogger(javaClass)
     private val authService = AuthService()
     private val tdSettings = TDLibSettings.create(APIToken(settings.apiId, settings.apiHash)).apply {
-        databaseDirectoryPath = Paths.get(settings.tdDirectory)
-        downloadedFilesDirectoryPath = Paths.get(settings.tdDirectory, "downloads")
+        databaseDirectoryPath = Paths.get(settings.tdDirectory, "user")
+        downloadedFilesDirectoryPath = Paths.get(settings.tdDirectory, "user", "downloads")
     }
 
     private val tdBot: TdBot = TdBot(settings, authService)
@@ -41,7 +41,6 @@ class TdRuntime(
         ).also { engine ->
             tdScenario.botApi = engine
         }
-
         startTdChannel(tdEngine)
     }
 

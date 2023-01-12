@@ -6,14 +6,9 @@ import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.plugin.StateBody
 import com.justai.jaicf.plugin.StateDeclaration
+import com.justai.jaicf.channel.td.request.TdMessageRequest
+import com.justai.jaicf.channel.td.request.TdRequest
 import it.tdlight.jni.TdApi
-
-@ScenarioDsl
-@StateDeclaration
-fun TdScenarioRootBuilder.onTextMessage(
-    vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageText>, TdReactions>.() -> Unit
-) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
@@ -41,6 +36,13 @@ fun TdScenarioRootBuilder.onAudioMessage(
 fun TdScenarioRootBuilder.onBasicGroupChatCreateMessage(
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageBasicGroupChatCreate>, TdReactions>.() -> Unit
+) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
+fun TdScenarioRootBuilder.onBotWriteAccessAllowedMessage(
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageBotWriteAccessAllowed>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -101,16 +103,16 @@ fun TdScenarioRootBuilder.onChatJoinByRequestMessage(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onChatSetThemeMessage(
+fun TdScenarioRootBuilder.onChatSetMessageAutoDeleteTimeMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetTheme>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetMessageAutoDeleteTime>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onChatSetAutoDeleteTimeMessage(
+fun TdScenarioRootBuilder.onChatSetThemeMessage(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetMessageAutoDeleteTime>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageChatSetTheme>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -195,6 +197,13 @@ fun TdScenarioRootBuilder.onForumTopicEditedMessage(
 fun TdScenarioRootBuilder.onForumTopicIsClosedToggledMessage(
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageForumTopicIsClosedToggled>, TdReactions>.() -> Unit
+) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
+fun TdScenarioRootBuilder.onForumTopicIsHiddenToggledMessage(
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageForumTopicIsHiddenToggled>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -311,9 +320,23 @@ fun TdScenarioRootBuilder.onStickerMessage(
 
 @ScenarioDsl
 @StateDeclaration
+fun TdScenarioRootBuilder.onSuggestProfilePhotoMessage(
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageSuggestProfilePhoto>, TdReactions>.() -> Unit
+) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
 fun TdScenarioRootBuilder.onSupergroupChatCreateMessage(
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageSupergroupChatCreate>, TdReactions>.() -> Unit
+) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
+fun TdScenarioRootBuilder.onTextMessage(
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageText>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -549,16 +572,16 @@ fun TdScenarioRootBuilder.onUpdateChatMember(
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onUpdateChatMessageSender(
+fun TdScenarioRootBuilder.onUpdateChatMessageAutoDeleteTime(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.UpdateChatMessageSender>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.UpdateChatMessageAutoDeleteTime>, TdReactions>.() -> Unit
 ) = onUpdate(conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
-fun TdScenarioRootBuilder.onUpdateChatMessageAutoDeleteTime(
+fun TdScenarioRootBuilder.onUpdateChatMessageSender(
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.UpdateChatMessageAutoDeleteTime>, TdReactions>.() -> Unit
+    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.UpdateChatMessageSender>, TdReactions>.() -> Unit
 ) = onUpdate(conditions = conditions, body = body)
 
 @ScenarioDsl

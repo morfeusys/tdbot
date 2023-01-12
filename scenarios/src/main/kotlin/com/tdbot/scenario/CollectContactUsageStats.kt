@@ -1,14 +1,11 @@
 package com.tdbot.scenario
 
-import com.github.kotlintelegrambot.entities.ParseMode
+import com.justai.jaicf.channel.td.TdMessage
 import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.scenario.createTdModel
-import com.justai.jaicf.channel.td.scenario.onReady
-import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
+import com.justai.jaicf.channel.td.scenario.*
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdInteractiveScenario
-import com.tdbot.api.createInteractiveScenario
 import com.tdbot.scenario.utils.asStatePath
 import it.tdlight.jni.TdApi
 import java.time.Duration
@@ -50,7 +47,7 @@ class CollectContactUsageStats(
         }
     }
 
-    override val interactiveScenario = createInteractiveScenario {
+    override val interactiveScenario = createTdScenario {
         state("/ShowContactsUsageStats${contactName.asStatePath}") {
             action {
                 if (contactId != null) {
@@ -64,7 +61,7 @@ class CollectContactUsageStats(
 
             state("name") {
                 activators {
-                    catchAll()
+                    tdTextMessage()
                 }
 
                 action {
@@ -88,7 +85,7 @@ class CollectContactUsageStats(
                         reactions.image(stat.chartImageUrl, "_${stat.user.firstName} ${stat.user.lastName}_ " +
                                 "was online *${stat.times} times* " +
                                 "starting from ${startTime.format(dateTimeFormatter)} " +
-                                "with total *${stat.totalTime}*", ParseMode.MARKDOWN)
+                                "with total *${stat.totalTime}*", TdMessage.ParseMode.Markdown)
                     }
                     reactions.buttons("Refresh" toState ".")
                 }

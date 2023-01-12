@@ -1,5 +1,6 @@
 package com.justai.jaicf.channel.td
 
+import com.justai.jaicf.channel.td.request.*
 import com.justai.jaicf.model.activation.ActivationRule
 
 val isOutgoing: OnlyIf = { request.td?.isOutgoing == true }

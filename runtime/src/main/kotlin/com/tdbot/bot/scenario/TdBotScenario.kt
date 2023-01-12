@@ -1,11 +1,8 @@
 package com.tdbot.bot.scenario
 
-import com.github.kotlintelegrambot.entities.ParseMode
-import com.github.kotlintelegrambot.entities.ReplyKeyboardRemove
 import com.justai.jaicf.activator.regex.regex
-import com.justai.jaicf.builder.createModel
 import com.justai.jaicf.channel.td.hook.TdReadyHook
-import com.justai.jaicf.channel.telegram.telegram
+import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.helpers.kotlin.ifTrue
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.reactions.buttons
@@ -19,14 +16,8 @@ class TdBotScenario(
     authService: AuthService,
     scenarios: Scenarios,
 ) : Scenario {
-    override val model = createModel(telegram) {
-        var me: TdApi.User? = null
-
+    override val model = createTdModel {
         append(SignInScenario(authService))
-
-        handle<TdReadyHook> {
-            me = user
-        }
 
         state("TdBotScenario.Start") {
             activators {
@@ -36,18 +27,14 @@ class TdBotScenario(
 
 
             action {
-                reactions.say("\uD83D\uDC4B Hello ${request.message.from?.firstName}!", replyMarkup = ReplyKeyboardRemove())
+                reactions.say("\uD83D\uDC4B Hello!", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 reactions.go("/TdBotScenario.Scenarios")
             }
         }
 
         state("TdBotScenario.onReady") {
-            activators {
-                event("ready")
-            }
-
             action {
-                reactions.say("✋ Okay, ${me?.firstName}! I'm ready now.", replyMarkup = ReplyKeyboardRemove())
+                reactions.say("✋ Okay, I'm ready now.", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 reactions.go("/TdBotScenario.Scenarios")
             }
         }
@@ -99,7 +86,7 @@ class TdBotScenario(
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("toggle"))
 
                     context.session["selected_scenario"] = name
-                    reactions.say("_${name}_ scenario is _${enabled.status}_ now.", ParseMode.MARKDOWN)
+                    reactions.sayMarkdown("_${name}_ scenario is _${enabled.status}_ now.")
 
                     if (scenarios.isInteractive(name)) {
                         val scenario = scenarios.all[name] as TdInteractiveScenario
@@ -117,7 +104,7 @@ class TdBotScenario(
                 action {
                     val scenario = context.session.remove("selected_scenario") as String
                     val enabled = scenarios.toggle(scenario)
-                    reactions.say("_${scenario}_ scenario is ${enabled.status} now.", ParseMode.MARKDOWN)
+                    reactions.sayMarkdown("_${scenario}_ scenario is ${enabled.status} now.")
                     reactions.go("/TdBotScenario.Scenarios")
                 }
             }
@@ -127,8 +114,8 @@ class TdBotScenario(
                     val name = context.session["selected_scenario"] as String
                     val scenario = scenarios.all[name] as TdInteractiveScenario
                     val enabled = scenarios.isEnabled(name)
-                    reactions.say("Here is how the _${name}_ scenario works\n\n" +
-                            scenario.config.helpMarkdownText!!, ParseMode.MARKDOWN)
+                    reactions.sayMarkdown("Here is how the _${name}_ scenario works\n\n" +
+                            scenario.config.helpMarkdownText!!)
 
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("../toggle"))
                     buttons.addAll(scenario.config.actionButtons)

@@ -1,13 +1,12 @@
 package com.tdbot.runtime
 
-import com.github.kotlintelegrambot.entities.User
 import com.justai.jaicf.api.BotApi
 import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.chatId
-import com.justai.jaicf.channel.td.fromId
 import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.request.chatId
+import com.justai.jaicf.channel.td.request.fromId
+import com.justai.jaicf.channel.td.request.td
 import com.justai.jaicf.channel.td.scenario.createTdModel
-import com.justai.jaicf.channel.td.td
 import com.justai.jaicf.context.BotContext
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.hook.BotHookException
@@ -15,9 +14,10 @@ import com.justai.jaicf.hook.BotRequestHook
 import com.justai.jaicf.model.scenario.Scenario
 import com.tdbot.api.createBotClient
 import com.tdbot.bot.Scenarios
+import it.tdlight.jni.TdApi
 import java.util.*
 
-class TdScenario(tdBotUser: User, scenarios: Scenarios) : Scenario {
+class TdScenario(tdBotUser: TdApi.User, scenarios: Scenarios) : Scenario {
     lateinit var botApi: BotApi
     lateinit var telegrapApi: TdTelegramApi
 
@@ -27,7 +27,7 @@ class TdScenario(tdBotUser: User, scenarios: Scenarios) : Scenario {
         createTdModel {
             val botFather = createBotClient("@BotFather") { bot ->
                 bot.sendMessage("/setcommands")
-                bot.sendMessage("@${tdBotUser.username}")
+                bot.sendMessage("@${tdBotUser.usernames.activeUsernames.first()}")
                 bot.sendMessage("scenarios - Show scenarios list")
             }
 

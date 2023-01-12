@@ -61,6 +61,12 @@ fun TdTelegramApi.editMessageCaption(
     caption: TdApi.FormattedText,
 ) = send(TdApi.EditMessageCaption(chatId, messageId, replyMarkup, caption))
 
+fun TdTelegramApi.editMessageReplyMarkup(
+    chatId: Long,
+    messageId: Long,
+    replyMarkup: TdApi.ReplyMarkup
+) = send(TdApi.EditMessageReplyMarkup(chatId, messageId, replyMarkup))
+
 fun TdTelegramApi.getInlineQueryResults(
     botUserId: Long,
     chatId: Long,

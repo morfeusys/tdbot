@@ -4,6 +4,7 @@ import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.request.*
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.plugin.StateBody
@@ -25,10 +26,7 @@ inline fun <reified U : TdApi.Update> TdScenarioRootBuilder.onUpdate(
     @StateBody noinline body: ActionContext<ActivatorContext, TdRequest<U>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
     activators {
-        when (U::class.java) {
-            TdApi.Update::class.java -> catchAll().onlyIf { request.td != null }
-            else -> update<U>()
-        }.apply {
+        tdUpdate<U>().apply {
             conditions.forEach(::onlyIf)
         }
     }
@@ -45,11 +43,7 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
     @StateBody noinline body: ActionContext<ActivatorContext, TdMessageRequest<M>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
     activators {
-        when (M::class.java) {
-            TdApi.MessageText::class.java -> catchAll().onlyIf { request.td?.textRequest != null }
-            TdApi.MessageContent::class.java -> catchAll().onlyIf { request.td?.messageRequest != null }
-            else -> update<TdApi.UpdateNewMessage>().onlyIf { request.td?.messageRequest?.update?.message?.content is M }
-        }.apply {
+        tdMessage<M>().apply {
             conditions.forEach(::onlyIf)
         }
     }
@@ -86,7 +80,7 @@ fun TdScenarioRootBuilder.onTextMessage(
         }
     }
 
-    action(tdRegexMessage) {
+    action(tdRegexToken) {
         body(this)
     }
 }

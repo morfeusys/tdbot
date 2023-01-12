@@ -3,6 +3,64 @@ package com.justai.jaicf.channel.td
 import it.tdlight.jni.TdApi
 
 object TdMessage {
+    enum class ParseMode {
+        Markdown, MarkdownV2
+    }
+
+    fun keyboard(
+        rows: Array<Array<out TdApi.KeyboardButton>>,
+        isPersistent: Boolean = false,
+        resizeKeyboard: Boolean = false,
+        oneTime: Boolean = false,
+        isPersonal: Boolean = false,
+        inputFieldPlaceholder: String = ""
+    ) = TdApi.ReplyMarkupShowKeyboard(rows, isPersistent, resizeKeyboard, oneTime, isPersonal, inputFieldPlaceholder)
+
+    fun keyboard(
+        buttons: Array<out TdApi.KeyboardButton>,
+        isPersistent: Boolean = false,
+        resizeKeyboard: Boolean = false,
+        oneTime: Boolean = false,
+        isPersonal: Boolean = false,
+        inputFieldPlaceholder: String = ""
+    ) = keyboard(arrayOf(buttons), isPersistent, resizeKeyboard, oneTime, isPersonal, inputFieldPlaceholder)
+
+    fun keyboard(
+        button: TdApi.KeyboardButton,
+        isPersistent: Boolean = false,
+        resizeKeyboard: Boolean = false,
+        oneTime: Boolean = false,
+        isPersonal: Boolean = false,
+        inputFieldPlaceholder: String = ""
+    ) = keyboard(arrayOf(button), isPersistent, resizeKeyboard, oneTime, isPersonal, inputFieldPlaceholder)
+
+    fun textButton(text: String) =
+        TdApi.KeyboardButton(text, TdApi.KeyboardButtonTypeText())
+
+    fun phoneButton(text: String) =
+        TdApi.KeyboardButton(text, TdApi.KeyboardButtonTypeRequestPhoneNumber())
+
+    fun phoneKeyboard(text: String) =
+        keyboard(phoneButton(text))
+
+    fun locationButton(text: String) =
+        TdApi.KeyboardButton(text, TdApi.KeyboardButtonTypeRequestLocation())
+
+    fun locationKeyboard(text: String) =
+        keyboard(locationButton(text))
+
+    fun pollButton(text: String, forceRegular: Boolean, forceQuiz: Boolean) =
+        TdApi.KeyboardButton(text, TdApi.KeyboardButtonTypeRequestPoll(forceRegular, forceQuiz))
+
+    fun pollKeyboard(text: String, forceRegular: Boolean, forceQuiz: Boolean) =
+        keyboard(pollButton(text, forceRegular, forceQuiz))
+
+    fun buttonWebapp(text: String, url: String) =
+        TdApi.KeyboardButton(text, TdApi.KeyboardButtonTypeWebApp(url))
+
+    fun webappKeyboard(text: String, url: String) =
+        keyboard(buttonWebapp(text, url))
+
     fun text(messageText: TdApi.MessageText) =
         text(messageText.text.text, messageText.text.entities)
 
@@ -11,7 +69,13 @@ object TdMessage {
         entities: Array<out TdApi.TextEntity> = emptyArray(),
         disableWebPagePreview: Boolean = false,
         clearDraft: Boolean = false,
-    ) = TdApi.InputMessageText(TdApi.FormattedText(text, entities), disableWebPagePreview, clearDraft)
+    ) = text(TdApi.FormattedText(text, entities), disableWebPagePreview, clearDraft)
+
+    fun text(
+        text: TdApi.FormattedText,
+        disableWebPagePreview: Boolean = false,
+        clearDraft: Boolean = false,
+    ) = TdApi.InputMessageText(text, disableWebPagePreview, clearDraft)
 
     fun photo(
         id: String,

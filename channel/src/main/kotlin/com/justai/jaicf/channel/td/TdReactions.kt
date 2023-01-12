@@ -1,12 +1,14 @@
 package com.justai.jaicf.channel.td
 
 import com.justai.jaicf.channel.td.api.*
-import com.justai.jaicf.logging.AudioReaction
-import com.justai.jaicf.logging.ImageReaction
-import com.justai.jaicf.logging.SayReaction
-import com.justai.jaicf.logging.VideoReaction
+import com.justai.jaicf.channel.td.request.DefaultTdRequest
+import com.justai.jaicf.channel.td.request.chatId
+import com.justai.jaicf.channel.td.request.messageId
+import com.justai.jaicf.channel.td.request.messageRequest
+import com.justai.jaicf.logging.*
 import com.justai.jaicf.reactions.Reactions
 import it.tdlight.jni.TdApi
+import java.util.concurrent.TimeUnit
 
 val Reactions.td get() = this as? TdReactions
 
@@ -18,27 +20,45 @@ class TdReactions(
 
     private fun <R> withChatId(function: (chatId: Long) -> R): R? = chatId?.let { function(it) }
 
+    private fun parse(text: String, parseMode: TdMessage.ParseMode) =
+        api.send(TdApi.ParseTextEntities(text, TdApi.TextParseModeMarkdown(parseMode.ordinal)))
+
     fun sendMessage(
         content: TdApi.InputMessageContent,
         options: TdApi.MessageSendOptions? = null,
+        replyMarkup: TdApi.ReplyMarkup? = null,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
     ) = withChatId { chatId ->
-        api.sendMessage(chatId, messageThreadId, replyToMessageId, options, content = content)
+        api.sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content)
+    }
+
+    override fun buttons(vararg buttons: String): ButtonsReaction {
+        api.awaitLastMessage()?.let { message ->
+            val keyboard = (message.replyMarkup as? TdApi.ReplyMarkupInlineKeyboard)?.rows?.toMutableList() ?: mutableListOf<Array<TdApi.InlineKeyboardButton>>()
+            keyboard.addAll(buttons.map { text ->
+                arrayOf(TdApi.InlineKeyboardButton(text, TdApi.InlineKeyboardButtonTypeCallback(text.toByteArray())))
+            })
+            val replyMarkup = TdApi.ReplyMarkupInlineKeyboard(keyboard.toTypedArray())
+            api.editMessageReplyMarkup(message.chatId, message.id, replyMarkup)
+        }
+        return ButtonsReaction.create(buttons.asList())
     }
 
     fun reply(
         text: String,
         options: TdApi.MessageSendOptions? = null,
-        messageThreadId: Long = 0) = reply(TdMessage.text(text), options, messageThreadId)
+        replyMarkup: TdApi.ReplyMarkup? = null,
+        messageThreadId: Long = 0) = reply(TdMessage.text(text), options, replyMarkup, messageThreadId)
 
     fun reply(
         content: TdApi.InputMessageContent,
         options: TdApi.MessageSendOptions? = null,
+        replyMarkup: TdApi.ReplyMarkup? = null,
         messageThreadId: Long = 0
     ) = withChatId { chatId ->
         request.messageId?.let { messageId ->
-            api.sendMessage(chatId, messageThreadId, messageId, options, content = content)
+            api.sendMessage(chatId, messageThreadId, messageId, options, replyMarkup, content)
         }
     }
 
@@ -61,12 +81,32 @@ class TdReactions(
         sendMessage(TdMessage.text(text))
     }
 
-    fun say(text: String, entities: Array<out TdApi.TextEntity>) =
-        sendMessage(TdMessage.text(text, entities))
+    fun say(
+        text: String,
+        entities: Array<out TdApi.TextEntity> = emptyArray(),
+        replyMarkup: TdApi.ReplyMarkup? = null
+    ) = sendMessage(TdMessage.text(text, entities), replyMarkup = replyMarkup)
+
+    fun say(
+        text: TdApi.FormattedText,
+        replyMarkup: TdApi.ReplyMarkup? = null
+    ) = sendMessage(TdMessage.text(text), replyMarkup = replyMarkup)
+
+    fun say(text: String, parseMode: TdMessage.ParseMode, replyMarkup: TdApi.ReplyMarkup? = null) =
+        say(parse(text, parseMode), replyMarkup)
+
+    fun sayMarkdown(text: String, replyMarkup: TdApi.ReplyMarkup? = null) =
+        say(text, TdMessage.ParseMode.Markdown, replyMarkup)
 
     override fun image(url: String) = ImageReaction.create(url).also {
         sendMessage(TdMessage.photo(url))
     }
+
+    fun image(url: String, caption: String) =
+        sendMessage(TdMessage.photo(url, caption = TdApi.FormattedText(caption, null)))
+
+    fun image(url: String, caption: String, parseMode: TdMessage.ParseMode) =
+        sendMessage(TdMessage.photo(url, caption = parse(caption, parseMode)))
 
     fun animation(url: String) = ImageReaction.create(url).also {
         sendMessage(TdMessage.animation(url))

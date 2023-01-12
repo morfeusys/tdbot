@@ -4,7 +4,5 @@ plugins {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-
     api(project(":channel"))
-    api(project(":telegram"))
 }

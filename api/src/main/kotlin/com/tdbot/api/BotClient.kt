@@ -8,6 +8,8 @@ import com.justai.jaicf.channel.td.scenario.onReady
 import it.tdlight.jni.TdApi
 import org.slf4j.LoggerFactory
 
+private typealias ReplyHandler = (TdApi.Message) -> Unit
+
 val isBotChat: (bot: BotClient?) -> OnlyIf = { isChat { it?.botUserId } }
 val isNotBotChat: (bot: BotClient?) -> OnlyIf = { isNotChat { it?.botUserId } }
 
@@ -22,7 +24,7 @@ class BotClient(
     private val readyHandler: (client: BotClient) -> Unit = {}
 ) {
     private val logger = LoggerFactory.getLogger("BotClient-$botName")
-    private val handlers = mutableMapOf<Int, HandlerHolder>()
+    private val handlers = mutableMapOf<Long, HandlerHolder>()
     private lateinit var api: TdTelegramApi
     private var startMessage: TdApi.Message? = null
 
@@ -98,10 +100,7 @@ class BotClient(
 
     private fun onMessageReceived(message: TdApi.Message) {
         removeOutdatedHandlers()
-        if (message.replyToMessageId != 0L) {
-            val msg = api.send(TdApi.GetMessage(botUserId, message.replyToMessageId))
-            handlers[msg.date]?.handler?.invoke(message)
-        }
+        handlers[message.replyToMessageId]?.handler?.invoke(message)
     }
 
     fun toggleMuted(muted: Boolean) {
@@ -118,21 +117,31 @@ class BotClient(
 
     fun sendMessage(
         content: String,
-        replyHandler: (TdApi.Message) -> Unit = {}
+        replyHandler: ReplyHandler? = null
     ) = sendMessage(TdMessage.text(content), replyHandler)
 
     fun sendMessage(
         content: TdApi.InputMessageContent,
-        replyHandler: (TdApi.Message) -> Unit = {}
+        replyHandler: ReplyHandler? = null
     ) = api.sendMessage(botUserId, content = content).let { msg ->
-        handlers[msg.date] = HandlerHolder(replyHandler)
+        if (replyHandler != null) {
+            api.awaitMessage(msg.id)?.also {
+                handlers[it.id] = HandlerHolder(replyHandler)
+            }
+        }
     }
 
     fun forwardMessage(
         message: TdApi.Message,
-        replyHandler: (TdApi.Message) -> Unit = {}
-    ) = api.forwardMessages(botUserId, fromChatId = message.chatId, messageIds = arrayOf(message.id)).let { msgs ->
-        handlers[msgs.messages.first().date] = HandlerHolder(replyHandler)
+        replyHandler: ReplyHandler? = null
+    ) = api.forwardMessages(botUserId, fromChatId = message.chatId, messageIds = arrayOf(message.id)).let { list ->
+        if (replyHandler != null) {
+            list.messages.first().let { msg ->
+                api.awaitMessage(msg.id)?.also {
+                    handlers[it.id] = HandlerHolder(replyHandler)
+                }
+            }
+        }
     }
 
     private data class HandlerHolder(val handler: (TdApi.Message) -> Unit) {

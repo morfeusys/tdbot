@@ -2,35 +2,33 @@ package com.justai.jaicf.channel.td
 
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.BotChannel
+import com.justai.jaicf.channel.invocationapi.InvocableBotChannel
+import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
+import com.justai.jaicf.channel.invocationapi.InvocationQueryRequest
+import com.justai.jaicf.channel.invocationapi.InvocationRequest
 import com.justai.jaicf.channel.td.api.TdTelegramApi
 import com.justai.jaicf.channel.td.api.messageId
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
+import com.justai.jaicf.channel.td.request.*
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.helpers.kotlin.ifTrue
 import it.tdlight.client.AuthenticationData
 import it.tdlight.client.ClientInteraction
-import it.tdlight.client.SimpleTelegramClient
 import it.tdlight.client.TDLibSettings
 import it.tdlight.jni.TdApi
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import org.slf4j.LoggerFactory
+import java.util.concurrent.Executors
 
 class TdChannel(
     override val botApi: BotEngine,
     private val authenticationData: AuthenticationData,
     settings: TDLibSettings,
     clientInteraction: ClientInteraction? = null,
-) : BotChannel {
-    private val botProcessScope = CoroutineScope(newSingleThreadContext("TdChannel process thread"))
+) : BotChannel, InvocableBotChannel {
+    private val processExecutor = Executors.newSingleThreadExecutor()
 
-    private val api = TdTelegramApi(
-        SimpleTelegramClient(settings).apply {
-            clientInteraction?.let { setClientInteraction(it) }
-        }
-    )
+    val api = TdTelegramApi(TdTelegramClient(settings, clientInteraction))
 
     init {
         onReady(::ready)
@@ -70,27 +68,35 @@ class TdChannel(
 
     private fun ready(api: TdTelegramApi) {
         botApi.hooks.triggerHook(TdReadyHook(api))
-        addHandlers()
+        onClose { botApi.hooks.triggerHook(TdClosedHook(it)) }
+        api.onUpdates(::process)
     }
 
-    private fun addHandlers() {
-        api.onUpdates { update ->
-            botProcessScope.launch {
-                if (api.sentMessages.none { it.id == update.messageId }) {
-                    val request = when (update) {
-                        is TdApi.UpdateNewMessage -> when (update.message.content) {
-                            is TdApi.MessageText -> TdTextMessageRequest(api.me, update)
-                            else -> TdEventMessageRequest(api.me, update)
-                        }
-                        else -> TdUpdateRequest(api.me, update)
-                    }
-                    botApi.process(request, TdReactions(api, request), RequestContext.DEFAULT)
-                }
+    private fun process(update: TdApi.Update, requestContext: RequestContext = RequestContext.DEFAULT) {
+        processExecutor.execute {
+            if (!api.isSentMessage(update)) {
+                val request = update.asRequest
+                botApi.process(request, TdReactions(api, request), requestContext)
             }
         }
-
-        onClose {
-            botApi.hooks.triggerHook(TdClosedHook(it))
-        }
     }
+
+    override fun processInvocation(request: InvocationRequest, requestContext: RequestContext) {
+        when (request) {
+            is InvocationEventRequest -> request.asEventUpdate
+            is InvocationQueryRequest -> request.asNewMessageUpdate
+            else -> null
+        }?.let(::process)
+    }
+
+    private val TdApi.Update.asRequest: TdRequest<out TdApi.Update>
+        get() = when (this) {
+            is TdApi.UpdateNewMessage -> when (message.content) {
+                is TdApi.MessageText -> TdTextMessageRequest(api.me, this)
+                else -> TdNewMessageRequest(api.me, this)
+            }
+            is TdApi.UpdateNewCallbackQuery -> TdCallbackQueryRequest(api.me, this)
+            is TdEventUpdate -> TdEventRequest(api.me, this)
+            else -> TdUpdateRequest(api.me, this)
+        }
 }
