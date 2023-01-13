@@ -20,6 +20,8 @@ class TdReactions(
 
     private fun <R> withChatId(function: (chatId: Long) -> R): R? = chatId?.let { function(it) }
 
+    private fun TdApi.Message.await() = api.awaitMessage(id) ?: this
+
     private fun parse(text: String, parseMode: TdMessage.ParseMode) =
         api.send(TdApi.ParseTextEntities(text, TdApi.TextParseModeMarkdown(parseMode.ordinal)))
 
@@ -30,7 +32,7 @@ class TdReactions(
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
     ) = withChatId { chatId ->
-        api.sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content)
+        api.sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content).await()
     }
 
     override fun buttons(vararg buttons: String): ButtonsReaction {
