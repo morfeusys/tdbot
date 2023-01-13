@@ -1,7 +1,8 @@
 package com.tdbot.scenario
 
+import com.justai.jaicf.channel.td.TdMessage
 import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.api.sendTextMessage
+import com.justai.jaicf.channel.td.api.sendMessage
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.channel.td.scenario.createTdScenario
 import com.justai.jaicf.channel.td.scenario.onReady
@@ -37,8 +38,8 @@ class SendReasonOnCallDecline(vararg reasons: String) : TdInteractiveScenario() 
         event("SendReasonOnCallDecline") { userId ->
             val user = telegramApi.send(TdApi.GetUser(userId.toLong()))
             context.session["user_to_send_call_dismiss_reason"] = user
-            reactions.sayMarkdown("${"telephone_receiver".asEmojiUnicode} You've declined incoming call from *${user.firstName} ${user.lastName}*.\n\n"
-                    + "Click one of the buttons below to send a reason text back to them.")
+            reactions.say("${"telephone_receiver".asEmojiUnicode} You've declined incoming call from *${user.firstName} ${user.lastName}*.\n\n"
+                    + "Click one of the buttons below to send a reason text back to them.", TdMessage.ParseMode.Markdown)
             reactions.buttons(*buttons)
         }
 
@@ -46,8 +47,8 @@ class SendReasonOnCallDecline(vararg reasons: String) : TdInteractiveScenario() 
             state("/SendReasonText/$reason") {
                 action {
                     val user = context.session.remove("user_to_send_call_dismiss_reason") as TdApi.User
-                    telegramApi.sendTextMessage(user.id, reason)
-                    reactions.sayMarkdown("Okay, I've sent a reason _\"$reason\"_ to *${user.firstName} ${user.lastName}*.")
+                    telegramApi.sendMessage(user.id, content = TdMessage.text(reason))
+                    reactions.say("Okay, I've sent a reason _\"$reason\"_ to *${user.firstName} ${user.lastName}*.", TdMessage.ParseMode.Markdown)
                 }
             }
         }

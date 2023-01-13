@@ -4,7 +4,13 @@ import it.tdlight.jni.TdApi
 
 object TdMessage {
     enum class ParseMode {
-        Markdown, MarkdownV2
+        HTML, Markdown, MarkdownV2;
+
+        val mode get() = when (this) {
+            Markdown -> TdApi.TextParseModeMarkdown(1)
+            MarkdownV2 -> TdApi.TextParseModeMarkdown(2)
+            else -> TdApi.TextParseModeHTML()
+        }
     }
 
     fun keyboard(
@@ -247,7 +253,7 @@ object TdMessage {
     fun video(
         file: TdApi.InputFile,
         thumbnail: TdApi.InputThumbnail? = null,
-        addedStickerFileIds: IntArray?,
+        addedStickerFileIds: IntArray? = null,
         duration: Int = 0,
         width: Int = 0,
         height: Int = 0,

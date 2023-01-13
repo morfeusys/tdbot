@@ -31,7 +31,7 @@ inline fun <reified U : TdApi.Update> TdScenarioRootBuilder.onUpdate(
         }
     }
 
-    action(tdUpdateToken<U>()) {
+    action(tdUpdateType<U>()) {
         body(this)
     }
 }
@@ -48,7 +48,7 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
         }
     }
 
-    action(tdMessageToken()) {
+    action(tdMessageType()) {
         body(this)
     }
 }
@@ -80,7 +80,7 @@ fun TdScenarioRootBuilder.onTextMessage(
         }
     }
 
-    action(tdRegexToken) {
+    action(tdRegexType) {
         body(this)
     }
 }

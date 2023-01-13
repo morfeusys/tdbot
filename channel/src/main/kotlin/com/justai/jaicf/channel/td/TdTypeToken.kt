@@ -13,10 +13,10 @@ import it.tdlight.jni.TdApi
 typealias TdTypeToken = ChannelTypeToken<DefaultTdRequest, TdReactions>
 
 val td: TdTypeToken = ChannelTypeToken()
-val tdRegexToken = ContextTypeToken<RegexActivatorContext, TdTextMessageRequest, TdReactions>()
+val tdRegexType = ContextTypeToken<RegexActivatorContext, TdTextMessageRequest, TdReactions>()
 
-fun <M : TdApi.MessageContent> tdMessageToken() =
+fun <M : TdApi.MessageContent> tdMessageType() =
     ContextTypeToken<ActivatorContext, TdMessageRequest<M>, TdReactions>()
 
-fun <U : TdApi.Update> tdUpdateToken() =
+fun <U : TdApi.Update> tdUpdateType() =
     ContextTypeToken<ActivatorContext, TdRequest<U>, TdReactions>()

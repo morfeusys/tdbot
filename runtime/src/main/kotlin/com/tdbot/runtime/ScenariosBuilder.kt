@@ -1,7 +1,7 @@
 package com.tdbot.runtime
 
+import com.justai.jaicf.channel.td.api.TdBotApi
 import com.justai.jaicf.model.scenario.Scenario
-import com.tdbot.api.TdBotApi
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.bot.Scenarios
 

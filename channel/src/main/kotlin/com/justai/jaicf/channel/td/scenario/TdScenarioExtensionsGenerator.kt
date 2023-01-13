@@ -64,16 +64,16 @@ fun main() {
     fun generateTypeTokens() {
         val file = File("./channel/src/main/kotlin/com/justai/jaicf/channel/td/scenario/TdScenarioTypeTokens.kt")
         file.writeText("package com.justai.jaicf.channel.td.scenario\n\n" +
-                "import com.justai.jaicf.channel.td.tdMessageToken\n" +
-                "import com.justai.jaicf.channel.td.tdUpdateToken\n" +
+                "import com.justai.jaicf.channel.td.tdMessageType\n" +
+                "import com.justai.jaicf.channel.td.tdUpdateType\n" +
                 "import it.tdlight.jni.TdApi\n")
 
         messages.forEach { msg ->
-            file.appendText("\nval td${msg}MessageType = tdMessageToken<TdApi.Message$msg>()\n")
+            file.appendText("\nval td${msg}MessageType = tdMessageType<TdApi.Message$msg>()\n")
         }
 
         updates.forEach { update ->
-            file.appendText("\nval td${update}Type = tdUpdateToken<TdApi.$update>()\n")
+            file.appendText("\nval td${update}Type = tdUpdateType<TdApi.$update>()\n")
         }
     }
 

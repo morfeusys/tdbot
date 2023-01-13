@@ -2,11 +2,10 @@ package com.tdbot.api
 
 import com.justai.jaicf.builder.RootBuilder
 import com.justai.jaicf.builder.ScenarioDsl
-import com.justai.jaicf.builder.createModel
 import com.justai.jaicf.channel.invocationapi.invocationRequest
 import com.justai.jaicf.channel.td.TdReactions
+import com.justai.jaicf.channel.td.api.TdBotApi
 import com.justai.jaicf.channel.td.request.DefaultTdRequest
-import com.justai.jaicf.channel.td.td
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.model.scenario.Scenario

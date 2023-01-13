@@ -3,14 +3,10 @@ package com.justai.jaicf.channel.td.api
 import com.justai.jaicf.channel.td.TdMessage
 import it.tdlight.jni.TdApi
 
-fun TdTelegramApi.sendTextMessage(
-    chatId: Long,
+fun TdTelegramApi.parseText(
     text: String,
-    messageThreadId: Long = 0,
-    replyToMessageId: Long = 0,
-    options: TdApi.MessageSendOptions? = null,
-    replyMarkup: TdApi.ReplyMarkup? = null,
-) = sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, TdMessage.text(text))
+    parseMode: TdMessage.ParseMode?
+) = parseMode?.let { send(TdApi.ParseTextEntities(text, parseMode.mode)) } ?: TdApi.FormattedText(text, emptyArray())
 
 fun TdTelegramApi.sendMessage(
     chatId: Long,

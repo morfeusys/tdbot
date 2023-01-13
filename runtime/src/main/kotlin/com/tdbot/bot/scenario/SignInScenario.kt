@@ -56,21 +56,21 @@ fun SignInScenario(authService: AuthService) = TdScenario {
             }
 
             action(tdContactMessageType) {
-                val contact = request.content
+                val contact = request.content.contact
                 val message = request.update.message
-                if (contact.contact.userId != message.chatId) {
+                if (contact.userId != message.chatId) {
                     reactions.say("Send me your own contact, not anther's one")
                 } else {
-                    val phone = contact.contact.phoneNumber.let { p -> when {
+                    val phone = contact.phoneNumber.let { p -> when {
                         p.startsWith("+") -> p.substring(1)
                         else -> p
                     } }.toLong()
 
                     authService.setPhoneNumber(message.chatId, phone)
 
-                    reactions.sayMarkdown("Telegram was sent you a confirmation code.\n" +
+                    reactions.say("Telegram was sent you a confirmation code.\n" +
                             "Send me this code *with spaces between digits.*\n\n" +
-                            "_For example: 4 5 6 7 8, not 45678._")
+                            "_For example: 4 5 6 7 8, not 45678._", TdMessage.ParseMode.Markdown)
                     reactions.say("⚠️ NOTE that code without spaces will be rejected by Telegram!",
                         replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 }

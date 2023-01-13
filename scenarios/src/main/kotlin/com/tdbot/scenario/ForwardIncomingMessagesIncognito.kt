@@ -1,15 +1,12 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.api.searchChats
-import com.justai.jaicf.channel.td.api.sendMessage
+import com.justai.jaicf.channel.td.api.*
 import com.justai.jaicf.channel.td.request.TdMessageRequest
 import com.justai.jaicf.channel.td.request.chatId
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onAnyMessage
 import com.justai.jaicf.channel.td.scenario.onReady
-import com.tdbot.api.TdBotApi
 import it.tdlight.jni.TdApi
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -44,48 +41,43 @@ fun ForwardIncomingMessagesIncognito(
     fun TdTelegramApi.downloadFile(file: TdApi.File) =
         send(TdApi.DownloadFile(file.id, 1, 0L, 0L, true))
 
-    fun <R> withTempFile(file: TdApi.File, handler: (file: TdApi.InputFileLocal) -> R) =
+    fun <R> withTempFile(file: TdApi.File, handler: (file: File) -> R) =
         File(tdApi.downloadFile(file).local.path).let { local ->
             try {
-                val res = handler(TdApi.InputFileLocal(local.absolutePath))
-                if (res is TdApi.Message) {
-                    tdBotApi.telegram.awaitMessage(res.id)
-                }
+                handler(local)
             } finally {
                 local.delete()
             }
         }
 
     fun sendText(text: TdApi.FormattedText) =
-        tdBotApi.telegram.sendMessage(toChatId!!, content = TdMessage.text(text))
+        tdBotApi.say(text, chatId = toChatId!!)
 
     fun sendPhoto(caption: TdApi.FormattedText, content: TdApi.MessagePhoto) =
         withTempFile(content.photo.sizes.maxBy { it.photo.size }.photo) { file ->
-            tdBotApi.telegram.sendMessage(toChatId!!, content = TdMessage.photo(file, caption = caption))
+            tdBotApi.image(file, caption, chatId = toChatId!!)
         }
 
     fun sendAnimation(caption: TdApi.FormattedText, content: TdApi.MessageAnimation) =
         withTempFile(content.animation.animation) { file ->
-            tdBotApi.telegram.sendMessage(
-                toChatId!!,
-                content = TdMessage.animation(
-                    file,
+            tdBotApi.sendMessage(
+                TdMessage.animation(
+                    file.asLocalFile,
                     null,
                     null,
                     content.animation.duration,
                     content.animation.width,
                     content.animation.height,
                     caption
-                )
+                ), chatId = toChatId!!
             )
         }
 
     fun sendVideo(caption: TdApi.FormattedText, content: TdApi.MessageVideo) =
         withTempFile(content.video.video) { file ->
-            tdBotApi.telegram.sendMessage(
-                toChatId!!,
-                content = TdMessage.video(
-                    file,
+            tdBotApi.sendMessage(
+                TdMessage.video(
+                    file.asLocalFile,
                     null,
                     null,
                     content.video.duration,
@@ -93,38 +85,37 @@ fun ForwardIncomingMessagesIncognito(
                     content.video.height,
                     content.video.supportsStreaming,
                     caption
-                )
+                ), chatId = toChatId!!
             )
         }
 
     fun sendVoiceNote(caption: TdApi.FormattedText, content: TdApi.MessageVoiceNote) =
         withTempFile(content.voiceNote.voice) { file ->
-            tdBotApi.telegram.sendMessage(
-                toChatId!!,
-                content = TdMessage.voiceNote(file, content.voiceNote.duration, content.voiceNote.waveform, caption)
+            tdBotApi.sendMessage(
+                TdMessage.voiceNote(file.asLocalFile, content.voiceNote.duration, content.voiceNote.waveform, caption),
+                chatId = toChatId!!
             )
         }
 
     fun sendAudio(caption: TdApi.FormattedText, content: TdApi.MessageAudio) =
         withTempFile(content.audio.audio) { file ->
-            tdBotApi.telegram.sendMessage(
-                toChatId!!,
-                content = TdMessage.audio(
-                    file,
+            tdBotApi.sendMessage(
+                TdMessage.audio(
+                    file.asLocalFile,
                     null,
                     content.audio.duration,
                     content.audio.title,
                     content.audio.performer,
                     caption
-                )
+                ), chatId = toChatId!!
             )
         }
 
     fun sendVideoNote(content: TdApi.MessageVideoNote) =
         withTempFile(content.videoNote.video) { file ->
-            tdBotApi.telegram.sendMessage(
-                toChatId!!,
-                content = TdMessage.videoNote(file, null, content.videoNote.duration, content.videoNote.length)
+            tdBotApi.sendMessage(
+                TdMessage.videoNote(file.asLocalFile, null, content.videoNote.duration, content.videoNote.length),
+                chatId = toChatId!!
             )
         }
 

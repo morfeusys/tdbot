@@ -1,6 +1,7 @@
 package com.tdbot.bot.scenario
 
 import com.justai.jaicf.activator.regex.regex
+import com.justai.jaicf.channel.td.TdMessage
 import com.justai.jaicf.channel.td.TdReactions
 import com.justai.jaicf.channel.td.request.td
 import com.justai.jaicf.channel.td.request.updateNewCallbackQueryRequest
@@ -95,7 +96,7 @@ class TdBotScenario(
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("toggle"))
 
                     context.session["selected_scenario"] = name
-                    reactions.sayMarkdown("_${name}_ scenario is _${enabled.status}_ now.")
+                    reactions.say("_${name}_ scenario is _${enabled.status}_ now.", TdMessage.ParseMode.Markdown)
 
                     if (scenarios.isInteractive(name)) {
                         val scenario = scenarios.all[name] as TdInteractiveScenario
@@ -113,7 +114,7 @@ class TdBotScenario(
                 action {
                     val scenario = context.session.remove("selected_scenario") as String
                     val enabled = scenarios.toggle(scenario)
-                    reactions.sayMarkdown("_${scenario}_ scenario is ${enabled.status} now.")
+                    reactions.say("_${scenario}_ scenario is ${enabled.status} now.", TdMessage.ParseMode.Markdown)
                     reactions.go("/TdBotScenario.Scenarios")
                 }
             }
@@ -123,8 +124,8 @@ class TdBotScenario(
                     val name = context.session["selected_scenario"] as String
                     val scenario = scenarios.all[name] as TdInteractiveScenario
                     val enabled = scenarios.isEnabled(name)
-                    reactions.sayMarkdown("Here is how the _${name}_ scenario works\n\n" +
-                            scenario.config.helpMarkdownText!!)
+                    reactions.say("Here is how the _${name}_ scenario works\n\n" +
+                            scenario.config.helpMarkdownText!!, TdMessage.ParseMode.Markdown)
 
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("../toggle"))
                     buttons.addAll(scenario.config.actionButtons)

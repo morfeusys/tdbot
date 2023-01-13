@@ -4,12 +4,10 @@ import com.justai.jaicf.BotEngine
 import com.justai.jaicf.activator.regex.RegexActivator
 import com.justai.jaicf.channel.invocationapi.InvocationEventRequest
 import com.justai.jaicf.channel.td.TdChannel
+import com.justai.jaicf.channel.td.api.TdBotApi
 import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.hook.TdClosedHook
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.helpers.kotlin.ifTrue
-import com.tdbot.api.TdBotApi
 import com.tdbot.bot.scenario.TdBotScenario
 import com.tdbot.runtime.AuthService
 import com.tdbot.runtime.MutableContextManager
@@ -40,7 +38,7 @@ class TdBot(
     override val chatId
         get() = this::user.isInitialized.ifTrue { user.id } ?: authService.userId.takeIf { it != 0L }
 
-    override val telegram by lazy { channel.api }
+    override val api by lazy { channel.api }
 
     override fun sendEvent(event: String, data: String) {
         if (chatId != null) {

@@ -17,7 +17,7 @@ fun TranscribeMyVoiceNotesWithTranscriberBot(language: String) = TdScenario {
         transcriberBot.forwardMessage(request.update.message) { reply ->
             val text = reply.content as TdApi.MessageText
             if (text.text.text.length <= 1024) {
-                reactions.editCaption(text.text.text)
+                reactions.editCaption(text.text)
             } else {
                 reactions.reply(TdMessage.text(text))
             }

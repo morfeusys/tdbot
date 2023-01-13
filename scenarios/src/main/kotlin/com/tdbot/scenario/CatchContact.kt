@@ -1,6 +1,7 @@
 package com.tdbot.scenario
 
 import com.justai.jaicf.activator.regex.regex
+import com.justai.jaicf.channel.td.TdMessage
 import com.justai.jaicf.channel.td.api.TdTelegramApi
 import com.justai.jaicf.channel.td.isFromIds
 import com.justai.jaicf.channel.td.scenario.createTdModel
@@ -44,7 +45,7 @@ object CatchContact : TdInteractiveScenario({
                 context.session["user_to_catch"] = user
                 val username = user.usernames.activeUsernames?.firstOrNull()
                 if (username != null) {
-                    reactions.sayMarkdown("${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now")
+                    reactions.say("${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", TdMessage.ParseMode.Markdown)
                 } else {
                     reactions.say("${"red_circle".asEmojiUnicode} ${user.firstName} ${user.lastName.orEmpty()} is online now")
                 }

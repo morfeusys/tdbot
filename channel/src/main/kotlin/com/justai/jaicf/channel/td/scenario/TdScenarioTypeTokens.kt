@@ -1,333 +1,333 @@
 package com.justai.jaicf.channel.td.scenario
 
-import com.justai.jaicf.channel.td.tdMessageToken
-import com.justai.jaicf.channel.td.tdUpdateToken
+import com.justai.jaicf.channel.td.tdMessageType
+import com.justai.jaicf.channel.td.tdUpdateType
 import it.tdlight.jni.TdApi
 
-val tdAnimatedEmojiMessageType = tdMessageToken<TdApi.MessageAnimatedEmoji>()
+val tdAnimatedEmojiMessageType = tdMessageType<TdApi.MessageAnimatedEmoji>()
 
-val tdAnimationMessageType = tdMessageToken<TdApi.MessageAnimation>()
+val tdAnimationMessageType = tdMessageType<TdApi.MessageAnimation>()
 
-val tdAudioMessageType = tdMessageToken<TdApi.MessageAudio>()
+val tdAudioMessageType = tdMessageType<TdApi.MessageAudio>()
 
-val tdBasicGroupChatCreateMessageType = tdMessageToken<TdApi.MessageBasicGroupChatCreate>()
+val tdBasicGroupChatCreateMessageType = tdMessageType<TdApi.MessageBasicGroupChatCreate>()
 
-val tdBotWriteAccessAllowedMessageType = tdMessageToken<TdApi.MessageBotWriteAccessAllowed>()
+val tdBotWriteAccessAllowedMessageType = tdMessageType<TdApi.MessageBotWriteAccessAllowed>()
 
-val tdCallMessageType = tdMessageToken<TdApi.MessageCall>()
+val tdCallMessageType = tdMessageType<TdApi.MessageCall>()
 
-val tdChatAddMembersMessageType = tdMessageToken<TdApi.MessageChatAddMembers>()
+val tdChatAddMembersMessageType = tdMessageType<TdApi.MessageChatAddMembers>()
 
-val tdChatChangePhotoMessageType = tdMessageToken<TdApi.MessageChatChangePhoto>()
+val tdChatChangePhotoMessageType = tdMessageType<TdApi.MessageChatChangePhoto>()
 
-val tdChatChangeTitleMessageType = tdMessageToken<TdApi.MessageChatChangeTitle>()
+val tdChatChangeTitleMessageType = tdMessageType<TdApi.MessageChatChangeTitle>()
 
-val tdChatDeleteMemberMessageType = tdMessageToken<TdApi.MessageChatDeleteMember>()
+val tdChatDeleteMemberMessageType = tdMessageType<TdApi.MessageChatDeleteMember>()
 
-val tdChatDeletePhotoMessageType = tdMessageToken<TdApi.MessageChatDeletePhoto>()
+val tdChatDeletePhotoMessageType = tdMessageType<TdApi.MessageChatDeletePhoto>()
 
-val tdChatJoinByLinkMessageType = tdMessageToken<TdApi.MessageChatJoinByLink>()
+val tdChatJoinByLinkMessageType = tdMessageType<TdApi.MessageChatJoinByLink>()
 
-val tdChatJoinByRequestMessageType = tdMessageToken<TdApi.MessageChatJoinByRequest>()
+val tdChatJoinByRequestMessageType = tdMessageType<TdApi.MessageChatJoinByRequest>()
 
-val tdChatSetMessageAutoDeleteTimeMessageType = tdMessageToken<TdApi.MessageChatSetMessageAutoDeleteTime>()
+val tdChatSetMessageAutoDeleteTimeMessageType = tdMessageType<TdApi.MessageChatSetMessageAutoDeleteTime>()
 
-val tdChatSetThemeMessageType = tdMessageToken<TdApi.MessageChatSetTheme>()
+val tdChatSetThemeMessageType = tdMessageType<TdApi.MessageChatSetTheme>()
 
-val tdChatUpgradeFromMessageType = tdMessageToken<TdApi.MessageChatUpgradeFrom>()
+val tdChatUpgradeFromMessageType = tdMessageType<TdApi.MessageChatUpgradeFrom>()
 
-val tdChatUpgradeToMessageType = tdMessageToken<TdApi.MessageChatUpgradeTo>()
+val tdChatUpgradeToMessageType = tdMessageType<TdApi.MessageChatUpgradeTo>()
 
-val tdContactMessageType = tdMessageToken<TdApi.MessageContact>()
+val tdContactMessageType = tdMessageType<TdApi.MessageContact>()
 
-val tdContactRegisteredMessageType = tdMessageToken<TdApi.MessageContactRegistered>()
+val tdContactRegisteredMessageType = tdMessageType<TdApi.MessageContactRegistered>()
 
-val tdCustomServiceActionMessageType = tdMessageToken<TdApi.MessageCustomServiceAction>()
+val tdCustomServiceActionMessageType = tdMessageType<TdApi.MessageCustomServiceAction>()
 
-val tdDiceMessageType = tdMessageToken<TdApi.MessageDice>()
+val tdDiceMessageType = tdMessageType<TdApi.MessageDice>()
 
-val tdDocumentMessageType = tdMessageToken<TdApi.MessageDocument>()
+val tdDocumentMessageType = tdMessageType<TdApi.MessageDocument>()
 
-val tdExpiredPhotoMessageType = tdMessageToken<TdApi.MessageExpiredPhoto>()
+val tdExpiredPhotoMessageType = tdMessageType<TdApi.MessageExpiredPhoto>()
 
-val tdExpiredVideoMessageType = tdMessageToken<TdApi.MessageExpiredVideo>()
+val tdExpiredVideoMessageType = tdMessageType<TdApi.MessageExpiredVideo>()
 
-val tdForumTopicCreatedMessageType = tdMessageToken<TdApi.MessageForumTopicCreated>()
+val tdForumTopicCreatedMessageType = tdMessageType<TdApi.MessageForumTopicCreated>()
 
-val tdForumTopicEditedMessageType = tdMessageToken<TdApi.MessageForumTopicEdited>()
+val tdForumTopicEditedMessageType = tdMessageType<TdApi.MessageForumTopicEdited>()
 
-val tdForumTopicIsClosedToggledMessageType = tdMessageToken<TdApi.MessageForumTopicIsClosedToggled>()
+val tdForumTopicIsClosedToggledMessageType = tdMessageType<TdApi.MessageForumTopicIsClosedToggled>()
 
-val tdForumTopicIsHiddenToggledMessageType = tdMessageToken<TdApi.MessageForumTopicIsHiddenToggled>()
+val tdForumTopicIsHiddenToggledMessageType = tdMessageType<TdApi.MessageForumTopicIsHiddenToggled>()
 
-val tdGameMessageType = tdMessageToken<TdApi.MessageGame>()
+val tdGameMessageType = tdMessageType<TdApi.MessageGame>()
 
-val tdGameScoreMessageType = tdMessageToken<TdApi.MessageGameScore>()
+val tdGameScoreMessageType = tdMessageType<TdApi.MessageGameScore>()
 
-val tdGiftedPremiumMessageType = tdMessageToken<TdApi.MessageGiftedPremium>()
+val tdGiftedPremiumMessageType = tdMessageType<TdApi.MessageGiftedPremium>()
 
-val tdInviteVideoChatParticipantsMessageType = tdMessageToken<TdApi.MessageInviteVideoChatParticipants>()
+val tdInviteVideoChatParticipantsMessageType = tdMessageType<TdApi.MessageInviteVideoChatParticipants>()
 
-val tdInvoiceMessageType = tdMessageToken<TdApi.MessageInvoice>()
+val tdInvoiceMessageType = tdMessageType<TdApi.MessageInvoice>()
 
-val tdLocationMessageType = tdMessageToken<TdApi.MessageLocation>()
+val tdLocationMessageType = tdMessageType<TdApi.MessageLocation>()
 
-val tdPassportDataReceivedMessageType = tdMessageToken<TdApi.MessagePassportDataReceived>()
+val tdPassportDataReceivedMessageType = tdMessageType<TdApi.MessagePassportDataReceived>()
 
-val tdPassportDataSentMessageType = tdMessageToken<TdApi.MessagePassportDataSent>()
+val tdPassportDataSentMessageType = tdMessageType<TdApi.MessagePassportDataSent>()
 
-val tdPaymentSuccessfulMessageType = tdMessageToken<TdApi.MessagePaymentSuccessful>()
+val tdPaymentSuccessfulMessageType = tdMessageType<TdApi.MessagePaymentSuccessful>()
 
-val tdPaymentSuccessfulBotMessageType = tdMessageToken<TdApi.MessagePaymentSuccessfulBot>()
+val tdPaymentSuccessfulBotMessageType = tdMessageType<TdApi.MessagePaymentSuccessfulBot>()
 
-val tdPhotoMessageType = tdMessageToken<TdApi.MessagePhoto>()
+val tdPhotoMessageType = tdMessageType<TdApi.MessagePhoto>()
 
-val tdPinMessageMessageType = tdMessageToken<TdApi.MessagePinMessage>()
+val tdPinMessageMessageType = tdMessageType<TdApi.MessagePinMessage>()
 
-val tdPollMessageType = tdMessageToken<TdApi.MessagePoll>()
+val tdPollMessageType = tdMessageType<TdApi.MessagePoll>()
 
-val tdProximityAlertTriggeredMessageType = tdMessageToken<TdApi.MessageProximityAlertTriggered>()
+val tdProximityAlertTriggeredMessageType = tdMessageType<TdApi.MessageProximityAlertTriggered>()
 
-val tdScreenshotTakenMessageType = tdMessageToken<TdApi.MessageScreenshotTaken>()
+val tdScreenshotTakenMessageType = tdMessageType<TdApi.MessageScreenshotTaken>()
 
-val tdStickerMessageType = tdMessageToken<TdApi.MessageSticker>()
+val tdStickerMessageType = tdMessageType<TdApi.MessageSticker>()
 
-val tdSuggestProfilePhotoMessageType = tdMessageToken<TdApi.MessageSuggestProfilePhoto>()
+val tdSuggestProfilePhotoMessageType = tdMessageType<TdApi.MessageSuggestProfilePhoto>()
 
-val tdSupergroupChatCreateMessageType = tdMessageToken<TdApi.MessageSupergroupChatCreate>()
+val tdSupergroupChatCreateMessageType = tdMessageType<TdApi.MessageSupergroupChatCreate>()
 
-val tdTextMessageType = tdMessageToken<TdApi.MessageText>()
+val tdTextMessageType = tdMessageType<TdApi.MessageText>()
 
-val tdUnsupportedMessageType = tdMessageToken<TdApi.MessageUnsupported>()
+val tdUnsupportedMessageType = tdMessageType<TdApi.MessageUnsupported>()
 
-val tdVenueMessageType = tdMessageToken<TdApi.MessageVenue>()
+val tdVenueMessageType = tdMessageType<TdApi.MessageVenue>()
 
-val tdVideoMessageType = tdMessageToken<TdApi.MessageVideo>()
+val tdVideoMessageType = tdMessageType<TdApi.MessageVideo>()
 
-val tdVideoChatEndedMessageType = tdMessageToken<TdApi.MessageVideoChatEnded>()
+val tdVideoChatEndedMessageType = tdMessageType<TdApi.MessageVideoChatEnded>()
 
-val tdVideoChatScheduledMessageType = tdMessageToken<TdApi.MessageVideoChatScheduled>()
+val tdVideoChatScheduledMessageType = tdMessageType<TdApi.MessageVideoChatScheduled>()
 
-val tdVideoChatStartedMessageType = tdMessageToken<TdApi.MessageVideoChatStarted>()
+val tdVideoChatStartedMessageType = tdMessageType<TdApi.MessageVideoChatStarted>()
 
-val tdVideoNoteMessageType = tdMessageToken<TdApi.MessageVideoNote>()
+val tdVideoNoteMessageType = tdMessageType<TdApi.MessageVideoNote>()
 
-val tdVoiceNoteMessageType = tdMessageToken<TdApi.MessageVoiceNote>()
+val tdVoiceNoteMessageType = tdMessageType<TdApi.MessageVoiceNote>()
 
-val tdWebAppDataReceivedMessageType = tdMessageToken<TdApi.MessageWebAppDataReceived>()
+val tdWebAppDataReceivedMessageType = tdMessageType<TdApi.MessageWebAppDataReceived>()
 
-val tdWebAppDataSentMessageType = tdMessageToken<TdApi.MessageWebAppDataSent>()
+val tdWebAppDataSentMessageType = tdMessageType<TdApi.MessageWebAppDataSent>()
 
-val tdWebsiteConnectedMessageType = tdMessageToken<TdApi.MessageWebsiteConnected>()
+val tdWebsiteConnectedMessageType = tdMessageType<TdApi.MessageWebsiteConnected>()
 
-val tdUpdateAccessHashType = tdUpdateToken<TdApi.UpdateAccessHash>()
+val tdUpdateAccessHashType = tdUpdateType<TdApi.UpdateAccessHash>()
 
-val tdUpdateActiveEmojiReactionsType = tdUpdateToken<TdApi.UpdateActiveEmojiReactions>()
+val tdUpdateActiveEmojiReactionsType = tdUpdateType<TdApi.UpdateActiveEmojiReactions>()
 
-val tdUpdateActiveNotificationsType = tdUpdateToken<TdApi.UpdateActiveNotifications>()
+val tdUpdateActiveNotificationsType = tdUpdateType<TdApi.UpdateActiveNotifications>()
 
-val tdUpdateAnimatedEmojiMessageClickedType = tdUpdateToken<TdApi.UpdateAnimatedEmojiMessageClicked>()
+val tdUpdateAnimatedEmojiMessageClickedType = tdUpdateType<TdApi.UpdateAnimatedEmojiMessageClicked>()
 
-val tdUpdateAnimationSearchParametersType = tdUpdateToken<TdApi.UpdateAnimationSearchParameters>()
+val tdUpdateAnimationSearchParametersType = tdUpdateType<TdApi.UpdateAnimationSearchParameters>()
 
-val tdUpdateAttachmentMenuBotsType = tdUpdateToken<TdApi.UpdateAttachmentMenuBots>()
+val tdUpdateAttachmentMenuBotsType = tdUpdateType<TdApi.UpdateAttachmentMenuBots>()
 
-val tdUpdateAuthorizationStateType = tdUpdateToken<TdApi.UpdateAuthorizationState>()
+val tdUpdateAuthorizationStateType = tdUpdateType<TdApi.UpdateAuthorizationState>()
 
-val tdUpdateBasicGroupType = tdUpdateToken<TdApi.UpdateBasicGroup>()
+val tdUpdateBasicGroupType = tdUpdateType<TdApi.UpdateBasicGroup>()
 
-val tdUpdateBasicGroupFullInfoType = tdUpdateToken<TdApi.UpdateBasicGroupFullInfo>()
+val tdUpdateBasicGroupFullInfoType = tdUpdateType<TdApi.UpdateBasicGroupFullInfo>()
 
-val tdUpdateCallType = tdUpdateToken<TdApi.UpdateCall>()
+val tdUpdateCallType = tdUpdateType<TdApi.UpdateCall>()
 
-val tdUpdateChatActionType = tdUpdateToken<TdApi.UpdateChatAction>()
+val tdUpdateChatActionType = tdUpdateType<TdApi.UpdateChatAction>()
 
-val tdUpdateChatActionBarType = tdUpdateToken<TdApi.UpdateChatActionBar>()
+val tdUpdateChatActionBarType = tdUpdateType<TdApi.UpdateChatActionBar>()
 
-val tdUpdateChatAvailableReactionsType = tdUpdateToken<TdApi.UpdateChatAvailableReactions>()
+val tdUpdateChatAvailableReactionsType = tdUpdateType<TdApi.UpdateChatAvailableReactions>()
 
-val tdUpdateChatDefaultDisableNotificationType = tdUpdateToken<TdApi.UpdateChatDefaultDisableNotification>()
+val tdUpdateChatDefaultDisableNotificationType = tdUpdateType<TdApi.UpdateChatDefaultDisableNotification>()
 
-val tdUpdateChatDraftMessageType = tdUpdateToken<TdApi.UpdateChatDraftMessage>()
+val tdUpdateChatDraftMessageType = tdUpdateType<TdApi.UpdateChatDraftMessage>()
 
-val tdUpdateChatFiltersType = tdUpdateToken<TdApi.UpdateChatFilters>()
+val tdUpdateChatFiltersType = tdUpdateType<TdApi.UpdateChatFilters>()
 
-val tdUpdateChatHasProtectedContentType = tdUpdateToken<TdApi.UpdateChatHasProtectedContent>()
+val tdUpdateChatHasProtectedContentType = tdUpdateType<TdApi.UpdateChatHasProtectedContent>()
 
-val tdUpdateChatHasScheduledMessagesType = tdUpdateToken<TdApi.UpdateChatHasScheduledMessages>()
+val tdUpdateChatHasScheduledMessagesType = tdUpdateType<TdApi.UpdateChatHasScheduledMessages>()
 
-val tdUpdateChatIsBlockedType = tdUpdateToken<TdApi.UpdateChatIsBlocked>()
+val tdUpdateChatIsBlockedType = tdUpdateType<TdApi.UpdateChatIsBlocked>()
 
-val tdUpdateChatIsMarkedAsUnreadType = tdUpdateToken<TdApi.UpdateChatIsMarkedAsUnread>()
+val tdUpdateChatIsMarkedAsUnreadType = tdUpdateType<TdApi.UpdateChatIsMarkedAsUnread>()
 
-val tdUpdateChatLastMessageType = tdUpdateToken<TdApi.UpdateChatLastMessage>()
+val tdUpdateChatLastMessageType = tdUpdateType<TdApi.UpdateChatLastMessage>()
 
-val tdUpdateChatMemberType = tdUpdateToken<TdApi.UpdateChatMember>()
+val tdUpdateChatMemberType = tdUpdateType<TdApi.UpdateChatMember>()
 
-val tdUpdateChatMessageAutoDeleteTimeType = tdUpdateToken<TdApi.UpdateChatMessageAutoDeleteTime>()
+val tdUpdateChatMessageAutoDeleteTimeType = tdUpdateType<TdApi.UpdateChatMessageAutoDeleteTime>()
 
-val tdUpdateChatMessageSenderType = tdUpdateToken<TdApi.UpdateChatMessageSender>()
+val tdUpdateChatMessageSenderType = tdUpdateType<TdApi.UpdateChatMessageSender>()
 
-val tdUpdateChatNotificationSettingsType = tdUpdateToken<TdApi.UpdateChatNotificationSettings>()
+val tdUpdateChatNotificationSettingsType = tdUpdateType<TdApi.UpdateChatNotificationSettings>()
 
-val tdUpdateChatOnlineMemberCountType = tdUpdateToken<TdApi.UpdateChatOnlineMemberCount>()
+val tdUpdateChatOnlineMemberCountType = tdUpdateType<TdApi.UpdateChatOnlineMemberCount>()
 
-val tdUpdateChatPendingJoinRequestsType = tdUpdateToken<TdApi.UpdateChatPendingJoinRequests>()
+val tdUpdateChatPendingJoinRequestsType = tdUpdateType<TdApi.UpdateChatPendingJoinRequests>()
 
-val tdUpdateChatPermissionsType = tdUpdateToken<TdApi.UpdateChatPermissions>()
+val tdUpdateChatPermissionsType = tdUpdateType<TdApi.UpdateChatPermissions>()
 
-val tdUpdateChatPhotoType = tdUpdateToken<TdApi.UpdateChatPhoto>()
+val tdUpdateChatPhotoType = tdUpdateType<TdApi.UpdateChatPhoto>()
 
-val tdUpdateChatPositionType = tdUpdateToken<TdApi.UpdateChatPosition>()
+val tdUpdateChatPositionType = tdUpdateType<TdApi.UpdateChatPosition>()
 
-val tdUpdateChatReadInboxType = tdUpdateToken<TdApi.UpdateChatReadInbox>()
+val tdUpdateChatReadInboxType = tdUpdateType<TdApi.UpdateChatReadInbox>()
 
-val tdUpdateChatReadOutboxType = tdUpdateToken<TdApi.UpdateChatReadOutbox>()
+val tdUpdateChatReadOutboxType = tdUpdateType<TdApi.UpdateChatReadOutbox>()
 
-val tdUpdateChatReplyMarkupType = tdUpdateToken<TdApi.UpdateChatReplyMarkup>()
+val tdUpdateChatReplyMarkupType = tdUpdateType<TdApi.UpdateChatReplyMarkup>()
 
-val tdUpdateChatThemeType = tdUpdateToken<TdApi.UpdateChatTheme>()
+val tdUpdateChatThemeType = tdUpdateType<TdApi.UpdateChatTheme>()
 
-val tdUpdateChatThemesType = tdUpdateToken<TdApi.UpdateChatThemes>()
+val tdUpdateChatThemesType = tdUpdateType<TdApi.UpdateChatThemes>()
 
-val tdUpdateChatTitleType = tdUpdateToken<TdApi.UpdateChatTitle>()
+val tdUpdateChatTitleType = tdUpdateType<TdApi.UpdateChatTitle>()
 
-val tdUpdateChatUnreadMentionCountType = tdUpdateToken<TdApi.UpdateChatUnreadMentionCount>()
+val tdUpdateChatUnreadMentionCountType = tdUpdateType<TdApi.UpdateChatUnreadMentionCount>()
 
-val tdUpdateChatUnreadReactionCountType = tdUpdateToken<TdApi.UpdateChatUnreadReactionCount>()
+val tdUpdateChatUnreadReactionCountType = tdUpdateType<TdApi.UpdateChatUnreadReactionCount>()
 
-val tdUpdateChatVideoChatType = tdUpdateToken<TdApi.UpdateChatVideoChat>()
+val tdUpdateChatVideoChatType = tdUpdateType<TdApi.UpdateChatVideoChat>()
 
-val tdUpdateConnectionStateType = tdUpdateToken<TdApi.UpdateConnectionState>()
+val tdUpdateConnectionStateType = tdUpdateType<TdApi.UpdateConnectionState>()
 
-val tdUpdateDefaultReactionTypeType = tdUpdateToken<TdApi.UpdateDefaultReactionType>()
+val tdUpdateDefaultReactionTypeType = tdUpdateType<TdApi.UpdateDefaultReactionType>()
 
-val tdUpdateDeleteMessagesType = tdUpdateToken<TdApi.UpdateDeleteMessages>()
+val tdUpdateDeleteMessagesType = tdUpdateType<TdApi.UpdateDeleteMessages>()
 
-val tdUpdateDiceEmojisType = tdUpdateToken<TdApi.UpdateDiceEmojis>()
+val tdUpdateDiceEmojisType = tdUpdateType<TdApi.UpdateDiceEmojis>()
 
-val tdUpdateFavoriteStickersType = tdUpdateToken<TdApi.UpdateFavoriteStickers>()
+val tdUpdateFavoriteStickersType = tdUpdateType<TdApi.UpdateFavoriteStickers>()
 
-val tdUpdateFileType = tdUpdateToken<TdApi.UpdateFile>()
+val tdUpdateFileType = tdUpdateType<TdApi.UpdateFile>()
 
-val tdUpdateFileAddedToDownloadsType = tdUpdateToken<TdApi.UpdateFileAddedToDownloads>()
+val tdUpdateFileAddedToDownloadsType = tdUpdateType<TdApi.UpdateFileAddedToDownloads>()
 
-val tdUpdateFileDownloadType = tdUpdateToken<TdApi.UpdateFileDownload>()
+val tdUpdateFileDownloadType = tdUpdateType<TdApi.UpdateFileDownload>()
 
-val tdUpdateFileDownloadsType = tdUpdateToken<TdApi.UpdateFileDownloads>()
+val tdUpdateFileDownloadsType = tdUpdateType<TdApi.UpdateFileDownloads>()
 
-val tdUpdateFileGenerationStartType = tdUpdateToken<TdApi.UpdateFileGenerationStart>()
+val tdUpdateFileGenerationStartType = tdUpdateType<TdApi.UpdateFileGenerationStart>()
 
-val tdUpdateFileGenerationStopType = tdUpdateToken<TdApi.UpdateFileGenerationStop>()
+val tdUpdateFileGenerationStopType = tdUpdateType<TdApi.UpdateFileGenerationStop>()
 
-val tdUpdateFileRemovedFromDownloadsType = tdUpdateToken<TdApi.UpdateFileRemovedFromDownloads>()
+val tdUpdateFileRemovedFromDownloadsType = tdUpdateType<TdApi.UpdateFileRemovedFromDownloads>()
 
-val tdUpdateForumTopicInfoType = tdUpdateToken<TdApi.UpdateForumTopicInfo>()
+val tdUpdateForumTopicInfoType = tdUpdateType<TdApi.UpdateForumTopicInfo>()
 
-val tdUpdateGroupCallType = tdUpdateToken<TdApi.UpdateGroupCall>()
+val tdUpdateGroupCallType = tdUpdateType<TdApi.UpdateGroupCall>()
 
-val tdUpdateGroupCallParticipantType = tdUpdateToken<TdApi.UpdateGroupCallParticipant>()
+val tdUpdateGroupCallParticipantType = tdUpdateType<TdApi.UpdateGroupCallParticipant>()
 
-val tdUpdateHavePendingNotificationsType = tdUpdateToken<TdApi.UpdateHavePendingNotifications>()
+val tdUpdateHavePendingNotificationsType = tdUpdateType<TdApi.UpdateHavePendingNotifications>()
 
-val tdUpdateInstalledStickerSetsType = tdUpdateToken<TdApi.UpdateInstalledStickerSets>()
+val tdUpdateInstalledStickerSetsType = tdUpdateType<TdApi.UpdateInstalledStickerSets>()
 
-val tdUpdateLanguagePackStringsType = tdUpdateToken<TdApi.UpdateLanguagePackStrings>()
+val tdUpdateLanguagePackStringsType = tdUpdateType<TdApi.UpdateLanguagePackStrings>()
 
-val tdUpdateMessageContentType = tdUpdateToken<TdApi.UpdateMessageContent>()
+val tdUpdateMessageContentType = tdUpdateType<TdApi.UpdateMessageContent>()
 
-val tdUpdateMessageContentOpenedType = tdUpdateToken<TdApi.UpdateMessageContentOpened>()
+val tdUpdateMessageContentOpenedType = tdUpdateType<TdApi.UpdateMessageContentOpened>()
 
-val tdUpdateMessageEditedType = tdUpdateToken<TdApi.UpdateMessageEdited>()
+val tdUpdateMessageEditedType = tdUpdateType<TdApi.UpdateMessageEdited>()
 
-val tdUpdateMessageInteractionInfoType = tdUpdateToken<TdApi.UpdateMessageInteractionInfo>()
+val tdUpdateMessageInteractionInfoType = tdUpdateType<TdApi.UpdateMessageInteractionInfo>()
 
-val tdUpdateMessageIsPinnedType = tdUpdateToken<TdApi.UpdateMessageIsPinned>()
+val tdUpdateMessageIsPinnedType = tdUpdateType<TdApi.UpdateMessageIsPinned>()
 
-val tdUpdateMessageLiveLocationViewedType = tdUpdateToken<TdApi.UpdateMessageLiveLocationViewed>()
+val tdUpdateMessageLiveLocationViewedType = tdUpdateType<TdApi.UpdateMessageLiveLocationViewed>()
 
-val tdUpdateMessageMentionReadType = tdUpdateToken<TdApi.UpdateMessageMentionRead>()
+val tdUpdateMessageMentionReadType = tdUpdateType<TdApi.UpdateMessageMentionRead>()
 
-val tdUpdateMessageSendAcknowledgedType = tdUpdateToken<TdApi.UpdateMessageSendAcknowledged>()
+val tdUpdateMessageSendAcknowledgedType = tdUpdateType<TdApi.UpdateMessageSendAcknowledged>()
 
-val tdUpdateMessageSendFailedType = tdUpdateToken<TdApi.UpdateMessageSendFailed>()
+val tdUpdateMessageSendFailedType = tdUpdateType<TdApi.UpdateMessageSendFailed>()
 
-val tdUpdateMessageSendSucceededType = tdUpdateToken<TdApi.UpdateMessageSendSucceeded>()
+val tdUpdateMessageSendSucceededType = tdUpdateType<TdApi.UpdateMessageSendSucceeded>()
 
-val tdUpdateMessageUnreadReactionsType = tdUpdateToken<TdApi.UpdateMessageUnreadReactions>()
+val tdUpdateMessageUnreadReactionsType = tdUpdateType<TdApi.UpdateMessageUnreadReactions>()
 
-val tdUpdateNewCallSignalingDataType = tdUpdateToken<TdApi.UpdateNewCallSignalingData>()
+val tdUpdateNewCallSignalingDataType = tdUpdateType<TdApi.UpdateNewCallSignalingData>()
 
-val tdUpdateNewCallbackQueryType = tdUpdateToken<TdApi.UpdateNewCallbackQuery>()
+val tdUpdateNewCallbackQueryType = tdUpdateType<TdApi.UpdateNewCallbackQuery>()
 
-val tdUpdateNewChatType = tdUpdateToken<TdApi.UpdateNewChat>()
+val tdUpdateNewChatType = tdUpdateType<TdApi.UpdateNewChat>()
 
-val tdUpdateNewChatJoinRequestType = tdUpdateToken<TdApi.UpdateNewChatJoinRequest>()
+val tdUpdateNewChatJoinRequestType = tdUpdateType<TdApi.UpdateNewChatJoinRequest>()
 
-val tdUpdateNewChosenInlineResultType = tdUpdateToken<TdApi.UpdateNewChosenInlineResult>()
+val tdUpdateNewChosenInlineResultType = tdUpdateType<TdApi.UpdateNewChosenInlineResult>()
 
-val tdUpdateNewCustomEventType = tdUpdateToken<TdApi.UpdateNewCustomEvent>()
+val tdUpdateNewCustomEventType = tdUpdateType<TdApi.UpdateNewCustomEvent>()
 
-val tdUpdateNewCustomQueryType = tdUpdateToken<TdApi.UpdateNewCustomQuery>()
+val tdUpdateNewCustomQueryType = tdUpdateType<TdApi.UpdateNewCustomQuery>()
 
-val tdUpdateNewInlineCallbackQueryType = tdUpdateToken<TdApi.UpdateNewInlineCallbackQuery>()
+val tdUpdateNewInlineCallbackQueryType = tdUpdateType<TdApi.UpdateNewInlineCallbackQuery>()
 
-val tdUpdateNewInlineQueryType = tdUpdateToken<TdApi.UpdateNewInlineQuery>()
+val tdUpdateNewInlineQueryType = tdUpdateType<TdApi.UpdateNewInlineQuery>()
 
-val tdUpdateNewMessageType = tdUpdateToken<TdApi.UpdateNewMessage>()
+val tdUpdateNewMessageType = tdUpdateType<TdApi.UpdateNewMessage>()
 
-val tdUpdateNewPreCheckoutQueryType = tdUpdateToken<TdApi.UpdateNewPreCheckoutQuery>()
+val tdUpdateNewPreCheckoutQueryType = tdUpdateType<TdApi.UpdateNewPreCheckoutQuery>()
 
-val tdUpdateNewShippingQueryType = tdUpdateToken<TdApi.UpdateNewShippingQuery>()
+val tdUpdateNewShippingQueryType = tdUpdateType<TdApi.UpdateNewShippingQuery>()
 
-val tdUpdateNotificationType = tdUpdateToken<TdApi.UpdateNotification>()
+val tdUpdateNotificationType = tdUpdateType<TdApi.UpdateNotification>()
 
-val tdUpdateNotificationGroupType = tdUpdateToken<TdApi.UpdateNotificationGroup>()
+val tdUpdateNotificationGroupType = tdUpdateType<TdApi.UpdateNotificationGroup>()
 
-val tdUpdateOptionType = tdUpdateToken<TdApi.UpdateOption>()
+val tdUpdateOptionType = tdUpdateType<TdApi.UpdateOption>()
 
-val tdUpdatePollType = tdUpdateToken<TdApi.UpdatePoll>()
+val tdUpdatePollType = tdUpdateType<TdApi.UpdatePoll>()
 
-val tdUpdatePollAnswerType = tdUpdateToken<TdApi.UpdatePollAnswer>()
+val tdUpdatePollAnswerType = tdUpdateType<TdApi.UpdatePollAnswer>()
 
-val tdUpdateRecentStickersType = tdUpdateToken<TdApi.UpdateRecentStickers>()
+val tdUpdateRecentStickersType = tdUpdateType<TdApi.UpdateRecentStickers>()
 
-val tdUpdateSavedAnimationsType = tdUpdateToken<TdApi.UpdateSavedAnimations>()
+val tdUpdateSavedAnimationsType = tdUpdateType<TdApi.UpdateSavedAnimations>()
 
-val tdUpdateSavedNotificationSoundsType = tdUpdateToken<TdApi.UpdateSavedNotificationSounds>()
+val tdUpdateSavedNotificationSoundsType = tdUpdateType<TdApi.UpdateSavedNotificationSounds>()
 
-val tdUpdateScopeNotificationSettingsType = tdUpdateToken<TdApi.UpdateScopeNotificationSettings>()
+val tdUpdateScopeNotificationSettingsType = tdUpdateType<TdApi.UpdateScopeNotificationSettings>()
 
-val tdUpdateSecretChatType = tdUpdateToken<TdApi.UpdateSecretChat>()
+val tdUpdateSecretChatType = tdUpdateType<TdApi.UpdateSecretChat>()
 
-val tdUpdateSelectedBackgroundType = tdUpdateToken<TdApi.UpdateSelectedBackground>()
+val tdUpdateSelectedBackgroundType = tdUpdateType<TdApi.UpdateSelectedBackground>()
 
-val tdUpdateServiceNotificationType = tdUpdateToken<TdApi.UpdateServiceNotification>()
+val tdUpdateServiceNotificationType = tdUpdateType<TdApi.UpdateServiceNotification>()
 
-val tdUpdateStickerSetType = tdUpdateToken<TdApi.UpdateStickerSet>()
+val tdUpdateStickerSetType = tdUpdateType<TdApi.UpdateStickerSet>()
 
-val tdUpdateSuggestedActionsType = tdUpdateToken<TdApi.UpdateSuggestedActions>()
+val tdUpdateSuggestedActionsType = tdUpdateType<TdApi.UpdateSuggestedActions>()
 
-val tdUpdateSupergroupType = tdUpdateToken<TdApi.UpdateSupergroup>()
+val tdUpdateSupergroupType = tdUpdateType<TdApi.UpdateSupergroup>()
 
-val tdUpdateSupergroupFullInfoType = tdUpdateToken<TdApi.UpdateSupergroupFullInfo>()
+val tdUpdateSupergroupFullInfoType = tdUpdateType<TdApi.UpdateSupergroupFullInfo>()
 
-val tdUpdateTermsOfServiceType = tdUpdateToken<TdApi.UpdateTermsOfService>()
+val tdUpdateTermsOfServiceType = tdUpdateType<TdApi.UpdateTermsOfService>()
 
-val tdUpdateTrendingStickerSetsType = tdUpdateToken<TdApi.UpdateTrendingStickerSets>()
+val tdUpdateTrendingStickerSetsType = tdUpdateType<TdApi.UpdateTrendingStickerSets>()
 
-val tdUpdateUnreadChatCountType = tdUpdateToken<TdApi.UpdateUnreadChatCount>()
+val tdUpdateUnreadChatCountType = tdUpdateType<TdApi.UpdateUnreadChatCount>()
 
-val tdUpdateUnreadMessageCountType = tdUpdateToken<TdApi.UpdateUnreadMessageCount>()
+val tdUpdateUnreadMessageCountType = tdUpdateType<TdApi.UpdateUnreadMessageCount>()
 
-val tdUpdateUserType = tdUpdateToken<TdApi.UpdateUser>()
+val tdUpdateUserType = tdUpdateType<TdApi.UpdateUser>()
 
-val tdUpdateUserFullInfoType = tdUpdateToken<TdApi.UpdateUserFullInfo>()
+val tdUpdateUserFullInfoType = tdUpdateType<TdApi.UpdateUserFullInfo>()
 
-val tdUpdateUserPrivacySettingRulesType = tdUpdateToken<TdApi.UpdateUserPrivacySettingRules>()
+val tdUpdateUserPrivacySettingRulesType = tdUpdateType<TdApi.UpdateUserPrivacySettingRules>()
 
-val tdUpdateUserStatusType = tdUpdateToken<TdApi.UpdateUserStatus>()
+val tdUpdateUserStatusType = tdUpdateType<TdApi.UpdateUserStatus>()
 
-val tdUpdateUsersNearbyType = tdUpdateToken<TdApi.UpdateUsersNearby>()
+val tdUpdateUsersNearbyType = tdUpdateType<TdApi.UpdateUsersNearby>()
 
-val tdUpdateWebAppMessageSentType = tdUpdateToken<TdApi.UpdateWebAppMessageSent>()
+val tdUpdateWebAppMessageSentType = tdUpdateType<TdApi.UpdateWebAppMessageSent>()
