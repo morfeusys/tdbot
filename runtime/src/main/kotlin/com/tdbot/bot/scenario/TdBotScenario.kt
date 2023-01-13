@@ -35,7 +35,6 @@ class TdBotScenario(
                 regex("restart")
             }
 
-
             action {
                 reactions.say("\uD83D\uDC4B Hello!", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 reactions.go("/TdBotScenario.Scenarios")
@@ -148,4 +147,10 @@ class TdBotScenario(
 
     private val Int.are
         get() = (this == 1).ifTrue { "is" } ?: "are"
+
+    companion object {
+        const val EVENT_READY = "TdBotScenario.onReady"
+        const val EVENT_CLOSE = "TdBotScenario.onClose"
+        const val EVENT_ERROR = "TdBotScenario.onError"
+    }
 }

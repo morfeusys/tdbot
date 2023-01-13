@@ -29,7 +29,7 @@ fun SignInScenario(authService: AuthService) = TdScenario {
 
     state("TdBotScenario.Authenticated") {
         activators {
-            event("TdBotScenario.Ready")
+            event(TdBotScenario.EVENT_READY)
         }
 
         action {
@@ -89,11 +89,12 @@ fun SignInScenario(authService: AuthService) = TdScenario {
 
             state("Error") {
                 activators {
-                    event("error")
+                    event(TdBotScenario.EVENT_ERROR)
                 }
 
                 action {
                     reactions.say("⚠️ Authentication error. ${request.invocationRequest?.requestData}")
+                    reactions.go("/TdBotScenario.SignIn")
                 }
             }
         }

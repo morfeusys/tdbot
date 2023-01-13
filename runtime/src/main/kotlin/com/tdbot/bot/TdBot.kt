@@ -75,16 +75,16 @@ class TdBot(
     fun onReady(api: TdTelegramApi) {
         logger.info("Ready")
         user = api.me
-        sendEvent("TdBotScenario.Ready", user.id.toString())
+        sendEvent(TdBotScenario.EVENT_READY, user.id.toString())
     }
 
     fun onClose(api: TdTelegramApi) {
         logger.info("Closed")
-        sendEvent("TdBotScenario.Close")
+        sendEvent(TdBotScenario.EVENT_CLOSE)
     }
 
     fun onException(error: Throwable) {
         logger.error("onException", error)
-        sendEvent("error", error.message ?: "")
+        sendEvent(TdBotScenario.EVENT_ERROR, error.message ?: "")
     }
 }
