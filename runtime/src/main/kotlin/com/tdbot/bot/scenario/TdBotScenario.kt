@@ -1,6 +1,9 @@
 package com.tdbot.bot.scenario
 
 import com.justai.jaicf.activator.regex.regex
+import com.justai.jaicf.channel.td.TdReactions
+import com.justai.jaicf.channel.td.request.td
+import com.justai.jaicf.channel.td.request.updateNewCallbackQueryRequest
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.helpers.kotlin.ifTrue
 import com.justai.jaicf.hook.BeforeActionHook
@@ -20,7 +23,10 @@ class TdBotScenario(
         append(SignInScenario(authService))
 
         handle<BeforeActionHook> {
-
+            request.td?.updateNewCallbackQueryRequest?.also { query ->
+                val tdReactions = reactions as TdReactions
+                tdReactions.api.send(TdApi.AnswerCallbackQuery(query.update.id, null, false, null, 0))
+            }
         }
 
         state("TdBotScenario.Start") {
