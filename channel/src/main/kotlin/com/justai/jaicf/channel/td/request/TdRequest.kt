@@ -13,8 +13,6 @@ typealias DefaultTdRequest = TdRequest<out TdApi.Update>
 val BotRequest.td get() = this as? DefaultTdRequest
 
 val DefaultTdRequest.messageRequest get() = this as? TdMessageRequest<out TdApi.MessageContent>
-val DefaultTdRequest.textRequest get() = this as? TdTextMessageRequest
-val DefaultTdRequest.callbackQueryRequest get() = this as? TdCallbackQueryRequest
 
 val DefaultTdRequest.fromId get() = update.fromId
 val DefaultTdRequest.messageId get() = update.messageId

@@ -1,9 +1,9 @@
 package com.tdbot.bot.scenario
 
 import com.justai.jaicf.activator.regex.regex
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.helpers.kotlin.ifTrue
+import com.justai.jaicf.hook.BeforeActionHook
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
@@ -18,6 +18,10 @@ class TdBotScenario(
 ) : Scenario {
     override val model = createTdModel {
         append(SignInScenario(authService))
+
+        handle<BeforeActionHook> {
+
+        }
 
         state("TdBotScenario.Start") {
             activators {

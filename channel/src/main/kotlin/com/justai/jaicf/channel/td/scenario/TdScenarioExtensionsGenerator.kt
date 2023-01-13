@@ -77,7 +77,24 @@ fun main() {
         }
     }
 
+    fun generateRequestExtensions() {
+        val file = File("./channel/src/main/kotlin/com/justai/jaicf/channel/td/request/TdRequestExtensions.kt")
+        file.writeText("package com.justai.jaicf.channel.td.request\n\n" +
+                "import it.tdlight.jni.TdApi\n")
+
+        messages.forEach { msg ->
+            val value = msg.replaceFirstChar { it.lowercase() }
+            file.appendText("\nval DefaultTdRequest.${value}MessageRequest get() = this as? TdMessageRequest<TdApi.Message$msg>\n")
+        }
+
+        updates.forEach { update ->
+            val value = update.replaceFirstChar { it.lowercase() }
+            file.appendText("\nval DefaultTdRequest.${value}Request get() = this as? TdRequest<TdApi.$update>\n")
+        }
+    }
+
     generateHandlers()
     generateActivators()
     generateTypeTokens()
+    generateRequestExtensions()
 }
