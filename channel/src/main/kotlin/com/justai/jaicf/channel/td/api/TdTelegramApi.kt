@@ -21,6 +21,11 @@ class TdTelegramApi(internal val client: TdTelegramClient) {
                 it.complete(event.message)
             }
         }
+        onUpdate<TdApi.UpdateMessageSendFailed> { event ->
+            findSentMessage(event.oldMessageId)?.also {
+                it.completeExceptionally(TelegramError(TdApi.Error(event.errorCode, event.errorMessage)))
+            }
+        }
     }
 
     private fun addSentMessage(message: TdApi.Message) {
