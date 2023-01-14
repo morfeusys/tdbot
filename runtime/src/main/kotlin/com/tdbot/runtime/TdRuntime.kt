@@ -32,12 +32,13 @@ class TdRuntime(
         }.build()
 
         tdBot.start(scenarios)
-        val tdScenario = TdScenario(tdBot.getUser(), scenarios)
+        val contextManager = InMemoryBotContextManager()
+        val tdScenario = TdScenario(tdBot.getUser(), scenarios, contextManager)
 
         val tdEngine = BotEngine(
             scenario = tdScenario,
             activators = arrayOf(RegexActivator),
-            defaultContextManager = MutableContextManager(),
+            defaultContextManager = contextManager,
         ).also { engine ->
             tdScenario.botApi = engine
         }

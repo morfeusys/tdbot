@@ -9,6 +9,7 @@ import com.justai.jaicf.channel.td.request.td
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.context.BotContext
 import com.justai.jaicf.context.RequestContext
+import com.justai.jaicf.context.manager.BotContextManager
 import com.justai.jaicf.hook.BotHookException
 import com.justai.jaicf.hook.BotRequestHook
 import com.justai.jaicf.model.scenario.Scenario
@@ -17,12 +18,22 @@ import com.tdbot.bot.Scenarios
 import it.tdlight.jni.TdApi
 import java.util.*
 
-class TdScenario(tdBotUser: TdApi.User, scenarios: Scenarios) : Scenario {
+class TdScenario(
+    tdBotUser: TdApi.User,
+    scenarios: Scenarios,
+    contextManager: BotContextManager
+) : Scenario {
     lateinit var botApi: BotApi
     lateinit var telegrapApi: TdTelegramApi
 
     override val model by lazy {
         val rootState = UUID.randomUUID().toString()
+
+        fun BotContext.setState(state: String) {
+            dialogContext.currentState = state
+            dialogContext.currentContext = state
+            contextManager.saveContext(this, null, null, RequestContext.DEFAULT)
+        }
 
         createTdModel {
             val botFather = createBotClient("@BotFather") { bot ->
@@ -59,10 +70,5 @@ class TdScenario(tdBotUser: TdApi.User, scenarios: Scenarios) : Scenario {
                 }
             }
         }
-    }
-
-    private fun BotContext.setState(state: String) {
-        dialogContext.currentState = state
-        dialogContext.currentContext = state
     }
 }

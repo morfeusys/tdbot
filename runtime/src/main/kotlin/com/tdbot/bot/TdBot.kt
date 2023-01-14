@@ -10,7 +10,7 @@ import com.justai.jaicf.context.RequestContext
 import com.justai.jaicf.helpers.kotlin.ifTrue
 import com.tdbot.bot.scenario.TdBotScenario
 import com.tdbot.runtime.AuthService
-import com.tdbot.runtime.MutableContextManager
+import com.tdbot.runtime.InMemoryBotContextManager
 import com.tdbot.runtime.TdRuntime
 import it.tdlight.client.APIToken
 import it.tdlight.client.AuthenticationData
@@ -54,7 +54,7 @@ class TdBot(
         val botApi = BotEngine(
             scenario = TdBotScenario(authService, scenarios),
             activators = arrayOf(RegexActivator),
-            defaultContextManager = MutableContextManager()
+            defaultContextManager = InMemoryBotContextManager()
         )
 
         channel = TdChannel(
