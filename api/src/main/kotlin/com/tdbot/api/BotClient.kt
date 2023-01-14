@@ -123,7 +123,7 @@ class BotClient(
     fun sendMessage(
         content: TdApi.InputMessageContent,
         replyHandler: ReplyHandler? = null
-    ) = api.sendMessage(botUserId, content = content).let { msg ->
+    ) = api.sendMessage(botUserId, content = content).also { msg ->
         if (replyHandler != null) {
             api.awaitMessage(msg.id)?.also {
                 handlers[it.id] = HandlerHolder(replyHandler)
@@ -134,7 +134,7 @@ class BotClient(
     fun forwardMessage(
         message: TdApi.Message,
         replyHandler: ReplyHandler? = null
-    ) = api.forwardMessages(botUserId, fromChatId = message.chatId, messageIds = arrayOf(message.id)).let { list ->
+    ) = api.forwardMessages(botUserId, fromChatId = message.chatId, messageIds = arrayOf(message.id)).also { list ->
         if (replyHandler != null) {
             list.messages.first().let { msg ->
                 api.awaitMessage(msg.id)?.also {
