@@ -27,7 +27,7 @@ class TdRuntime(
     private lateinit var tdChannel: TdChannel
 
     fun start(builder: ScenariosBuilder.() -> Unit) {
-        val scenarios = ScenariosBuilder(tdBot).apply {
+        val scenarios = ScenariosBuilder(settings, tdBot).apply {
             builder.invoke(this)
         }.build()
 
@@ -76,7 +76,6 @@ class TdRuntime(
         val apiHash: String,
         val tdBotToken: String,
         val tdDirectory: String,
-        val publicQrLink: String,
     )
 }
 

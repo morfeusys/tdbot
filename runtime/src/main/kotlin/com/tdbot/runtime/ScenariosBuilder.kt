@@ -5,7 +5,10 @@ import com.justai.jaicf.model.scenario.Scenario
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.bot.Scenarios
 
-class ScenariosBuilder(val tdBotApi: TdBotApi) {
+class ScenariosBuilder(
+    val settings: TdRuntime.Settings,
+    val tdBotApi: TdBotApi
+) {
     private val map = mutableMapOf<String, Scenario>()
 
     infix fun String.to(scenario: Scenario) = requireAlphanumeric.apply {
@@ -21,7 +24,7 @@ class ScenariosBuilder(val tdBotApi: TdBotApi) {
         }
     }
 
-    internal fun build() = Scenarios(map.toMap())
+    internal fun build() = Scenarios(map.toMap(), settings.tdDirectory)
 
     companion object {
         private val alphanumeric = Regex("[a-zA-Z0-9]+")
