@@ -1,9 +1,7 @@
 package com.justai.jaicf.channel.td
 
 import com.justai.jaicf.channel.td.api.*
-import com.justai.jaicf.channel.td.request.DefaultTdRequest
-import com.justai.jaicf.channel.td.request.chatId
-import com.justai.jaicf.channel.td.request.messageId
+import com.justai.jaicf.channel.td.request.*
 import com.justai.jaicf.logging.AudioReaction
 import com.justai.jaicf.logging.ButtonsReaction
 import com.justai.jaicf.logging.ImageReaction
@@ -19,17 +17,11 @@ class TdReactions(
 ): Reactions(), TdBotApi {
     override val chatId = request.chatId
 
-    override fun audio(url: String) = AudioReaction.create(url).also {
-        super<TdBotApi>.audio(url, null, null, null, null, chatId!!, 0, 0)
-    }
+    override fun say(text: String) = SayReaction.create(text).also { sendText(text) }
 
-    override fun image(url: String) = ImageReaction.create(url).also {
-        super<TdBotApi>.image(url, null, null, null, null, chatId!!, 0, 0)
-    }
+    override fun image(url: String) = ImageReaction.create(url).also { sendPhoto(url) }
 
-    override fun say(text: String) = SayReaction.create(text).also {
-        super<TdBotApi>.say(text, null, null, null, chatId!!, 0, 0)
-    }
+    override fun audio(url: String) = AudioReaction.create(url).also { sendAudio(url) }
 
     override fun buttons(vararg buttons: String): ButtonsReaction {
         api.awaitLastMessage()?.let { message ->
@@ -69,13 +61,10 @@ class TdReactions(
     fun editCaption(text: TdApi.FormattedText, replyMarkup: TdApi.ReplyMarkup? = null) =
         api.editMessageCaption(chatId!!, request.messageId!!, replyMarkup, text)
 
-    fun forward(message: TdApi.Message) =
-        api.forwardMessages(chatId!!, fromChatId = message.chatId, messageIds = arrayOf(message.id))
+    fun forwardMessageToChat(toChatId: Long) =
+        forwardMessage(request.messageRequest!!.update.message, toChatId)
 
-    fun forward(toChatId: Long) =
-        api.forwardMessages(toChatId, fromChatId = chatId!!, messageIds = arrayOf(request.messageId!!))
-
-    fun delete(revoke: Boolean = false) =
+    fun deleteMessage(revoke: Boolean = false) =
         api.send(TdApi.DeleteMessages(chatId!!, longArrayOf(request.messageId!!), revoke))
 
     fun addEmojiReaction(reaction: TdApi.ReactionTypeEmoji, isBig: Boolean = false, updateRecentReactions: Boolean = false) =

@@ -1,9 +1,6 @@
 package com.justai.jaicf.channel.td.api
 
 import com.justai.jaicf.channel.td.TdMessage
-import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.api.parseText
-import com.justai.jaicf.channel.td.api.sendMessage
 import it.tdlight.jni.TdApi
 import java.io.File
 
@@ -27,7 +24,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = api.sendMessage(chatId, messageThreadId, replyToMessageId, options, replyMarkup, content).await()
 
-    fun say(
+    fun sendText(
         text: String,
         parseMode: TdMessage.ParseMode? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -35,9 +32,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = say(api.parseText(text, parseMode), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendText(api.parseText(text, parseMode), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun say(
+    fun sendText(
         text: TdApi.FormattedText,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -46,7 +43,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.text(text), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun image(
+    fun sendPhoto(
         url: String,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -55,9 +52,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = image(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendPhoto(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun image(
+    fun sendPhoto(
         url: String,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -67,7 +64,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.photo(url, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun image(
+    fun sendPhoto(
         file: File,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -76,9 +73,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = image(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendPhoto(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun image(
+    fun sendPhoto(
         file: File,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -88,7 +85,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.photo(file.asLocalFile, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun animation(
+    fun sendAnimation(
         url: String,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -97,9 +94,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = animation(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendAnimation(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun animation(
+    fun sendAnimation(
         url: String,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -109,7 +106,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.animation(url, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun animation(
+    fun sendAnimation(
         file: File,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -118,9 +115,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = animation(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendAnimation(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun animation(
+    fun sendAnimation(
         file: File,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -130,7 +127,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.animation(file.asLocalFile, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun video(
+    fun sendVideo(
         url: String,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -139,9 +136,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = video(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendVideo(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun video(
+    fun sendVideo(
         url: String,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -151,7 +148,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.video(url, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun video(
+    fun sendVideo(
         file: File,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -160,9 +157,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = video(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendVideo(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun video(
+    fun sendVideo(
         file: File,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -172,7 +169,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.video(file.asLocalFile, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun audio(
+    fun sendAudio(
         url: String,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -181,9 +178,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = audio(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendAudio(url, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun audio(
+    fun sendAudio(
         url: String,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -193,7 +190,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.audio(url, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun audio(
+    fun sendAudio(
         file: File,
         caption: String? = null,
         parseMode: TdMessage.ParseMode? = null,
@@ -202,9 +199,9 @@ interface TdBotApi {
         chatId: Long = this.chatId!!,
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
-    ) = audio(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+    ) = sendAudio(file, caption?.let { api.parseText(it, parseMode) }, options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun audio(
+    fun sendAudio(
         file: File,
         caption: TdApi.FormattedText? = null,
         options: TdApi.MessageSendOptions? = null,
@@ -214,7 +211,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.audio(file.asLocalFile, caption = caption), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun videoNote(
+    fun sendVideoNote(
         url: String,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -223,7 +220,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.videoNote(url), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun videoNote(
+    fun sendVideoNote(
         file: File,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -232,7 +229,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.videoNote(file.asLocalFile), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun voiceNote(
+    fun sendVoiceNote(
         url: String,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -241,7 +238,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.voiceNote(url), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun voiceNote(
+    fun sendVoiceNote(
         file: File,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -250,7 +247,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.voiceNote(file.asLocalFile), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun sticker(
+    fun sendSticker(
         url: String,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -259,7 +256,7 @@ interface TdBotApi {
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.sticker(url), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
 
-    fun sticker(
+    fun sendSticker(
         file: File,
         options: TdApi.MessageSendOptions? = null,
         replyMarkup: TdApi.ReplyMarkup? = null,
@@ -267,4 +264,9 @@ interface TdBotApi {
         messageThreadId: Long = 0,
         replyToMessageId: Long = 0
     ) = sendMessage(TdMessage.sticker(file.asLocalFile), options, replyMarkup, chatId, messageThreadId, replyToMessageId)
+
+    fun forwardMessage(
+        message: TdApi.Message,
+        chatId: Long = this.chatId!!
+    ) = api.forwardMessages(chatId, fromChatId = message.chatId, messageIds = arrayOf(message.id))
 }
