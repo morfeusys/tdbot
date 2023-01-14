@@ -70,13 +70,13 @@ class TdBot(
 
     fun getUser(): TdApi.User = me.get()
 
-    fun onReady(api: TdTelegramApi) {
+    fun onUserLoggedIn(api: TdTelegramApi) {
         logger.info("Ready")
         user = api.me
         sendEvent(TdBotScenario.EVENT_READY, user.id.toString())
     }
 
-    fun onClose(api: TdTelegramApi) {
+    fun onUserLoggedOut(api: TdTelegramApi) {
         logger.info("Closed")
         sendEvent(TdBotScenario.EVENT_CLOSE)
     }

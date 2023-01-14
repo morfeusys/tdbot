@@ -51,7 +51,7 @@ class TdBotScenario(
 
         state("TdBotScenario.onClose") {
             activators {
-                event("close")
+                event(EVENT_CLOSE)
             }
 
             action {

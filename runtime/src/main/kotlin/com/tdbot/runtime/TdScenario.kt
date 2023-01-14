@@ -1,10 +1,7 @@
 package com.tdbot.runtime
 
 import com.justai.jaicf.api.BotApi
-import com.justai.jaicf.channel.td.api.TdTelegramApi
-import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.request.chatId
-import com.justai.jaicf.channel.td.request.fromId
 import com.justai.jaicf.channel.td.request.td
 import com.justai.jaicf.channel.td.scenario.createTdModel
 import com.justai.jaicf.context.BotContext
@@ -21,53 +18,45 @@ import java.util.*
 class TdScenario(
     tdBotUser: TdApi.User,
     scenarios: Scenarios,
-    contextManager: BotContextManager
+    private val contextManager: BotContextManager
 ) : Scenario {
     lateinit var botApi: BotApi
-    lateinit var telegrapApi: TdTelegramApi
+    private val rootState = UUID.randomUUID().toString()
 
-    override val model by lazy {
-        val rootState = UUID.randomUUID().toString()
+    private fun BotContext.setState(state: String) {
+        dialogContext.currentState = state
+        dialogContext.currentContext = state
+        contextManager.saveContext(this, null, null, RequestContext.DEFAULT)
+    }
 
-        fun BotContext.setState(state: String) {
-            dialogContext.currentState = state
-            dialogContext.currentContext = state
-            contextManager.saveContext(this, null, null, RequestContext.DEFAULT)
+    override val model = createTdModel {
+        val botFather = createBotClient("@BotFather") { bot ->
+            bot.sendMessage("/setcommands")
+            bot.sendMessage("@${tdBotUser.usernames.activeUsernames.first()}")
+            bot.sendMessage("scenarios - Show scenarios list")
         }
 
-        createTdModel {
-            val botFather = createBotClient("@BotFather") { bot ->
-                bot.sendMessage("/setcommands")
-                bot.sendMessage("@${tdBotUser.usernames.activeUsernames.first()}")
-                bot.sendMessage("scenarios - Show scenarios list")
+        handle<BotRequestHook> {
+            if (request.td?.chatId == tdBotUser.id) {
+                throw BotHookException("Rejected tdBot's request")
             }
+            if (request.td?.chatId == botFather.botUserId) {
+                throw BotHookException("Rejected BotFather's chat request")
+            }
+        }
 
-            handle<BotRequestHook> {
-                if (request.td?.chatId == tdBotUser.id || request.td?.fromId == tdBotUser.id) {
-                    throw BotHookException("Rejected tdBot's request")
+        scenarios.all.forEach { (name, scenario) ->
+            append("/$name", scenario, modal = true)
+        }
+
+        fallback(rootState) {
+            try {
+                scenarios.enabled.keys.forEach { state ->
+                    context.setState("/$state")
+                    botApi.process(request, reactions, RequestContext.DEFAULT)
                 }
-                if (request.td?.chatId == botFather.botUserId) {
-                    throw BotHookException("Rejected BotFather's chat request")
-                }
-            }
-
-            handle<TdReadyHook> {
-                telegrapApi = api
-            }
-
-            scenarios.all.forEach { (name, scenario) ->
-                append("/$name", scenario, modal = true)
-            }
-
-            fallback(rootState) {
-                try {
-                    scenarios.enabled.keys.forEach { state ->
-                        context.setState("/$state")
-                        botApi.process(request, reactions, RequestContext.DEFAULT)
-                    }
-                } finally {
-                    context.setState("/$rootState")
-                }
+            } finally {
+                context.setState("/$rootState")
             }
         }
     }
