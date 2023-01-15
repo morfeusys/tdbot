@@ -45,7 +45,7 @@ fun SignInScenario(authService: AuthService) = TdScenario {
             if (userId != null) {
                 reactions.say("You're logged in already")
             } else {
-                reactions.say("Share your contact to sign in",
+                reactions.sendText("Share your contact to sign in",
                     replyMarkup = TdMessage.phoneKeyboard("Share my contact"))
             }
         }
@@ -68,10 +68,10 @@ fun SignInScenario(authService: AuthService) = TdScenario {
 
                     authService.setPhoneNumber(message.chatId, phone)
 
-                    reactions.say("Telegram was sent you a confirmation code.\n" +
+                    reactions.sendText("Telegram was sent you a confirmation code.\n" +
                             "Send me this code *with spaces between digits.*\n\n" +
                             "_For example: 4 5 6 7 8, not 45678._", TdMessage.ParseMode.Markdown)
-                    reactions.say("⚠️ NOTE that code without spaces will be rejected by Telegram!",
+                    reactions.sendText("⚠️ NOTE that code without spaces will be rejected by Telegram!",
                         replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 }
             }

@@ -7,6 +7,7 @@ import com.justai.jaicf.channel.td.scenario.onClose
 import com.justai.jaicf.channel.td.scenario.onReady
 import it.tdlight.jni.TdApi
 import org.slf4j.LoggerFactory
+import java.util.concurrent.Executors
 
 private typealias ReplyHandler = (TdApi.Message) -> Unit
 
@@ -57,6 +58,7 @@ class BotClient(
     internal fun stop() {
         startMessage = null
         handlers.clear()
+        unregister(this)
     }
 
     fun start(): TdApi.Message {
@@ -67,6 +69,7 @@ class BotClient(
     }
 
     private fun init(start: Boolean) {
+        register(this)
         if (start) {
             start()
         }
@@ -100,7 +103,11 @@ class BotClient(
 
     private fun onMessageReceived(message: TdApi.Message) {
         removeOutdatedHandlers()
-        handlers[message.replyToMessageId]?.handler?.invoke(message)
+        handlers[message.replyToMessageId]?.also {
+            replyHandlerExecutor.execute {
+                it.handler.invoke(message)
+            }
+        }
     }
 
     fun toggleMuted(muted: Boolean) {
@@ -146,5 +153,22 @@ class BotClient(
 
     private data class HandlerHolder(val handler: (TdApi.Message) -> Unit) {
         val created = System.currentTimeMillis()
+    }
+
+    companion object {
+        private val replyHandlerExecutor = Executors.newSingleThreadExecutor()
+        private val botClients = mutableSetOf<BotClient>()
+
+        private fun register(client: BotClient) = synchronized(botClients) {
+            botClients.add(client)
+        }
+
+        private fun unregister(client: BotClient) = synchronized(botClients) {
+            botClients.remove(client)
+        }
+
+        fun findBotClient(botUserId: Long) = synchronized(botClients) {
+            botClients.find { it.botUserId == botUserId }
+        }
     }
 }

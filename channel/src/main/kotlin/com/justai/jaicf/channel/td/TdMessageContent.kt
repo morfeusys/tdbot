@@ -2,7 +2,7 @@ package com.justai.jaicf.channel.td
 
 import it.tdlight.jni.TdApi
 
-val TdApi.MessageContent.text: TdApi.FormattedText?
+val TdApi.MessageContent.formattedText: TdApi.FormattedText?
     get() = when (this) {
         is TdApi.MessageText -> text
         is TdApi.MessagePhoto -> caption
@@ -11,4 +11,11 @@ val TdApi.MessageContent.text: TdApi.FormattedText?
         is TdApi.MessageVoiceNote -> caption
         is TdApi.MessageAudio -> caption
         else -> null
+    }
+
+val TdApi.MessageContent.text: String?
+    get() = when (this) {
+        is TdApi.MessageSticker -> sticker.emoji
+        is TdApi.MessageAnimatedEmoji -> emoji
+        else -> formattedText?.text
     }

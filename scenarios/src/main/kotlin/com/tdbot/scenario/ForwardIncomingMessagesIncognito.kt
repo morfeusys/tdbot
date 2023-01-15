@@ -51,11 +51,11 @@ fun ForwardIncomingMessagesIncognito(
         }
 
     fun sendText(text: TdApi.FormattedText) =
-        tdBotApi.say(text, chatId = toChatId!!)
+        tdBotApi.sendText(text, chatId = toChatId!!)
 
     fun sendPhoto(caption: TdApi.FormattedText, content: TdApi.MessagePhoto) =
         withTempFile(content.photo.sizes.maxBy { it.photo.size }.photo) { file ->
-            tdBotApi.image(file, caption, chatId = toChatId!!)
+            tdBotApi.sendPhoto(file, caption, chatId = toChatId!!)
         }
 
     fun sendAnimation(caption: TdApi.FormattedText, content: TdApi.MessageAnimation) =
@@ -153,11 +153,11 @@ fun ForwardIncomingMessagesIncognito(
                 content.takeIf { it !is TdApi.MessageText }?.let { "\n" }.orEmpty()
 
         val offset = title.length
-        val text = title + content.text?.text.orEmpty()
+        val text = title + content.formattedText?.text.orEmpty()
 
         val entities = mutableListOf(TdApi.TextEntity(0, title.length, TdApi.TextEntityTypeBold()))
 
-        content.text?.entities?.mapTo(entities) { e ->
+        content.formattedText?.entities?.mapTo(entities) { e ->
             TdApi.TextEntity(e.offset + offset, e.length, e.type)
         }
 

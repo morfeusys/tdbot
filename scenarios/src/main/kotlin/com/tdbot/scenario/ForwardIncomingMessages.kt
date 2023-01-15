@@ -15,6 +15,6 @@ fun ForwardIncomingMessages(toChat: String) = TdScenario {
     }
 
     onAnyMessage(isIncoming, isNotChat { chatId }) {
-        chatId?.let { reactions.forward(it) }
+        chatId?.let { reactions.forwardMessage(request.update.message, it) }
     }
 }

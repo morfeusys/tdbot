@@ -37,14 +37,14 @@ class TdBotScenario(
             }
 
             action {
-                reactions.say("\uD83D\uDC4B Hello!", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
+                reactions.sendText("\uD83D\uDC4B Hello!", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 reactions.go("/TdBotScenario.Scenarios")
             }
         }
 
         state("TdBotScenario.onReady") {
             action {
-                reactions.say("✋ Okay, I'm ready now.", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
+                reactions.sendText("✋ Okay, I'm ready now.", replyMarkup = TdApi.ReplyMarkupRemoveKeyboard())
                 reactions.go("/TdBotScenario.Scenarios")
             }
         }
@@ -96,7 +96,7 @@ class TdBotScenario(
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("toggle"))
 
                     context.session["selected_scenario"] = name
-                    reactions.say("_${name}_ scenario is _${enabled.status}_ now.", TdMessage.ParseMode.Markdown)
+                    reactions.sendText("_${name}_ scenario is _${enabled.status}_ now.", TdMessage.ParseMode.Markdown)
 
                     if (scenarios.isInteractive(name)) {
                         val scenario = scenarios.all[name] as TdInteractiveScenario
@@ -114,7 +114,7 @@ class TdBotScenario(
                 action {
                     val scenario = context.session.remove("selected_scenario") as String
                     val enabled = scenarios.toggle(scenario)
-                    reactions.say("_${scenario}_ scenario is ${enabled.status} now.", TdMessage.ParseMode.Markdown)
+                    reactions.sendText("_${scenario}_ scenario is ${enabled.status} now.", TdMessage.ParseMode.Markdown)
                     reactions.go("/TdBotScenario.Scenarios")
                 }
             }
@@ -124,7 +124,7 @@ class TdBotScenario(
                     val name = context.session["selected_scenario"] as String
                     val scenario = scenarios.all[name] as TdInteractiveScenario
                     val enabled = scenarios.isEnabled(name)
-                    reactions.say("Here is how the _${name}_ scenario works\n\n" +
+                    reactions.sendText("Here is how the _${name}_ scenario works\n\n" +
                             scenario.config.helpMarkdownText!!, TdMessage.ParseMode.Markdown)
 
                     val buttons = mutableListOf((enabled.ifTrue { "Disable" } ?: "Enable").toState("../toggle"))

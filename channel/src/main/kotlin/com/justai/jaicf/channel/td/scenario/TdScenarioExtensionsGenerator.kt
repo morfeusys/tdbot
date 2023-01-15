@@ -15,7 +15,9 @@ fun main() {
         .map { it.simpleName }.sorted()
 
     fun generateHandlers() {
+        val withPatterns = setOf("AnimatedEmoji", "Animation", "Audio", "Photo", "Sticker", "Video", "VoiceNote")
         val file = File("./channel/src/main/kotlin/com/justai/jaicf/channel/td/scenario/TdScenarioHandlers.kt")
+
         file.writeText("package com.justai.jaicf.channel.td.scenario\n\n" +
                 "import com.justai.jaicf.builder.ScenarioDsl\n" +
                 "import com.justai.jaicf.channel.td.*\n" +
@@ -25,6 +27,8 @@ fun main() {
                 "import com.justai.jaicf.plugin.StateDeclaration\n" +
                 "import com.justai.jaicf.channel.td.request.TdMessageRequest\n" +
                 "import com.justai.jaicf.channel.td.request.TdRequest\n" +
+                "import org.intellij.lang.annotations.Language\n" +
+                "import java.util.regex.Matcher\n" +
                 "import it.tdlight.jni.TdApi\n")
 
         messages.forEach { msg ->
@@ -32,8 +36,18 @@ fun main() {
                     "@StateDeclaration\n" +
                     "fun TdScenarioRootBuilder.on${msg}Message(\n" +
                     "    vararg conditions: OnlyIf,\n" +
-                    "    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.Message${msg}>, TdReactions>.() -> Unit\n" +
+                    "    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.Message$msg>, TdReactions>.() -> Unit\n" +
                     ") = onNewMessage(conditions = conditions, body = body)\n")
+
+            if (withPatterns.contains(msg)) {
+                file.appendText("\n@ScenarioDsl\n" +
+                        "@StateDeclaration\n" +
+                        "fun TdScenarioRootBuilder.on${msg}Message(\n" +
+                        "    @Language(\"RegExp\") pattern: String,\n" +
+                        "    vararg conditions: OnlyIf,\n" +
+                        "    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.Message$msg>, TdReactions>.(Matcher) -> Unit\n" +
+                        ") = onNewMessage(pattern, conditions = conditions, body = body)\n")
+            }
         }
 
         updates.forEach { update ->
@@ -41,7 +55,7 @@ fun main() {
                     "@StateDeclaration\n" +
                     "fun TdScenarioRootBuilder.on${update}(\n" +
                     "    vararg conditions: OnlyIf,\n" +
-                    "    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.${update}>, TdReactions>.() -> Unit\n" +
+                    "    @StateBody body: ActionContext<ActivatorContext, TdRequest<TdApi.$update>, TdReactions>.() -> Unit\n" +
                     ") = onUpdate(conditions = conditions, body = body)\n")
         }
     }

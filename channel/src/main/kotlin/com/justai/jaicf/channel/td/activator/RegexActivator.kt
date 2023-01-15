@@ -10,6 +10,9 @@ import com.justai.jaicf.context.BotContext
 import com.justai.jaicf.model.scenario.ScenarioModel
 import java.util.regex.Pattern
 
+val String.asPattern
+    get() = Pattern.compile(this, Pattern.CASE_INSENSITIVE or Pattern.UNICODE_CASE or Pattern.MULTILINE or Pattern.DOTALL)
+
 class RegexActivator(model: ScenarioModel) : BaseActivator(model) {
 
     override val name = "regexActivator"
@@ -18,8 +21,7 @@ class RegexActivator(model: ScenarioModel) : BaseActivator(model) {
 
     override fun provideRuleMatcher(botContext: BotContext, request: BotRequest) =
         ruleMatcher<RegexActivationRule> { rule ->
-            val pattern = Pattern.compile(rule.regex,
-                Pattern.CASE_INSENSITIVE or Pattern.UNICODE_CASE or Pattern.MULTILINE or Pattern.DOTALL)
+            val pattern = rule.regex.asPattern
             val matcher = pattern.matcher(request.input)
             if (matcher.matches()) {
                 RegexActivatorContext(pattern, matcher)

@@ -82,7 +82,7 @@ class CollectContactUsageStats(
                     if (stat == null || !stat.hasData) {
                         reactions.say("Looks like there is no statistics for this contact yet. Wait a little bit until they become online.")
                     } else {
-                        reactions.image(stat.chartImageUrl, "_${stat.user.firstName} ${stat.user.lastName}_ " +
+                        reactions.sendPhoto(stat.chartImageUrl, "_${stat.user.firstName} ${stat.user.lastName}_ " +
                                 "was online *${stat.times} times* " +
                                 "starting from ${startTime.format(dateTimeFormatter)} " +
                                 "with total *${stat.totalTime}*", TdMessage.ParseMode.Markdown)
@@ -105,7 +105,7 @@ class CollectContactUsageStats(
                                 "labels:[${users.map { "'${it.user.firstName} ${it.user.lastName}'" }.joinToString(",")}]," +
                                 "datasets:[{label:'Online',data:[${users.map { it.totalSeconds }.joinToString(",")},0]}]}}"
 
-                        reactions.image(chartImageUrl, "Here is an overall usage statistics starting from ${startTime.format(dateTimeFormatter)}")
+                        reactions.sendPhoto(chartImageUrl, "Here is an overall usage statistics starting from ${startTime.format(dateTimeFormatter)}")
                         reactions.say("Send me contact's name to see their detailed usage statistics")
                     }
                     reactions.buttons("Refresh" toState ".")

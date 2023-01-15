@@ -45,7 +45,7 @@ object CatchContact : TdInteractiveScenario({
                 context.session["user_to_catch"] = user
                 val username = user.usernames.activeUsernames?.firstOrNull()
                 if (username != null) {
-                    reactions.say("${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", TdMessage.ParseMode.Markdown)
+                    reactions.sendText("${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", TdMessage.ParseMode.Markdown)
                 } else {
                     reactions.say("${"red_circle".asEmojiUnicode} ${user.firstName} ${user.lastName.orEmpty()} is online now")
                 }

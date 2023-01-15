@@ -2,6 +2,7 @@ package com.justai.jaicf.channel.td.scenario
 
 import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.channel.td.*
+import com.justai.jaicf.channel.td.activator.asPattern
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
 import com.justai.jaicf.channel.td.request.*
@@ -12,6 +13,7 @@ import com.justai.jaicf.plugin.StateDeclaration
 import it.tdlight.jni.TdApi
 import org.intellij.lang.annotations.Language
 import java.util.*
+import java.util.regex.Matcher
 
 @ScenarioDsl
 fun TdScenarioRootBuilder.onReady(listener: TdReadyHook.() -> Unit) = handle(listener)
@@ -55,6 +57,27 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
 
 @ScenarioDsl
 @StateDeclaration
+inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage(
+    @Language("RegExp") pattern: String,
+    vararg conditions: OnlyIf,
+    @StateBody noinline body: ActionContext<ActivatorContext, TdMessageRequest<M>, TdReactions>.(Matcher) -> Unit
+) = state(UUID.randomUUID().toString()) {
+    val regex = pattern.asPattern
+
+    activators {
+        tdMessage<M>(pattern).apply {
+            conditions.forEach(::onlyIf)
+        }
+    }
+
+    action(tdMessageType()) {
+        val req = request as TdMessageRequest<M>
+        body(this, regex.matcher(req.content.text!!))
+    }
+}
+
+@ScenarioDsl
+@StateDeclaration
 fun TdScenarioRootBuilder.onAnyUpdate(
     vararg conditions: OnlyIf,
     @StateBody body: TdActionContext.() -> Unit
@@ -66,6 +89,14 @@ fun TdScenarioRootBuilder.onAnyMessage(
     vararg conditions: OnlyIf,
     @StateBody body: TdMessageActionContext.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
+fun TdScenarioRootBuilder.onAnyMessage(
+    @Language("RegExp") pattern: String,
+    vararg conditions: OnlyIf,
+    @StateBody body: TdMessageActionContext.(Matcher) -> Unit
+) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration

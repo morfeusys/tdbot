@@ -10,6 +10,7 @@ import com.justai.jaicf.context.manager.BotContextManager
 import com.justai.jaicf.hook.BotHookException
 import com.justai.jaicf.hook.BotRequestHook
 import com.justai.jaicf.model.scenario.Scenario
+import com.tdbot.api.BotClient
 import com.tdbot.api.createBotClient
 import com.tdbot.bot.Scenarios
 import it.tdlight.jni.TdApi
@@ -30,18 +31,20 @@ class TdScenario(
     }
 
     override val model = createTdModel {
-        val botFather = createBotClient("@BotFather") { bot ->
+        createBotClient("@BotFather") { bot ->
             bot.sendMessage("/setcommands")
             bot.sendMessage("@${tdBotUser.usernames.activeUsernames.first()}")
             bot.sendMessage("scenarios - Show scenarios list")
         }
 
         handle<BotRequestHook> {
-            if (request.td?.chatId == tdBotUser.id) {
-                throw BotHookException("Rejected tdBot's request")
-            }
-            if (request.td?.chatId == botFather.botUserId) {
-                throw BotHookException("Rejected BotFather's chat request")
+            request.td?.chatId?.also { chatId ->
+                if (chatId == tdBotUser.id) {
+                    throw BotHookException("Rejected tdBot's request")
+                }
+                BotClient.findBotClient(chatId)?.also {
+                    throw BotHookException("Rejected bot request [$chatId]")
+                }
             }
         }
 
