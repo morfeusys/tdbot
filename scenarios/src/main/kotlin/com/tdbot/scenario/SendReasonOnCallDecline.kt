@@ -11,7 +11,7 @@ import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.api.event
-import com.tdbot.scenario.utils.asEmojiUnicode
+import com.tdbot.scenario.utils.emoji_telephone_receiver
 import it.tdlight.jni.TdApi
 
 class SendReasonOnCallDecline(vararg reasons: String) : TdInteractiveScenario() {
@@ -36,7 +36,7 @@ class SendReasonOnCallDecline(vararg reasons: String) : TdInteractiveScenario() 
         event("SendReasonOnCallDecline") { userId ->
             val user = telegramApi.send(TdApi.GetUser(userId.toLong()))
             context.session["user_to_send_call_dismiss_reason"] = user
-            reactions.sendText("${"telephone_receiver".asEmojiUnicode} You've declined incoming call from *${user.firstName} ${user.lastName}*.\n\n"
+            reactions.sendText("$emoji_telephone_receiver You've declined incoming call from *${user.firstName} ${user.lastName}*.\n\n"
                     + "Click one of the buttons below to send a reason text back to them.", TdMessage.ParseMode.Markdown)
             reactions.buttons(*buttons)
         }

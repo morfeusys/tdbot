@@ -16,6 +16,6 @@ val TdApi.MessageContent.formattedText: TdApi.FormattedText?
 val TdApi.MessageContent.text: String?
     get() = when (this) {
         is TdApi.MessageSticker -> sticker.emoji
-        is TdApi.MessageAnimatedEmoji -> emoji
+        is TdApi.MessageAnimatedEmoji -> animatedEmoji.sticker.emoji
         else -> formattedText?.text
     }

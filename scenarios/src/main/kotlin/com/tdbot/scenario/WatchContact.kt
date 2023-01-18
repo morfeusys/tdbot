@@ -6,7 +6,7 @@ import com.justai.jaicf.channel.td.isFromId
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onReady
 import com.justai.jaicf.channel.td.scenario.onUpdateUserStatus
-import com.tdbot.scenario.utils.asEmojiUnicode
+import com.tdbot.scenario.utils.emoji_red_circle
 import it.tdlight.jni.TdApi
 
 fun WatchContact(contact: String, tdBotApi: TdBotApi) = TdScenario {
@@ -20,7 +20,7 @@ fun WatchContact(contact: String, tdBotApi: TdBotApi) = TdScenario {
 
     onUpdateUserStatus(isFromId { user?.id }) {
         if (request.update.status is TdApi.UserStatusOnline) {
-            tdBotApi.sendText("${"red_circle".asEmojiUnicode} *${user!!.firstName} ${user!!.lastName}* is online", TdMessage.ParseMode.Markdown)
+            tdBotApi.sendText("$emoji_red_circle *${user!!.firstName} ${user!!.lastName}* is online", TdMessage.ParseMode.Markdown)
         }
     }
 }

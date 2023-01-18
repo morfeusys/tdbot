@@ -13,12 +13,12 @@ import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
 import com.tdbot.api.TdInteractiveScenario
 import com.tdbot.api.event
-import com.tdbot.scenario.utils.asEmojiUnicode
+import com.tdbot.scenario.utils.emoji_red_circle
 import it.tdlight.jni.TdApi
 
 object CatchContact : TdInteractiveScenario({
     helpMarkdownText = "Catches the user when they become online. " +
-            "\nOnce the user becomes online, TdBot informs you with notification ${"red_circle".asEmojiUnicode}\n" +
+            "\nOnce the user becomes online, TdBot informs you with notification $emoji_red_circle\n" +
             "\nJust type *catch <CONTACT NAME>* to track the contact status.\n" +
             "\n_Please note that the user should be added to your contacts before._"
 }) {
@@ -45,9 +45,9 @@ object CatchContact : TdInteractiveScenario({
                 context.session["user_to_catch"] = user
                 val username = user.usernames.activeUsernames?.firstOrNull()
                 if (username != null) {
-                    reactions.sendText("${"red_circle".asEmojiUnicode} [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", TdMessage.ParseMode.Markdown)
+                    reactions.sendText("$emoji_red_circle [${user.firstName} ${user.lastName}](https://t.me/$username) is online now", TdMessage.ParseMode.Markdown)
                 } else {
-                    reactions.say("${"red_circle".asEmojiUnicode} ${user.firstName} ${user.lastName.orEmpty()} is online now")
+                    reactions.say("$emoji_red_circle ${user.firstName} ${user.lastName.orEmpty()} is online now")
                 }
                 reactions.buttons("Catch later".toState("/CatchContact/catch"))
             }
