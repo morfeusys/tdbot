@@ -1,7 +1,8 @@
 package com.tdbot.api
 
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.api.searchChats
+import com.justai.jaicf.channel.td.api.searchAnyChats
+import com.justai.jaicf.channel.td.api.searchPublicChats
 import com.justai.jaicf.channel.td.scenario.*
 import com.justai.jaicf.model.scenario.Scenario
 import it.tdlight.jni.TdApi
@@ -21,11 +22,15 @@ private fun Scenario.build(builder: TdScenarioRootBuilder.(Scenario) -> Unit) = 
     }
 }
 
-private fun TdScenarioRootBuilder.searchChannel(query: String) = AtomicReference<Long?>().also { ref ->
-    onReady { api.searchChats(query).chatIds.firstOrNull()?.let(ref::set) }
+fun TdScenarioRootBuilder.searchAnyChat(query: String) = AtomicReference<Long?>().also { ref ->
+    onReady { api.searchAnyChats(query).chatIds.firstOrNull()?.let(ref::set) }
 }
 
-private fun TdScenarioRootBuilder.searchContact(query: String) = AtomicReference<Long?>().also { ref ->
+fun TdScenarioRootBuilder.searchPublicChat(query: String) = AtomicReference<Long?>().also { ref ->
+    onReady { api.searchPublicChats(query).chatIds.firstOrNull()?.let(ref::set) }
+}
+
+fun TdScenarioRootBuilder.searchContact(query: String) = AtomicReference<Long?>().also { ref ->
     onReady { api.send(TdApi.SearchContacts(query, 1)).userIds.firstOrNull()?.let(ref::set) }
 }
 
@@ -54,12 +59,12 @@ fun Scenario.onlyWithNotContacts(vararg contacts: String) = build { scenario ->
 }
 
 fun Scenario.onlyInChats(vararg chats: String) = build { scenario ->
-    val chatIds = chats.map(::searchChannel)
+    val chatIds = chats.map(::searchAnyChat)
     append(scenario.onlyIf(isChats { chatIds.mapNotNull { it.get() }.toLongArray() }))
 }
 
 fun Scenario.onlyNotInChats(vararg chats: String) = build { scenario ->
-    val chatIds = chats.map(::searchChannel)
+    val chatIds = chats.map(::searchAnyChat)
     append(scenario.onlyIf(isNotChats { chatIds.mapNotNull { it.get() }.toLongArray() }))
 }
 

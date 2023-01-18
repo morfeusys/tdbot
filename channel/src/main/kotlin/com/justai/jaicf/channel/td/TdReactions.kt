@@ -25,9 +25,16 @@ class TdReactions(
 
     override fun buttons(vararg buttons: String): ButtonsReaction {
         api.awaitLastMessage()?.let { message ->
+            val texts = buttons.map { text ->
+                var s = text.take(21)
+                if (s.length < text.length) {
+                    s = s.replaceRange(18..20, "...")
+                }
+                s to text
+            }.toMap()
             val keyboard = (message.replyMarkup as? TdApi.ReplyMarkupInlineKeyboard)?.rows?.toMutableList() ?: mutableListOf<Array<TdApi.InlineKeyboardButton>>()
-            keyboard.addAll(buttons.map { text ->
-                arrayOf(TdApi.InlineKeyboardButton(text, TdApi.InlineKeyboardButtonTypeCallback(text.toByteArray())))
+            keyboard.addAll(texts.map { (text, value) ->
+                arrayOf(TdApi.InlineKeyboardButton(text, TdApi.InlineKeyboardButtonTypeCallback(value.toByteArray())))
             })
             val replyMarkup = TdApi.ReplyMarkupInlineKeyboard(keyboard.toTypedArray())
             api.editMessageReplyMarkup(message.chatId, message.id, replyMarkup)

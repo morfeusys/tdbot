@@ -4,7 +4,9 @@ allprojects {
 
     repositories {
         mavenCentral()
-        maven("https://mvn.mchv.eu/repository/mchv/")
+        maven(uri("http://mvn.mchv.eu/repository/mchv/")) {
+            isAllowInsecureProtocol = true
+        }
         maven(uri("https://jitpack.io"))
     }
 }

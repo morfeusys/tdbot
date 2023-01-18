@@ -17,9 +17,7 @@ import it.tdlight.jni.TdApi
 class SendReasonOnCallDecline(vararg reasons: String) : TdInteractiveScenario() {
     private lateinit var telegramApi: TdTelegramApi
 
-    private val buttons = reasons.map {
-        it.take(21).replaceRange(18..20, "...") toState "/SendReasonText/$it"
-    }.toTypedArray()
+    private val buttons = reasons.map { it toState "/SendReasonText/$it" }.toTypedArray()
 
     override val model = createTdModel {
         onReady {

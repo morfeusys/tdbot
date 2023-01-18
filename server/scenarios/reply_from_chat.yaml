@@ -1,0 +1,9 @@
+ReplyOnMessageFromChat:
+  enabled: false
+  config:
+    message:
+      pattern:
+    reply:
+      from: mychat
+      types:
+      random: true

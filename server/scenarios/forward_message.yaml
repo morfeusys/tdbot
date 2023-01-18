@@ -1,0 +1,5 @@
+ForwardIncomingMessage:
+  enabled: false
+  config:
+    to: "mychats"
+    incognito: false

@@ -1,0 +1,6 @@
+ReplaceHelloWithHi:
+  enabled: false
+  config:
+    pattern: hello
+    replacement: hi
+    replaceAll: false

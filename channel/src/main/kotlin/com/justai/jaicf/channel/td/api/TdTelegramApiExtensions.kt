@@ -79,10 +79,13 @@ fun TdTelegramApi.searchChats(query: String, limit: Int = 1) =
         }
     }
 
-fun TdTelegramApi.searchPublicChats(query: String, limit: Int = 1) =
+fun TdTelegramApi.searchPublicChats(query: String) =
+    send(TdApi.SearchPublicChats(query))
+
+fun TdTelegramApi.searchAnyChats(query: String, limit: Int = 1) =
     searchChats(query, limit).let {
         when (it.totalCount) {
-            0 -> send(TdApi.SearchPublicChats(query))
+            0 -> searchPublicChats(query)
             else -> it
         }
     }

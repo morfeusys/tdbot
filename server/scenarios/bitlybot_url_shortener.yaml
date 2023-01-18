@@ -1,0 +1,4 @@
+ShortenMyUrlsWithBitlyBot:
+  enabled: true
+  config:
+    maxLength: 50

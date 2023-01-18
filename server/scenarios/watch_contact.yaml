@@ -1,0 +1,4 @@
+WatchMorfeusys:
+  enabled: false
+  config:
+    contact: morfeusys

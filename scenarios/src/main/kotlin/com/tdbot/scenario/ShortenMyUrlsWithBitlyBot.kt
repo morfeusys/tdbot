@@ -4,13 +4,12 @@ import com.justai.jaicf.channel.td.isOutgoing
 import com.justai.jaicf.channel.td.scenario.TdScenario
 import com.justai.jaicf.channel.td.scenario.onTextMessage
 import com.tdbot.api.createBotClient
-import com.tdbot.api.isNotBotChat
 import it.tdlight.jni.TdApi
 
 fun ShortenMyUrlsWithBitlyBot(maxUrlLength: Int = 50) = TdScenario {
     val bitlyBot = createBotClient("@BitlyBot")
 
-    onTextMessage(isOutgoing, isNotBotChat(bitlyBot)) {
+    onTextMessage(isOutgoing) {
         val text = request.content.text.text
         request.content.text.entities.forEach { e ->
             if (e.type is TdApi.TextEntityTypeUrl) {

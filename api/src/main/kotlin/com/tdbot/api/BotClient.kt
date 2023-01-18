@@ -42,7 +42,7 @@ class BotClient(
         var chats = api.searchChats(botName)
         if (chats.totalCount == 0) {
             logger.info("Looking for $botName public chat")
-            chats = api.send(TdApi.SearchPublicChats(botName))
+            chats = api.searchPublicChats(botName)
             start = chats.totalCount > 0
         }
 

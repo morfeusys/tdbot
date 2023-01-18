@@ -1,0 +1,6 @@
+SendReasonOnCallDecline:
+  enabled: true
+  config:
+    reasons:
+      - Sorry, I can't talk right now. Please send me a text message, and I'll recall you shorly.
+      - Recall later please

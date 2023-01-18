@@ -1,0 +1,7 @@
+SendHttpOnMessage:
+  enabled: false
+  config:
+    message:
+      pattern:
+    http:
+      url:

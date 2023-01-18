@@ -1,0 +1,4 @@
+TranscribeMyVoiceNotes:
+  enabled: true
+  config:
+    language: english

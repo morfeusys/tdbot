@@ -1,0 +1,8 @@
+ReplyWithCatPhotoOnMew:
+  enabled: true
+  config:
+    message:
+      pattern: "m+e+w+"
+    reply:
+      content: "https://cataas.com/cat?x={{timestamp}}"
+      type: photo
