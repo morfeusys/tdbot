@@ -10,15 +10,16 @@ import com.tdbot.runtime.ScenariosBuilder
 import com.tdbot.server.model.ScenarioDefinition
 import java.io.File
 import java.io.FileInputStream
+import java.nio.file.Paths
 
 sealed class TdScenarioFactory(val filename: String) {
-    private val definitions = mapper
-        .readValue(FileInputStream(File("scenarios", filename)), definitionType)
-        .filterValues { it.enabled }
 
     protected abstract fun ScenariosBuilder.create(definition: ScenarioDefinition) : Scenario
 
-    fun create(builder: ScenariosBuilder): Map<String, Scenario> {
+    fun create(builder: ScenariosBuilder, dir: String = "."): Map<String, Scenario> {
+        val definitions = mapper
+            .readValue(FileInputStream(File(dir, filename)), definitionType)
+            .filterValues { it.enabled }
         val scenarios = definitions.mapValues {
             with(builder) { create(it.value) }
         }

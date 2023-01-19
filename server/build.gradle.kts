@@ -1,17 +1,26 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import kotlin.collections.listOf
-
 plugins {
     application
     kotlin("jvm") version "1.7.21"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 application {
     mainClass.set("com.tdbot.server.TdServerKt")
 }
 
-val platforms = arrayOf("osx-amd64", "windows-amd64", "linux-amd64", "linux-aarch64", "linux-x86")
+distributions {
+    main {
+        distributionBaseName.set("tdbot-server")
+        contents {
+            into("scenarios") {
+                from(layout.projectDirectory.dir("scenarios"))
+            }
+            into(".") {
+                from(layout.projectDirectory.file("logback.xml"))
+                from(layout.projectDirectory.file("dist/tdbot.properties"))
+            }
+        }
+    }
+}
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
@@ -27,53 +36,18 @@ dependencies {
     implementation("com.diogonunes:JColor:5.5.1")
     implementation("com.github.spullara.mustache.java:compiler:0.9.10")
 
-    platforms.forEach { platform ->
-        implementation("it.tdlight:tdlight-natives-$platform")
-    }
+    implementation("it.tdlight:tdlight-natives-osx-amd64")
+    implementation("it.tdlight:tdlight-natives-windows-amd64")
+    implementation("it.tdlight:tdlight-natives-linux-amd64")
+    implementation("it.tdlight:tdlight-natives-linux-x86")
+    implementation("it.tdlight:tdlight-natives-linux-aarch64")
 }
 
-listOf(project.configurations.implementation.get(), project.configurations.runtimeOnly.get())
-    .onEach { it.isCanBeResolved = true }
-    .also { configs ->
-        platforms.forEach { platform ->
-            tasks {
-                register<ShadowJar>("shadowJar-$platform") {
-                    archiveFileName.set("tdbot.jar")
-                    configurations = configs
-                    dependencies {
-                        platforms.filterNot { it == platform }.forEach {
-                            exclude(dependency("it.tdlight:tdlight-natives-$it"))
-                        }
-                    }
-                }
-
-                register<Zip>("dist-$platform") {
-                    val dir = "server-${project.version}"
-                    dependsOn("shadowJar-$platform")
-                    archiveBaseName.set("server-$platform")
-                    destinationDirectory.set(layout.buildDirectory.dir("dist"))
-                    from(layout.buildDirectory.dir("libs")) {
-                        include("tdbot.jar")
-                        into(dir)
-                    }
-                    from(layout.projectDirectory.dir("scenarios")) {
-                        into("$dir/scenarios")
-                    }
-                    from(layout.projectDirectory.dir("dist")) {
-                        into(dir)
-                    }
-                    from(layout.projectDirectory.file("logback.xml")) {
-                        into(dir)
-                    }
-                }
-            }
-        }
-    }
-
 tasks {
-    register("dist") {
-        platforms.forEach {
-            dependsOn("dist-$it")
+    startScripts {
+        doLast {
+            unixScript.writeText(unixScript.readText().replace("exec \"\$JAVACMD\" \"\$@\"", "export GRAMLIN_HOME=\$APP_HOME\nexec \"\$JAVACMD\" \"\$@\""))
+            windowsScript.writeText(windowsScript.readText().replace("@rem Execute server", "setx GRAMLIN_HOME %APP_HOME%"))
         }
     }
 }
