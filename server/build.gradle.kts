@@ -1,25 +1,6 @@
 plugins {
-    application
     kotlin("jvm") version "1.7.21"
-}
-
-application {
-    mainClass.set("com.tdbot.server.TdServerKt")
-}
-
-distributions {
-    main {
-        distributionBaseName.set("tdbot-server")
-        contents {
-            into("scenarios") {
-                from(layout.projectDirectory.dir("scenarios"))
-            }
-            into(".") {
-                from(layout.projectDirectory.file("logback.xml"))
-                from(layout.projectDirectory.file("dist/tdbot.properties"))
-            }
-        }
-    }
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
 dependencies {
@@ -44,10 +25,23 @@ dependencies {
 }
 
 tasks {
-    startScripts {
-        doLast {
-            unixScript.writeText(unixScript.readText().replace("exec \"\$JAVACMD\" \"\$@\"", "export GRAMLIN_HOME=\$APP_HOME\nexec \"\$JAVACMD\" \"\$@\""))
-            windowsScript.writeText(windowsScript.readText().replace("@rem Execute server", "setx GRAMLIN_HOME %APP_HOME%"))
+    shadowJar {
+        archiveFileName.set("tdbot.jar")
+    }
+    register<Zip>("dist") {
+        dependsOn(shadowJar)
+        archiveBaseName.set("tdbot-server")
+        val dir = "tdbot-server-${project.version}"
+        destinationDirectory.set(layout.buildDirectory.dir("dist"))
+        into(dir) {
+            from(layout.projectDirectory.dir("dist"))
+            from(layout.projectDirectory.file("logback.xml"))
+            from(layout.buildDirectory.dir("libs")) {
+                include("tdbot.jar")
+            }
+        }
+        into("$dir/scenarios") {
+            from(layout.projectDirectory.dir("scenarios"))
         }
     }
 }

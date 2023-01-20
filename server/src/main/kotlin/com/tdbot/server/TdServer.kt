@@ -47,7 +47,7 @@ fun main() {
 }
 
 private fun resolvePath(filePath: String) =
-    Paths.get(System.getenv("GRAMLIN_HOME") ?: ".", filePath).absolutePathString()
+    Paths.get(".", filePath).absolutePathString()
 
 private val propKeys = mapOf(
     "api_id" to "Please obtain your app_id and api_hash from https://my.telegram.org/apps and paste it to the tdbot.properties file",
