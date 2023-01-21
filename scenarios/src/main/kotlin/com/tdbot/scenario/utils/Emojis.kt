@@ -1,45 +1,5 @@
 package com.tdbot.scenario.utils
 
-import com.vdurmont.emoji.EmojiLoader
-import com.vdurmont.emoji.EmojiManager
-import com.vdurmont.emoji.EmojiParser
-import it.tdlight.jni.TdApi
-import org.json.JSONArray
-import java.io.File
-
-val String.withoutEmojis
-    get() = EmojiParser.removeAllEmojis(this)
-
-val String.asEmojiReaction
-    get() = TdApi.ReactionTypeEmoji(this)
-
-private val String.asEmoji
-    get() = EmojiManager.getForAlias(this)
-
-private val String.asEmojiUnicode
-    get() = asEmoji.unicode
-
-fun main() {
-    val file = File("./scenarios/src/main/kotlin/com/tdbot/scenario/utils/Emojis.kt")
-    val array = JSONArray(EmojiLoader::class.java.getResourceAsStream("/emojis.json").reader().readText())
-    val objects = (0 until array.length()).map { array.getJSONObject(it) }
-    val chars = objects.map { o ->
-        val aliases = o.getJSONArray("aliases")
-        (0 until aliases.length()).map { a ->
-            aliases.getString(a) to o.getString("emojiChar")
-        }
-    }.flatten().toMap()
-
-    EmojiManager.getAll().forEach { e ->
-        e.aliases.forEach { a ->
-            file.appendText("/**\n" +
-                    " * ${chars[a]} ${e.description} \n" +
-                    " */\n" +
-                    "val emoji_${a.replace("+", "plus").replace("-", "_")} = \"$a\".asEmojiUnicode\n")
-        }
-    }
-}
-
 /**
  * 🏴󠁧󠁢󠁥󠁮󠁧󠁿 waving black flag + regional indicator symbol letter g + regional indicator symbol letter b + regional indicator symbol letter e + regional indicator symbol letter n + regional indicator symbol letter g + cancel tag 
  */
