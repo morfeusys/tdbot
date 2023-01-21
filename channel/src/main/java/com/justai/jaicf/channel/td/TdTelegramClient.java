@@ -47,6 +47,10 @@ public class TdTelegramClient implements Authenticable {
 
     private final CountDownLatch closed = new CountDownLatch(1);
 
+    public TdTelegramClient(TDLibSettings settings) {
+        this(settings, null);
+    }
+
     public TdTelegramClient(TDLibSettings settings, ClientInteraction clientInteraction) {
         this.client = CommonClientManager.create(LibraryVersion.IMPLEMENTATION_NAME);
         this.settings = settings;
