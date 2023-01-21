@@ -1,5 +1,5 @@
 allprojects {
-    group = "com.tdbot"
+    group = "com.justai.gramlin"
     version = "1.0.0"
 
     repositories {

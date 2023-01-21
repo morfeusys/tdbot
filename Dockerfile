@@ -19,4 +19,4 @@ COPY . .
 
 RUN gradle :bot:shadowJar
 
-ENTRYPOINT ["java", "-jar", "./bot/build/libs/tdbot.jar"]
+ENTRYPOINT ["java", "-jar", "./bot/build/libs/gramlin.jar"]

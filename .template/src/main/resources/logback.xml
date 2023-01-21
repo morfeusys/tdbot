@@ -4,7 +4,8 @@
             <pattern>%d %5p [%8c] - %m %n</pattern>
         </encoder>
     </appender>
-    <logger level="ERROR" name="com.justai.jaicf"/>
+    <logger level="INFO" name="com.justai.gramlin.runtime"/>
+    <logger level="OFF" name="com.justai.jaicf"/>
     <logger level="WARN" name="it.tdlight.TDLight"/>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>

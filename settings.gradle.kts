@@ -1,4 +1,4 @@
-rootProject.name = "tdbot"
+rootProject.name = "gramlin"
 
 include("channel")
 include("scenarios")

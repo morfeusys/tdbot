@@ -26,18 +26,18 @@ dependencies {
 
 tasks {
     shadowJar {
-        archiveFileName.set("tdbot.jar")
+        archiveFileName.set("gramlin.jar")
     }
     register<Zip>("dist") {
         dependsOn(shadowJar)
-        archiveBaseName.set("tdbot-server")
-        val dir = "tdbot-server-${project.version}"
+        archiveBaseName.set("gramlin-server")
+        val dir = "gramlin-server-${project.version}"
         destinationDirectory.set(layout.buildDirectory.dir("dist"))
         into(dir) {
             from(layout.projectDirectory.dir("dist"))
             from(layout.projectDirectory.file("logback.xml"))
             from(layout.buildDirectory.dir("libs")) {
-                include("tdbot.jar")
+                include("gramlin.jar")
             }
         }
         into("$dir/scenarios") {

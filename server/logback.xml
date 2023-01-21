@@ -4,7 +4,7 @@
             <pattern>%d %5p [%8c] - %m %n</pattern>
         </encoder>
     </appender>
-    <logger level="INFO" name="com.tdbot.runtime"/>
+    <logger level="INFO" name="com.justai.gramlin.runtime"/>
     <logger level="OFF" name="com.justai.jaicf"/>
     <logger level="ERROR" name="it.tdlight.TDLight"/>
     <root level="INFO">

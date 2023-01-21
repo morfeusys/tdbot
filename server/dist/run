@@ -114,7 +114,7 @@ case "$( uname )" in                #(
   NONSTOP* )        nonstop=true ;;
 esac
 
-CLASSPATH=$APP_HOME/tdbot.jar
+CLASSPATH=$APP_HOME/gramlin.jar
 
 # Determine the Java command to use to start the JVM.
 if [ -n "$JAVA_HOME" ] ; then
@@ -204,7 +204,7 @@ fi
 
 set -- \
         -classpath "$CLASSPATH" \
-        com.tdbot.server.TdServerKt \
+        com.justai.gramlin.server.GramlinServerKt \
         "$@"
 
 # Stop when "xargs" is not available.

@@ -68,10 +68,10 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\tdbot.jar
+set CLASSPATH=%APP_HOME%\gramlin.jar
 
 @rem Execute server
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %SERVER_OPTS%  -classpath "%CLASSPATH%" com.tdbot.server.TdServerKt %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %SERVER_OPTS%  -classpath "%CLASSPATH%" com.justai.gramlin.server.GramlinServerKt %*
 
 :end
 @rem End local scope for the variables with windows NT shell

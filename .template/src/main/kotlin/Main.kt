@@ -1,18 +1,25 @@
-import com.tdbot.runtime.TdRuntime
-import com.tdbot.scenario.*
+import com.justai.gramlin.api.*
+import com.justai.gramlin.runtime.GramlinRuntime
+import com.justai.gramlin.scenario.*
 
 fun main() {
-    TdRuntime().start {
-        "CheckMyEnglishMessages" to GrammarChecker
+    GramlinRuntime().start {
+        "UrlShortener" to ShortenMyUrlsWithBitlyBot()
 
-        "ShortenMyOutgoingUrls" to BitlyUrlShortener()
+        "ContactCatcher" to CatchContact
 
-        "TranscribeMyVoiceNotes" to TranscriberBot("english")
+        "VoiceTranscriber" to TranscribeMyVoiceNotesWithTranscriberBot("english")
 
-        "CataasPhoto" to ReplyWithPhotoOnMessage("mew+") {
-            "https://cataas.com/cat?x=${System.currentTimeMillis()}"
+        "CataasPhoto" to ReactOnMessage("m+e+w+") {
+            reactions.image("https://cataas.com/cat?x=${System.currentTimeMillis()}")
         }
 
-        "CatchContact" to CatchContact(tdBotApi)
+        "SpellChecker" to FixMySpellWithYandexSpeller
+
+        "ContactsStatistics" to CollectContactUsageStats()
+
+        "SendReasonOnCallDecline" to SendReasonOnCallDecline(
+            "Can't answer now, sorry. Please send me a text message."
+        )
     }
 }

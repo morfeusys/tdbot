@@ -21,7 +21,7 @@ dependencies {
 
 tasks {
     shadowJar {
-        archiveFileName.set("tdbot.jar")
+        archiveFileName.set("gramlin.jar")
     }
 }
 
