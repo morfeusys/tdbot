@@ -1,11 +1,12 @@
 package com.justai.jaicf.channel.td.scenario
 
+import com.justai.jaicf.activator.regex.RegexActivatorContext
 import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.channel.td.*
-import com.justai.jaicf.channel.td.activator.asPattern
 import com.justai.jaicf.channel.td.hook.TdClosedHook
 import com.justai.jaicf.channel.td.hook.TdReadyHook
-import com.justai.jaicf.channel.td.request.*
+import com.justai.jaicf.channel.td.request.TdMessageRequest
+import com.justai.jaicf.channel.td.request.TdRequest
 import com.justai.jaicf.context.ActionContext
 import com.justai.jaicf.context.ActivatorContext
 import com.justai.jaicf.plugin.StateBody
@@ -13,7 +14,6 @@ import com.justai.jaicf.plugin.StateDeclaration
 import it.tdlight.jni.TdApi
 import org.intellij.lang.annotations.Language
 import java.util.*
-import java.util.regex.Matcher
 
 @ScenarioDsl
 fun TdScenarioRootBuilder.onReady(listener: TdReadyHook.() -> Unit) = handle(listener)
@@ -60,19 +60,16 @@ inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage
 inline fun <reified M : TdApi.MessageContent> TdScenarioRootBuilder.onNewMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody noinline body: ActionContext<ActivatorContext, TdMessageRequest<M>, TdReactions>.(Matcher) -> Unit
+    @StateBody noinline body: ActionContext<RegexActivatorContext, TdMessageRequest<M>, TdReactions>.() -> Unit
 ) = state(UUID.randomUUID().toString()) {
-    val regex = pattern.asPattern
-
     activators {
         tdMessage<M>(pattern).apply {
             conditions.forEach(::onlyIf)
         }
     }
 
-    action(tdMessageType()) {
-        val req = request as TdMessageRequest<M>
-        body(this, regex.matcher(req.content.text!!))
+    action(tdRegexMessageType()) {
+       body(this)
     }
 }
 
@@ -95,23 +92,5 @@ fun TdScenarioRootBuilder.onAnyMessage(
 fun TdScenarioRootBuilder.onAnyMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: TdMessageActionContext.(Matcher) -> Unit
+    @StateBody body: TdMessageActionContext.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
-
-@ScenarioDsl
-@StateDeclaration
-fun TdScenarioRootBuilder.onTextMessage(
-    @Language("RegExp") pattern: String,
-    vararg conditions: OnlyIf,
-    @StateBody body: TdRegexMessageActionContext.() -> Unit
-) = state(UUID.randomUUID().toString()) {
-    activators {
-        regex(pattern).apply {
-            conditions.forEach(::onlyIf)
-        }
-    }
-
-    action(tdRegexType) {
-        body(this)
-    }
-}

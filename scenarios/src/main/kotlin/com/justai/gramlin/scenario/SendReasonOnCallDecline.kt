@@ -11,13 +11,16 @@ import com.justai.jaicf.reactions.buttons
 import com.justai.jaicf.reactions.toState
 import com.justai.gramlin.api.GramlinInteractiveScenario
 import com.justai.gramlin.api.event
+import com.justai.gramlin.scenario.utils.asInlineButtonTitle
 import com.justai.gramlin.scenario.utils.emoji_telephone_receiver
 import it.tdlight.jni.TdApi
 
 class SendReasonOnCallDecline(vararg reasons: String) : GramlinInteractiveScenario() {
     private lateinit var telegramApi: TdTelegramApi
 
-    private val buttons = reasons.map { it toState "/SendReasonText/$it" }.toTypedArray()
+    private val buttons = reasons.mapIndexed {
+            index, s -> s.asInlineButtonTitle toState "/SendReasonText/$index"
+    }.toTypedArray()
 
     override val model = createTdModel {
         onReady {
@@ -41,8 +44,8 @@ class SendReasonOnCallDecline(vararg reasons: String) : GramlinInteractiveScenar
             reactions.buttons(*buttons)
         }
 
-        reasons.forEach { reason ->
-            state("/SendReasonText/$reason") {
+        reasons.forEachIndexed { index, reason ->
+            state("/SendReasonText/$index") {
                 action {
                     val user = context.session.remove("user_to_send_call_dismiss_reason") as TdApi.User
                     telegramApi.sendMessage(user.id, content = TdMessage.text(reason))

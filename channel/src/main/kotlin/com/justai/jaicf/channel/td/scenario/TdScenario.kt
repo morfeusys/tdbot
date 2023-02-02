@@ -5,13 +5,11 @@ import com.justai.jaicf.builder.RootBuilder
 import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.builder.createModel
 import com.justai.jaicf.channel.td.TdReactions
-import com.justai.jaicf.channel.td.activator.asPattern
 import com.justai.jaicf.channel.td.request.DefaultTdRequest
 import com.justai.jaicf.channel.td.request.messageRequest
 import com.justai.jaicf.channel.td.request.td
 import com.justai.jaicf.channel.td.request.textMessageRequest
 import com.justai.jaicf.channel.td.td
-import com.justai.jaicf.channel.td.text
 import com.justai.jaicf.model.activation.ActivationRule
 import com.justai.jaicf.model.scenario.Scenario
 import com.justai.jaicf.model.scenario.ScenarioModel
@@ -30,16 +28,18 @@ inline fun <reified R : TdApi.Update> ActivationRulesBuilder.tdUpdate() = when (
     else -> event(tdEvent<R>())
 }
 
+inline fun <reified R: TdApi.MessageContent> ActivationRule.onlyMessageRequest() =
+    onlyIf { request.td?.messageRequest?.content is R }
+
+inline fun <reified R: TdApi.MessageContent> ActivationRulesBuilder.tdMessage() = when (R::class.java) {
+    TdApi.MessageText::class.java -> catchAll()
+    TdApi.MessageContent::class.java -> catchAll()
+    else -> tdUpdate<TdApi.UpdateNewMessage>()
+}.onlyMessageRequest<R>()
+
 inline fun <reified R: TdApi.MessageContent> ActivationRulesBuilder.tdMessage(
-    @Language("RegExp") textPattern: String? = null
-): ActivationRule {
-    val regex = textPattern?.asPattern?.toRegex()
-    return when (R::class.java) {
-        TdApi.MessageText::class.java -> regex?.let(::regex) ?: catchAll().onlyIf { request.td?.textMessageRequest != null }
-        TdApi.MessageContent::class.java -> catchAll().onlyIf { request.td?.messageRequest?.let { regex.matches(it.content) } ?: false }
-        else -> tdUpdate<TdApi.UpdateNewMessage>().onlyIf { request.td?.messageRequest?.let { it.content is R && regex.matches(it.content) } ?: false }
-    }
-}
+    @Language("RegExp") pattern: String
+) = regex(pattern).onlyMessageRequest<R>()
 
 @ScenarioDsl
 fun TdScenario(
@@ -57,9 +57,3 @@ fun createTdModel(
 fun createTdScenario(
     @StateBody body: TdModel
 ) = TdScenario(body)
-
-fun Regex?.matches(content: TdApi.MessageContent) = when {
-    this == null -> true
-    content.text == null -> false
-    else -> matches(content.text!!)
-}

@@ -7,6 +7,14 @@ import it.tdlight.jni.TdApi
 val String?.asStatePath
     get() = takeIf { this != null }?.let { "/$it" } ?: ""
 
+val String.asInlineButtonTitle
+    get() = take(21).let { text ->
+        when {
+            text.length < length -> text.replaceRange(18..20, "...")
+            else -> text
+        }
+    }
+
 val String.withoutEmojis
     get() = EmojiParser.removeAllEmojis(this)
 

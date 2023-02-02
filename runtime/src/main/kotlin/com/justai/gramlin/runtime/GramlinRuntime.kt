@@ -4,7 +4,7 @@ import com.justai.gramlin.bot.GramlinBot
 import com.justai.gramlin.defaultRuntimeSettings
 import com.justai.jaicf.BotEngine
 import com.justai.jaicf.channel.td.TdChannel
-import com.justai.jaicf.channel.td.activator.RegexActivator
+import com.justai.jaicf.channel.td.activator.TdMessageRegexActivator
 import it.tdlight.client.APIToken
 import it.tdlight.client.TDLibSettings
 import it.tdlight.client.TelegramError
@@ -35,7 +35,7 @@ class GramlinRuntime(
 
         val gramlinEngine = BotEngine(
             scenario = gramlinScenario,
-            activators = arrayOf(RegexActivator),
+            activators = arrayOf(TdMessageRegexActivator),
             defaultContextManager = contextManager,
         ).also { engine ->
             gramlinScenario.botApi = engine

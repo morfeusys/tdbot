@@ -1,5 +1,6 @@
 package com.justai.jaicf.channel.td.scenario
 
+import com.justai.jaicf.activator.regex.RegexActivatorContext
 import com.justai.jaicf.builder.ScenarioDsl
 import com.justai.jaicf.channel.td.*
 import com.justai.jaicf.context.ActionContext
@@ -9,7 +10,6 @@ import com.justai.jaicf.plugin.StateDeclaration
 import com.justai.jaicf.channel.td.request.TdMessageRequest
 import com.justai.jaicf.channel.td.request.TdRequest
 import org.intellij.lang.annotations.Language
-import java.util.regex.Matcher
 import it.tdlight.jni.TdApi
 
 @ScenarioDsl
@@ -24,7 +24,7 @@ fun TdScenarioRootBuilder.onAnimatedEmojiMessage(
 fun TdScenarioRootBuilder.onAnimatedEmojiMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageAnimatedEmoji>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageAnimatedEmoji>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -39,7 +39,7 @@ fun TdScenarioRootBuilder.onAnimationMessage(
 fun TdScenarioRootBuilder.onAnimationMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageAnimation>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageAnimation>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -54,7 +54,7 @@ fun TdScenarioRootBuilder.onAudioMessage(
 fun TdScenarioRootBuilder.onAudioMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageAudio>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageAudio>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -314,7 +314,7 @@ fun TdScenarioRootBuilder.onPhotoMessage(
 fun TdScenarioRootBuilder.onPhotoMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessagePhoto>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessagePhoto>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -357,7 +357,7 @@ fun TdScenarioRootBuilder.onStickerMessage(
 fun TdScenarioRootBuilder.onStickerMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageSticker>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageSticker>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -380,6 +380,14 @@ fun TdScenarioRootBuilder.onTextMessage(
     vararg conditions: OnlyIf,
     @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageText>, TdReactions>.() -> Unit
 ) = onNewMessage(conditions = conditions, body = body)
+
+@ScenarioDsl
+@StateDeclaration
+fun TdScenarioRootBuilder.onTextMessage(
+    @Language("RegExp") pattern: String,
+    vararg conditions: OnlyIf,
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageText>, TdReactions>.() -> Unit
+) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
 @StateDeclaration
@@ -407,7 +415,7 @@ fun TdScenarioRootBuilder.onVideoMessage(
 fun TdScenarioRootBuilder.onVideoMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVideo>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageVideo>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl
@@ -450,7 +458,7 @@ fun TdScenarioRootBuilder.onVoiceNoteMessage(
 fun TdScenarioRootBuilder.onVoiceNoteMessage(
     @Language("RegExp") pattern: String,
     vararg conditions: OnlyIf,
-    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.MessageVoiceNote>, TdReactions>.(Matcher) -> Unit
+    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.MessageVoiceNote>, TdReactions>.() -> Unit
 ) = onNewMessage(pattern, conditions = conditions, body = body)
 
 @ScenarioDsl

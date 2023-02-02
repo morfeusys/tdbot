@@ -15,10 +15,11 @@ fun main() {
         .map { it.simpleName }.sorted()
 
     fun generateHandlers() {
-        val withPatterns = setOf("AnimatedEmoji", "Animation", "Audio", "Photo", "Sticker", "Video", "VoiceNote")
+        val withPatterns = setOf("AnimatedEmoji", "Animation", "Audio", "Photo", "Sticker", "Text", "Video", "VoiceNote")
         val file = File("./channel/src/main/kotlin/com/justai/jaicf/channel/td/scenario/TdScenarioHandlers.kt")
 
         file.writeText("package com.justai.jaicf.channel.td.scenario\n\n" +
+                "import com.justai.jaicf.activator.regex.RegexActivatorContext\n" +
                 "import com.justai.jaicf.builder.ScenarioDsl\n" +
                 "import com.justai.jaicf.channel.td.*\n" +
                 "import com.justai.jaicf.context.ActionContext\n" +
@@ -28,7 +29,6 @@ fun main() {
                 "import com.justai.jaicf.channel.td.request.TdMessageRequest\n" +
                 "import com.justai.jaicf.channel.td.request.TdRequest\n" +
                 "import org.intellij.lang.annotations.Language\n" +
-                "import java.util.regex.Matcher\n" +
                 "import it.tdlight.jni.TdApi\n")
 
         messages.forEach { msg ->
@@ -45,7 +45,7 @@ fun main() {
                         "fun TdScenarioRootBuilder.on${msg}Message(\n" +
                         "    @Language(\"RegExp\") pattern: String,\n" +
                         "    vararg conditions: OnlyIf,\n" +
-                        "    @StateBody body: ActionContext<ActivatorContext, TdMessageRequest<TdApi.Message$msg>, TdReactions>.(Matcher) -> Unit\n" +
+                        "    @StateBody body: ActionContext<RegexActivatorContext, TdMessageRequest<TdApi.Message$msg>, TdReactions>.() -> Unit\n" +
                         ") = onNewMessage(pattern, conditions = conditions, body = body)\n")
             }
         }

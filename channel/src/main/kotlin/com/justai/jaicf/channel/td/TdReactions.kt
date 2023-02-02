@@ -1,7 +1,10 @@
 package com.justai.jaicf.channel.td
 
 import com.justai.jaicf.channel.td.api.*
-import com.justai.jaicf.channel.td.request.*
+import com.justai.jaicf.channel.td.request.DefaultTdRequest
+import com.justai.jaicf.channel.td.request.chatId
+import com.justai.jaicf.channel.td.request.messageId
+import com.justai.jaicf.channel.td.request.messageRequest
 import com.justai.jaicf.logging.AudioReaction
 import com.justai.jaicf.logging.ButtonsReaction
 import com.justai.jaicf.logging.ImageReaction
@@ -25,16 +28,9 @@ class TdReactions(
 
     override fun buttons(vararg buttons: String): ButtonsReaction {
         api.awaitLastMessage()?.let { message ->
-            val texts = buttons.map { text ->
-                var s = text.take(21)
-                if (s.length < text.length) {
-                    s = s.replaceRange(18..20, "...")
-                }
-                s to text
-            }.toMap()
             val keyboard = (message.replyMarkup as? TdApi.ReplyMarkupInlineKeyboard)?.rows?.toMutableList() ?: mutableListOf<Array<TdApi.InlineKeyboardButton>>()
-            keyboard.addAll(texts.map { (text, value) ->
-                arrayOf(TdApi.InlineKeyboardButton(text, TdApi.InlineKeyboardButtonTypeCallback(value.toByteArray())))
+            keyboard.addAll(buttons.map {
+                arrayOf(TdApi.InlineKeyboardButton(it, TdApi.InlineKeyboardButtonTypeCallback(it.toByteArray())))
             })
             val replyMarkup = TdApi.ReplyMarkupInlineKeyboard(keyboard.toTypedArray())
             api.editMessageReplyMarkup(message.chatId, message.id, replyMarkup)
